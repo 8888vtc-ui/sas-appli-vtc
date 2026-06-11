@@ -1,0 +1,109 @@
+// ─── TRIP ───
+export interface Trip {
+  id: string;
+  clientName: string;
+  clientPhone: string;
+  clientEmail?: string;
+  pickUpLocation: string;
+  dropOffLocation: string;
+  date: string;
+  time: string;
+  bookingDateTime: string;
+  flightNumber?: string;
+  passengerCount: number;
+  price: number;
+  tripType: 'transfer' | 'disposal';
+  disposalEndDate?: string;
+  disposalEndTime?: string;
+  disposalZone?: string;
+  status: 'scheduled' | 'in_progress' | 'completed' | 'cancelled' | 'invoiced';
+  invoiceNumber?: string;
+  paymentStatus?: 'pending' | 'paid';
+  signature?: string; // Base64 signature image
+  notes?: string;
+}
+
+// ─── SETTINGS ───
+export interface AppSettings {
+  companyName: string;
+  companyAddress: string;
+  companyPhone: string;
+  companyEmail: string;
+  siret: string;
+  siren: string;
+  registreVTC: string;
+  driverName: string;
+  driverCardNumber: string;
+  driverPhone: string;
+  vehiclePlate: string;
+  vehicleModel: string;
+  welcomeMessage: string;
+  logoColor: string;
+  tvaRegime: 'franchise' | 'assujetti';
+  tvaNumber: string;
+}
+
+// ─── LEGAL DOCUMENT (VAULT) ───
+export interface LegalDocument {
+  id: string;
+  name: string;
+  category: 'driver' | 'vehicle' | 'admin';
+  expiryDate?: string;
+  fileData?: string;
+  fileName?: string;
+  uploadDate?: string;
+  isRequired: boolean;
+}
+
+// ─── INVOICE RECORD ───
+export interface InvoiceRecord {
+  id: string;
+  tripId: string;
+  invoiceNumber: string;
+  clientName: string;
+  clientPhone: string;
+  date: string;
+  amount: number;
+  tvaAmount: number;
+  totalTTC: number;
+  paymentStatus: 'pending' | 'paid';
+  createdAt: string;
+}
+
+// ─── VIEW TYPE ───
+export type View = 'dashboard' | 'sign' | 'settings' | 'vault' | 'vault-control' | 'invoices';
+
+// ─── DEFAULTS ───
+export const DEFAULT_SETTINGS: AppSettings = {
+  companyName: '',
+  companyAddress: '',
+  companyPhone: '',
+  companyEmail: '',
+  siret: '',
+  siren: '',
+  registreVTC: '',
+  driverName: '',
+  driverCardNumber: '',
+  driverPhone: '',
+  vehiclePlate: '',
+  vehicleModel: '',
+  welcomeMessage: 'BIENVENUE',
+  logoColor: '#FFD700',
+  tvaRegime: 'franchise',
+  tvaNumber: ''
+};
+
+export const LEGAL_DOC_TEMPLATES: Omit<LegalDocument, 'id'>[] = [
+  { name: 'Carte Professionnelle VTC', category: 'driver', isRequired: true },
+  { name: 'Permis de Conduire', category: 'driver', isRequired: true },
+  { name: 'Certificat Médical', category: 'driver', isRequired: true },
+  { name: 'Attestation de Formation Continue', category: 'driver', isRequired: false },
+  { name: 'Carte Grise', category: 'vehicle', isRequired: true },
+  { name: 'Attestation Assurance RC Pro', category: 'vehicle', isRequired: true },
+  { name: 'Contrôle Technique Annuel', category: 'vehicle', isRequired: true },
+  { name: 'Vignette Crit\'Air', category: 'vehicle', isRequired: false },
+  { name: 'Inscription Registre VTC', category: 'admin', isRequired: true },
+  { name: 'Extrait Kbis / INSEE', category: 'admin', isRequired: true },
+  { name: 'Attestation URSSAF', category: 'admin', isRequired: false },
+  { name: 'Attestation de Vigilance', category: 'admin', isRequired: false },
+];
