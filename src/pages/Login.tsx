@@ -152,6 +152,10 @@ export default function Login() {
             Inscrire ma société VTC
           </Link>
         </p>
+
+        <p className="text-center mt-6 text-xs text-[#64748b]">
+          VTC Pro Console • Réalisé par <span className="text-slate-300 font-semibold">David Chemla</span>
+        </p>
       </motion.div>
     </div>
   );

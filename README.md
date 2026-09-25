@@ -172,4 +172,4 @@ npm run lint
 
 ---
 
-*Développé pour une gestion VTC efficace et une sérénité administrative totale.*
+*Développé pour une gestion VTC efficace et une sérénité administrative totale. — Réalisé par David Chemla*

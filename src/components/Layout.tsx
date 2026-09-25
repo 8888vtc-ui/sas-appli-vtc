@@ -85,6 +85,14 @@ export default function Layout({ children, onNewTrip }: { children: React.ReactN
 
       {/* Page Content */}
       <main>{children}</main>
+
+      {/* Footer */}
+      <footer className="mt-16 pt-6 pb-6 text-center text-xs text-slate-500 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-3">
+        <span>VTC Pro Console — Conforme réglementation arrêté août 2025</span>
+        <span className="font-medium text-slate-400">
+          Réalisé par <strong className="text-blue-400 font-semibold">David Chemla</strong>
+        </span>
+      </footer>
     </div>
   );
 }

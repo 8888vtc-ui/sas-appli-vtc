@@ -330,6 +330,10 @@ export default function Register() {
             Se connecter
           </Link>
         </div>
+
+        <p className="text-center mt-6 text-xs text-[#64748b]">
+          VTC Pro Console • Réalisé par <span className="text-slate-300 font-semibold">David Chemla</span>
+        </p>
       </motion.div>
     </div>
   );
