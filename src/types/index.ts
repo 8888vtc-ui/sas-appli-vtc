@@ -107,3 +107,16 @@ export const LEGAL_DOC_TEMPLATES: Omit<LegalDocument, 'id'>[] = [
   { name: 'Attestation URSSAF', category: 'admin', isRequired: false },
   { name: 'Attestation de Vigilance', category: 'admin', isRequired: false },
 ];
+
+// ─── COMPANY DRIVER / USER ───
+export interface CompanyDriver {
+  id: string;
+  fullName: string;
+  phone: string;
+  email: string;
+  driverCardNumber: string;
+  cardExpiryDate?: string;
+  role: 'admin' | 'driver';
+  status: 'active' | 'inactive';
+  createdAt?: string;
+}

@@ -1,21 +1,29 @@
 import { createClient } from '@supabase/supabase-js';
 
-// Remplacer par vos identifiants Supabase (URL et Clé publique)
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
+const rawUrl = (import.meta.env.VITE_SUPABASE_URL || '').trim();
+const rawKey = (import.meta.env.VITE_SUPABASE_ANON_KEY || '').trim();
 
-// Si les variables sont les valeurs par défaut ou vides, on passe en mode local
-export const isLocalMode = !supabaseUrl || 
-                           supabaseUrl.includes('votre-projet') || 
-                           !supabaseAnonKey || 
-                           supabaseAnonKey.includes('votre-cle');
+// Détection robuste du mode local / non configuré
+const isPlaceholder = (str: string) => {
+  const s = str.toLowerCase();
+  return (
+    !s ||
+    s.includes('votre') ||
+    s.includes('projet_id') ||
+    s.includes('example') ||
+    s.includes('cle_anonyme') ||
+    s.includes('anon_key')
+  );
+};
 
-export const supabase = !isLocalMode 
-  ? createClient(supabaseUrl, supabaseAnonKey)
-  : null as any;
+export const isLocalMode = isPlaceholder(rawUrl) || isPlaceholder(rawKey) || rawKey.length < 25;
+
+export const supabase = !isLocalMode
+  ? createClient(rawUrl, rawKey)
+  : (null as any);
 
 /** 
- * SCHÉMA DE LA BASE DE DONNÉES (À exécuter dans l'éditeur SQL de Supabase) :
+ * SCHÉMA DE LA BASE DE DONNÉES (À exécuter dans l'éditeur SQL de Supabase si vous activez le Cloud) :
  * 
  * -- 1. Table des Sociétés
  * CREATE TABLE companies (
@@ -41,7 +49,7 @@ export const supabase = !isLocalMode
  *   full_name TEXT,
  *   phone TEXT,
  *   driver_card_number TEXT,
- *   role TEXT DEFAULT 'driver', -- 'admin' ou 'driver'
+ *   role TEXT DEFAULT 'driver',
  *   avatar_url TEXT,
  *   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
  * );
@@ -66,6 +74,7 @@ export const supabase = !isLocalMode
  *   status TEXT DEFAULT 'scheduled',
  *   invoice_number TEXT,
  *   notes TEXT,
+ *   signature TEXT,
  *   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
  * );
  * 
@@ -73,7 +82,6 @@ export const supabase = !isLocalMode
  * CREATE TABLE documents (
  *   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
  *   company_id UUID REFERENCES companies(id),
- *   profile_id UUID REFERENCES profiles(id), -- Optionnel si document personnel
  *   name TEXT NOT NULL,
  *   category TEXT NOT NULL,
  *   expiry_date DATE,
@@ -91,7 +99,7 @@ export const supabase = !isLocalMode
  *   amount DECIMAL(10,2) NOT NULL,
  *   tva_amount DECIMAL(10,2) NOT NULL,
  *   total_ttc DECIMAL(10,2) NOT NULL,
- *   status TEXT DEFAULT 'pending', -- 'pending', 'paid'
+ *   status TEXT DEFAULT 'pending',
  *   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
  * );
  * 
@@ -101,17 +109,8 @@ export const supabase = !isLocalMode
  *   company_id UUID REFERENCES companies(id),
  *   description TEXT NOT NULL,
  *   amount DECIMAL(10,2) NOT NULL,
- *   category TEXT NOT NULL, -- 'fuel', 'maintenance', 'insurance', 'other'
+ *   category TEXT NOT NULL,
  *   date DATE NOT NULL,
- *   file_url TEXT,
  *   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
  * );
- * 
- * -- Activer RLS (Row Level Security) sur toutes les tables
- * ALTER TABLE companies ENABLE ROW LEVEL SECURITY;
- * ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
- * ALTER TABLE trips ENABLE ROW LEVEL SECURITY;
- * ALTER TABLE documents ENABLE ROW LEVEL SECURITY;
- * ALTER TABLE invoices ENABLE ROW LEVEL SECURITY;
- * ALTER TABLE expenses ENABLE ROW LEVEL SECURITY;
  */

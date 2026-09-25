@@ -17,10 +17,9 @@ const navItems = [
 
 export default function Layout({ children, onNewTrip }: { children: React.ReactNode; onNewTrip: () => void }) {
   const { compliance, expiringSoon, settings } = useApp();
-  const { signOut } = useAuth();
+  const { user, profile, signOut } = useAuth();
 
   const handleLogout = async () => {
-    localStorage.removeItem('vtc_local_profile');
     try {
       await signOut();
     } catch { /* ignore */ }
@@ -38,6 +37,14 @@ export default function Layout({ children, onNewTrip }: { children: React.ReactN
           </p>
         </div>
         <div className="flex items-center gap-3 flex-wrap">
+          {profile?.full_name && (
+            <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 text-xs text-slate-300">
+              <span className="w-2 h-2 rounded-full bg-emerald-400" />
+              <span className="font-semibold text-white">{profile.full_name}</span>
+              <span className="text-slate-500 font-mono text-[10px]">({user?.email})</span>
+            </div>
+          )}
+
           {expiringSoon.length > 0 && (
             <NavLink to="/coffre-fort" className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-yellow-500/10 border border-yellow-500/30 text-yellow-400 text-xs font-semibold hover:bg-yellow-500/20 transition-all">
               <AlertTriangle className="w-3.5 h-3.5" /> {expiringSoon.length} doc(s) à vérifier
@@ -58,7 +65,7 @@ export default function Layout({ children, onNewTrip }: { children: React.ReactN
           </button>
 
           <button onClick={handleLogout} title="Déconnexion"
-            className="p-2.5 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 text-slate-400 hover:text-white transition-all">
+            className="p-2.5 rounded-xl bg-white/5 border border-white/10 hover:bg-red-500/20 hover:border-red-500/30 text-slate-400 hover:text-red-400 transition-all">
             <LogOut className="w-4 h-4" />
           </button>
         </div>
