@@ -20,8 +20,9 @@ export default function Dashboard() {
   const { addSignature, settings } = useApp();
 
   const shareOnWhatsApp = (trip: any) => {
-    const text = `Bonjour ${trip.clientName}, voici la confirmation de votre course VTC le ${trip.date} à ${trip.time}. Départ: ${trip.pickUpLocation}. Tarif: ${trip.price}€. Merci de votre confiance. ${settings.companyName}`;
-    const url = `https://wa.me/${trip.clientPhone.replace(/\s/g, '')}?text=${encodeURIComponent(text)}`;
+    const text = `Bonjour ${trip.clientName}, voici la confirmation de votre course VTC le ${trip.date} à ${trip.time}. Départ: ${trip.pickUpLocation}. Destination: ${trip.dropOffLocation || 'Mise à disposition'}. Tarif convenu: ${trip.price}€. Merci de votre confiance. ${settings.companyName}`;
+    const cleanPhone = (trip.clientPhone || '').replace(/[^0-9]/g, '');
+    const url = cleanPhone ? `https://wa.me/${cleanPhone}?text=${encodeURIComponent(text)}` : `https://wa.me/?text=${encodeURIComponent(text)}`;
     window.open(url, '_blank');
   };
 
@@ -205,7 +206,13 @@ export default function Dashboard() {
       <SignatureModal 
         isOpen={!!sigTripId} 
         onClose={() => setSigTripId(null)} 
-        onSave={(data) => sigTripId && addSignature(sigTripId, data)} 
+        initialSignature={trips.find(t => t.id === sigTripId)?.signature}
+        onSave={(data) => {
+          if (sigTripId) {
+            addSignature(sigTripId, data);
+            setSigTripId(null);
+          }
+        }} 
       />
     </motion.div>
   );

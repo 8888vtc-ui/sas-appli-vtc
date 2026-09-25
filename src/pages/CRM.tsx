@@ -4,7 +4,7 @@ import {
   Users, Search, Plus, Phone, Mail, MessageSquare, Star, Tag,
   Building2, Hotel, Briefcase, User, MapPin, Send,
   ChevronDown, UserPlus,
-  X, CheckCircle2, AlertCircle
+  X, CheckCircle2, AlertCircle, MessageCircle, Trash2
 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { format, differenceInDays } from 'date-fns';
@@ -160,6 +160,11 @@ export default function CRM() {
     setShowAddContact(false);
   };
 
+  const deleteContact = (id: string) => {
+    const updated = contacts.filter(c => c.id !== id);
+    saveContacts(updated);
+  };
+
   const toggleSelect = (id: string) => {
     setSelectedContacts(prev => prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]);
   };
@@ -287,26 +292,54 @@ export default function CRM() {
                     </div>
                   </div>
 
-                  {/* Right stats */}
-                  <div className="flex items-center gap-6 shrink-0">
+                  {/* Right stats & actions */}
+                  <div className="flex items-center gap-4 shrink-0 flex-wrap">
                     {contact.totalTrips > 0 && (
-                      <div className="text-center">
-                        <p className="text-lg font-bold text-white">{contact.totalTrips}</p>
+                      <div className="text-center min-w-[45px]">
+                        <p className="text-base font-bold text-white">{contact.totalTrips}</p>
                         <p className="text-[10px] text-slate-500">courses</p>
                       </div>
                     )}
                     {contact.totalRevenue > 0 && (
-                      <div className="text-center">
-                        <p className="text-lg font-bold text-emerald-400">{contact.totalRevenue.toFixed(0)}€</p>
+                      <div className="text-center min-w-[55px]">
+                        <p className="text-base font-bold text-emerald-400">{contact.totalRevenue.toFixed(0)}€</p>
                         <p className="text-[10px] text-slate-500">CA</p>
                       </div>
                     )}
                     {daysSince !== null && (
-                      <div className="text-center">
-                        <p className="text-lg font-bold" style={{ color: getDaysColor(daysSince) }}>{daysSince}j</p>
+                      <div className="text-center min-w-[55px]">
+                        <p className="text-base font-bold" style={{ color: getDaysColor(daysSince) }}>{daysSince}j</p>
                         <p className="text-[10px] text-slate-500">dernier contact</p>
                       </div>
                     )}
+
+                    <div className="flex items-center gap-1.5 border-l border-white/10 pl-3">
+                      {contact.phone && (
+                        <>
+                          <a href={`https://wa.me/${contact.phone.replace(/[^0-9]/g, '')}`} target="_blank" rel="noreferrer"
+                            onClick={e => e.stopPropagation()}
+                            className="p-2 rounded-lg bg-green-500/10 hover:bg-green-500/20 text-green-400 transition-all" title="WhatsApp">
+                            <MessageCircle className="w-3.5 h-3.5" />
+                          </a>
+                          <a href={`tel:${contact.phone}`}
+                            onClick={e => e.stopPropagation()}
+                            className="p-2 rounded-lg bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 transition-all" title="Appeler">
+                            <Phone className="w-3.5 h-3.5" />
+                          </a>
+                        </>
+                      )}
+                      {contact.email && (
+                        <a href={`mailto:${contact.email}`}
+                          onClick={e => e.stopPropagation()}
+                          className="p-2 rounded-lg bg-purple-500/10 hover:bg-purple-500/20 text-purple-400 transition-all" title="Email">
+                          <Mail className="w-3.5 h-3.5" />
+                        </a>
+                      )}
+                      <button onClick={e => { e.stopPropagation(); deleteContact(contact.id); }}
+                        className="p-2 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 transition-all" title="Supprimer">
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
                   </div>
                 </div>
               </motion.div>

@@ -26,36 +26,51 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
   return <>{children}</>;
 }
 
-function AppRoutes() {
+function ProtectedLayout() {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  return (
+    <AppProvider>
+      <Routes>
+        {/* Fullscreen Dedicated Views inside AppProvider */}
+        <Route path="/sign/:id" element={<SignMode />} />
+        <Route path="/controle" element={<Vault controlMode={true} />} />
+
+        {/* Standard Views with Layout and Navigation */}
+        <Route
+          path="*"
+          element={
+            <Layout onNewTrip={() => setIsModalOpen(true)}>
+              <Routes>
+                <Route path="/" element={<Dashboard />} />
+                <Route path="/factures" element={<Invoices />} />
+                <Route path="/crm" element={<CRM />} />
+                <Route path="/coffre-fort" element={<Vault />} />
+                <Route path="/parametres" element={<Settings />} />
+                <Route path="/comptabilite" element={<Accounting />} />
+              </Routes>
+              <TripModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+            </Layout>
+          }
+        />
+      </Routes>
+    </AppProvider>
+  );
+}
+
+function AppRoutes() {
   return (
     <Routes>
       {/* Public Routes */}
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
 
-      {/* Private Routes */}
-      <Route path="/sign/:id" element={<ProtectedRoute><SignMode /></ProtectedRoute>} />
-      <Route path="/controle" element={<ProtectedRoute><Vault controlMode={true} /></ProtectedRoute>} />
-
+      {/* Private Routes wrapped in ProtectedRoute & AppProvider */}
       <Route
-        path="*"
+        path="/*"
         element={
           <ProtectedRoute>
-            <AppProvider>
-              <Layout onNewTrip={() => setIsModalOpen(true)}>
-                <Routes>
-                  <Route path="/" element={<Dashboard />} />
-                  <Route path="/factures" element={<Invoices />} />
-                  <Route path="/crm" element={<CRM />} />
-                  <Route path="/coffre-fort" element={<Vault />} />
-                  <Route path="/parametres" element={<Settings />} />
-                  <Route path="/comptabilite" element={<Accounting />} />
-                </Routes>
-                <TripModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
-              </Layout>
-            </AppProvider>
+            <ProtectedLayout />
           </ProtectedRoute>
         }
       />
