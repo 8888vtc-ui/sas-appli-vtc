@@ -1,7 +1,7 @@
 import { NavLink } from 'react-router-dom';
 import {
   Calendar, Receipt, Shield, Settings as SettingsIcon,
-  Plus, AlertTriangle, PieChart
+  Plus, AlertTriangle, PieChart, Users
 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 
@@ -9,6 +9,7 @@ const navItems = [
   { to: '/', label: 'Courses', icon: Calendar },
   { to: '/factures', label: 'Factures', icon: Receipt },
   { to: '/comptabilite', label: 'Comptabilité', icon: PieChart },
+  { to: '/crm', label: 'CRM & Clients', icon: Users },
   { to: '/coffre-fort', label: 'Coffre-Fort', icon: Shield },
   { to: '/parametres', label: 'Paramètres', icon: SettingsIcon },
 ] as const;

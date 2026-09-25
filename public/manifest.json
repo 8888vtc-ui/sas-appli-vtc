@@ -1,0 +1,17 @@
+{
+  "name": "VTC Pro Console",
+  "short_name": "VTC Pro",
+  "description": "Console professionnelle tout-en-un de gestion VTC, Bons de commande & Coffre-fort",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0F172A",
+  "theme_color": "#0F172A",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

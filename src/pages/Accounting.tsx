@@ -2,20 +2,20 @@ import { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { 
   TrendingUp, TrendingDown, Wallet, Plus, 
-  Trash2, Filter, Download, Receipt, PieChart,
-  BarChart, Calendar, ChevronRight
+  Receipt, Download, ChevronRight
 } from 'lucide-react';
 import { 
   BarChart as ReBarChart, Bar, XAxis, YAxis, CartesianGrid, 
-  Tooltip, ResponsiveContainer, Cell, PieChart as RePieChart, Pie
+  Tooltip, ResponsiveContainer
 } from 'recharts';
 import { useApp } from '../context/AppContext';
 import { formatEUR } from '../lib/utils';
+import { exportInvoicesCSV, exportExpensesCSV } from '../lib/exportUtils';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
 
 export default function Accounting() {
-  const { trips, expenses, addExpense } = useApp();
+  const { trips, expenses, addExpense, invoices } = useApp();
   const [showAddExpense, setShowAddExpense] = useState(false);
   const [newExpense, setNewExpense] = useState({ description: '', amount: '', category: 'fuel', date: format(new Date(), 'yyyy-MM-dd') });
 
@@ -98,9 +98,13 @@ export default function Accounting() {
               <h3 className="text-lg font-bold text-white">Performance Mensuelle</h3>
               <p className="text-xs text-slate-400">Comparaison CA vs Dépenses (6 derniers mois)</p>
             </div>
-            <div className="flex gap-2">
-              <button className="p-2 bg-white/5 rounded-lg text-slate-400 hover:text-white"><BarChart className="w-4 h-4" /></button>
-              <button className="p-2 bg-white/5 rounded-lg text-slate-400 hover:text-white"><Download className="w-4 h-4" /></button>
+            <div className="flex gap-2 flex-wrap">
+              <button onClick={() => exportInvoicesCSV(invoices, trips)} className="px-3 py-2 bg-blue-600/20 border border-blue-500/30 rounded-xl text-blue-400 hover:bg-blue-600/30 text-xs font-bold flex items-center gap-1.5 transition-all">
+                <Download className="w-3.5 h-3.5" /> Factures (CSV)
+              </button>
+              <button onClick={() => exportExpensesCSV(expenses)} className="px-3 py-2 bg-white/5 border border-white/10 rounded-xl text-slate-300 hover:bg-white/10 text-xs font-bold flex items-center gap-1.5 transition-all">
+                <Download className="w-3.5 h-3.5" /> Dépenses (CSV)
+              </button>
             </div>
           </div>
           

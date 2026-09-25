@@ -3,7 +3,16 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
 import { format } from 'date-fns';
 import { useApp } from '../context/AppContext';
-import type { TripFormData } from '../context/AppContext';
+
+interface TripFormData {
+  clientName: string; clientPhone: string; clientEmail: string;
+  pickUpLocation: string; dropOffLocation: string;
+  date: string; time: string; flightNumber: string;
+  passengerCount: number; price: number;
+  tripType: 'transfer' | 'disposal';
+  disposalEndDate: string; disposalEndTime: string; disposalZone: string;
+  notes: string;
+}
 
 const emptyForm: TripFormData = {
   clientName: '', clientPhone: '', clientEmail: '', pickUpLocation: '', dropOffLocation: '',

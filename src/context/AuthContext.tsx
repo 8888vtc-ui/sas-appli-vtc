@@ -43,27 +43,30 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (isLocalMode) {
+    const localProfile = localStorage.getItem('vtc_local_profile');
+    if (localProfile || isLocalMode) {
       // Mode Local Storage
-      const localProfile = localStorage.getItem('vtc_local_profile');
-      if (localProfile) {
-        const parsed = JSON.parse(localProfile);
-        setUser({ id: 'local-user', email: 'local@vtc.pro' } as any);
-        setProfile(parsed);
-      }
+      const parsed = localProfile ? JSON.parse(localProfile) : {
+        id: 'local-user',
+        company_id: 'local-company',
+        full_name: 'Chauffeur Démo',
+        role: 'admin'
+      };
+      setUser({ id: 'local-user', email: 'local@vtc.pro' } as any);
+      setProfile(parsed);
       setLoading(false);
       return;
     }
 
     // Check initial session
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    supabase.auth.getSession().then(({ data: { session } }: any) => {
       setUser(session?.user ?? null);
       if (session?.user) fetchProfile(session.user.id);
       else setLoading(false);
     });
 
     // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event: any, session: any) => {
       setUser(session?.user ?? null);
       if (session?.user) fetchProfile(session.user.id);
       else {

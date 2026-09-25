@@ -44,7 +44,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [expenses, setExpenses] = useState<any[]>([]);
   const [invoiceCounter, setInvoiceCounter] = useState(1);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [uploadDocId, setUploadDocId] = useState<string | null>(null);
+  const [_uploadDocId, setUploadDocId] = useState<string | null>(null);
 
   // Charger les données initiales
   useEffect(() => {

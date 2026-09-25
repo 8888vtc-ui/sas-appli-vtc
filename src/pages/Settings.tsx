@@ -1,7 +1,8 @@
 import { motion } from 'framer-motion';
-import { Building2, User, Car, Eye } from 'lucide-react';
+import { Building2, User, Car, Eye, Download, Upload, Database } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import type { AppSettings } from '../types';
+import { exportFullBackupJSON, importFullBackupJSON } from '../lib/exportUtils';
 
 export default function Settings() {
   const { settings, updateSettings } = useApp();
@@ -104,6 +105,39 @@ export default function Settings() {
               <span className="text-sm text-white font-mono">{settings.logoColor}</span>
             </div>
           </div>
+        </div>
+      </div>
+
+      {/* Backup & Restore */}
+      <div className="glass rounded-3xl p-8">
+        <h2 className="text-xl font-bold mb-2 text-white flex items-center gap-2">
+          <Database className="w-5 h-5 text-blue-400" /> Sauvegarde & Restauration (JSON)
+        </h2>
+        <p className="text-xs text-slate-400 mb-6">
+          Sauvegardez l'intégralité de vos courses, factures, contacts et paramètres dans un fichier JSON réutilisable.
+        </p>
+
+        <div className="flex flex-col sm:flex-row gap-4">
+          <button type="button" onClick={() => exportFullBackupJSON()}
+            className="flex-1 py-3.5 px-6 rounded-2xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-sm flex items-center justify-center gap-2 transition-all shadow-lg shadow-blue-600/20">
+            <Download className="w-4 h-4" /> Exporter la sauvegarde (JSON)
+          </button>
+
+          <label className="flex-1 py-3.5 px-6 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 text-white font-bold text-sm flex items-center justify-center gap-2 cursor-pointer transition-all">
+            <Upload className="w-4 h-4" /> Importer une sauvegarde
+            <input type="file" accept=".json" className="hidden" onChange={async (e) => {
+              const file = e.target.files?.[0];
+              if (file) {
+                try {
+                  await importFullBackupJSON(file);
+                  alert('Sauvegarde restaurée avec succès ! La page va se recharger.');
+                  window.location.reload();
+                } catch {
+                  alert('Erreur lors de l\'import de la sauvegarde.');
+                }
+              }
+            }} />
+          </label>
         </div>
       </div>
     </motion.div>
