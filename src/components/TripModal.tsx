@@ -41,11 +41,11 @@ export default function TripModal({ isOpen, onClose }: { isOpen: boolean; onClos
     <AnimatePresence>
       {isOpen && (
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+          className="fixed inset-0 z-50 flex items-end sm:items-center justify-center sm:p-4 bg-black/60 backdrop-blur-sm">
           <motion.div initial={{ scale: 0.9, y: 20 }} animate={{ scale: 1, y: 0 }}
-            className="glass max-w-2xl w-full p-8 rounded-3xl overflow-y-auto max-h-[90vh]">
+            className="glass w-full sm:max-w-2xl p-5 sm:p-8 rounded-t-3xl sm:rounded-3xl overflow-y-auto max-h-[95vh] sm:max-h-[90vh]">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-bold text-white">Nouvelle Réservation</h2>
+              <h2 className="text-xl sm:text-2xl font-bold text-white">Nouvelle Réservation</h2>
               <button onClick={handleClose} className="p-2 hover:bg-white/10 rounded-full text-white"><X className="w-5 h-5" /></button>
             </div>
 
@@ -60,7 +60,7 @@ export default function TripModal({ isOpen, onClose }: { isOpen: boolean; onClos
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-5">
-              <div className="grid md:grid-cols-2 gap-5">
+              <div className="grid sm:grid-cols-2 gap-4 sm:gap-5">
                 {([
                   ['Nom Client *', 'clientName', 'text', 'Jean Dupont', true],
                   ['Téléphone Client *', 'clientPhone', 'tel', '+33 6 12 34 56 78', true],
@@ -94,14 +94,14 @@ export default function TripModal({ isOpen, onClose }: { isOpen: boolean; onClos
                       onChange={e => setFormData({ ...formData, disposalEndTime: e.target.value })}
                       className="w-full bg-white/5 border border-white/10 rounded-xl p-3 outline-none text-sm text-white" />
                   </div>
-                  <div className="space-y-1.5 md:col-span-2">
+                  <div className="space-y-1.5 sm:col-span-2">
                     <label className="text-xs font-medium" style={{ color: '#94A3B8' }}>Zone Géographique</label>
                     <input type="text" value={formData.disposalZone} placeholder="ex: Côte d'Azur"
                       onChange={e => setFormData({ ...formData, disposalZone: e.target.value })}
                       className="w-full bg-white/5 border border-white/10 rounded-xl p-3 outline-none text-sm text-white placeholder-white/20" />
                   </div>
                 </>)}
-                <div className="space-y-1.5 md:col-span-2">
+                <div className="space-y-1.5 sm:col-span-2">
                   <label className="text-xs font-medium" style={{ color: '#94A3B8' }}>Notes / Observations</label>
                   <textarea value={formData.notes} placeholder="Informations complémentaires..."
                     onChange={e => setFormData({ ...formData, notes: e.target.value })}

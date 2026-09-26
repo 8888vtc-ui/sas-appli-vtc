@@ -127,3 +127,56 @@ input:focus, select:focus {
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.2);
 }
+
+/* ═══════ MOBILE OPTIMIZATIONS ═══════ */
+
+/* Hide scrollbar on horizontal scroll areas */
+.overflow-x-auto::-webkit-scrollbar {
+  display: none;
+}
+.overflow-x-auto {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Prevent iOS auto-zoom on input focus (min 16px) */
+@media (max-width: 640px) {
+  input, select, textarea {
+    font-size: 16px !important;
+  }
+  
+  /* Tighter card padding on tiny screens */
+  .card {
+    padding: 16px;
+  }
+  
+  /* Ensure glass cards don't overflow */
+  .glass {
+    overflow: hidden;
+  }
+}
+
+/* Safe area padding for modern phones with notch/home indicator */
+@supports (padding: env(safe-area-inset-bottom)) {
+  body {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+
+/* Smooth momentum scrolling on iOS */
+* {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Tap highlight removal for mobile */
+button, a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Touch-friendly minimum sizes */
+@media (max-width: 640px) {
+  button, [role="button"] {
+    min-height: 36px;
+    min-width: 36px;
+  }
+}

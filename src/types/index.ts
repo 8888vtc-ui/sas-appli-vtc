@@ -110,7 +110,6 @@ export const LEGAL_DOC_TEMPLATES: Omit<LegalDocument, 'id'>[] = [
   { name: 'Attestation de Vigilance', category: 'admin', isRequired: false },
 ];
 
-// ─── COMPANY DRIVER / USER ───
 export interface CompanyDriver {
   id: string;
   fullName: string;
@@ -121,4 +120,83 @@ export interface CompanyDriver {
   role: 'admin' | 'driver';
   status: 'active' | 'inactive';
   createdAt?: string;
+}
+
+// ─── EXPENSE CATEGORIES ───
+export const EXPENSE_CATEGORIES = {
+  fuel: { label: 'Carburant', icon: '⛽', color: '#3b82f6' },
+  toll: { label: 'Péages', icon: '🛣️', color: '#8b5cf6' },
+  parking: { label: 'Parking', icon: '🅿️', color: '#06b6d4' },
+  wash: { label: 'Lavage véhicule', icon: '🧽', color: '#14b8a6' },
+  maintenance: { label: 'Entretien / Réparation', icon: '🔧', color: '#f59e0b' },
+  insurance: { label: 'Assurance', icon: '🛡️', color: '#ec4899' },
+  phone: { label: 'Téléphone / Internet', icon: '📱', color: '#6366f1' },
+  fees: { label: 'Commissions plateforme', icon: '💳', color: '#ef4444' },
+  lease: { label: 'Location / Leasing', icon: '🚗', color: '#84cc16' },
+  fine: { label: 'Amende / PV', icon: '⚠️', color: '#dc2626' },
+  supplies: { label: 'Fournitures (eau, presse...)', icon: '🛒', color: '#0ea5e9' },
+  accounting: { label: 'Comptabilité / Expert', icon: '📊', color: '#a855f7' },
+  training: { label: 'Formation continue', icon: '🎓', color: '#22c55e' },
+  other: { label: 'Autre', icon: '📝', color: '#94A3B8' },
+} as const;
+
+export type ExpenseCategory = keyof typeof EXPENSE_CATEGORIES;
+
+// ─── EXPENSE RECORD ───
+export interface Expense {
+  id: string;
+  description: string;
+  amount: number;
+  category: ExpenseCategory;
+  date: string;
+  tvaDeductible: boolean;    // Peut-on récupérer la TVA ?
+  tvaRate: number;           // Taux TVA (20%, 10%, 5.5%, 0%)
+  tvaAmount: number;         // Montant TVA calculé
+  receiptPhoto?: string;     // Base64 du justificatif (photo caméra)
+  receiptFileName?: string;  // Nom du fichier justificatif
+  notes?: string;
+  createdAt: string;
+}
+
+// ─── MILEAGE LOG (Suivi Kilométrique) ───
+export interface MileageLog {
+  id: string;
+  date: string;
+  startKm: number;
+  endKm: number;
+  distance: number;           // endKm - startKm
+  purpose: 'professional' | 'personal';
+  description: string;
+  tripId?: string;            // Lien optionnel vers une course
+  createdAt: string;
+}
+
+// ─── BARÈME URSSAF INDEMNITÉS KILOMÉTRIQUES 2025 ───
+// Pour véhicules personnels utilisés à titre professionnel
+// Source: barème officiel URSSAF (3 à 7 CV fiscaux)
+export const URSSAF_MILEAGE_SCALE_2025 = {
+  '3cv': { upTo5000: 0.529, from5001To20000: { d: 0.316, fixed: 1065 }, above20000: 0.370 },
+  '4cv': { upTo5000: 0.606, from5001To20000: { d: 0.340, fixed: 1330 }, above20000: 0.407 },
+  '5cv': { upTo5000: 0.636, from5001To20000: { d: 0.357, fixed: 1395 }, above20000: 0.427 },
+  '6cv': { upTo5000: 0.665, from5001To20000: { d: 0.374, fixed: 1457 }, above20000: 0.447 },
+  '7cv+': { upTo5000: 0.697, from5001To20000: { d: 0.394, fixed: 1515 }, above20000: 0.470 },
+} as const;
+
+export type FiscalPower = keyof typeof URSSAF_MILEAGE_SCALE_2025;
+
+/**
+ * Calcule l'indemnité kilométrique URSSAF annuelle
+ * @param totalKm - Total km professionnels dans l'année
+ * @param fiscalPower - Puissance fiscale du véhicule
+ * @returns Montant de l'indemnité en euros
+ */
+export function calculateMileageAllowance(totalKm: number, fiscalPower: FiscalPower): number {
+  const scale = URSSAF_MILEAGE_SCALE_2025[fiscalPower];
+  if (totalKm <= 5000) {
+    return totalKm * scale.upTo5000;
+  } else if (totalKm <= 20000) {
+    return totalKm * scale.from5001To20000.d + scale.from5001To20000.fixed;
+  } else {
+    return totalKm * scale.above20000;
+  }
 }

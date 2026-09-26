@@ -180,25 +180,25 @@ export default function CRM() {
   return (
     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
       {/* Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-4">
         {[
           { label: 'Contacts Total', value: stats.total, icon: Users, color: '#3b82f6' },
           { label: 'Clients Actifs', value: stats.clients, icon: CheckCircle2, color: '#22c55e' },
           { label: 'Prospects', value: stats.prospects, icon: UserPlus, color: '#8b5cf6' },
           { label: 'Inactifs > 30j', value: stats.inactive30, icon: AlertCircle, color: '#f59e0b' },
         ].map(s => (
-          <div key={s.label} className="glass rounded-2xl p-5">
+          <div key={s.label} className="glass rounded-xl sm:rounded-2xl p-3 sm:p-5">
             <div className="flex items-center justify-between mb-3">
-              <span className="text-xs font-medium text-slate-400">{s.label}</span>
+              <span className="text-[10px] sm:text-xs font-medium text-slate-400">{s.label}</span>
               <s.icon className="w-4 h-4" style={{ color: s.color }} />
             </div>
-            <p className="text-2xl font-bold text-white">{s.value}</p>
+            <p className="text-lg sm:text-2xl font-bold text-white">{s.value}</p>
           </div>
         ))}
       </div>
 
       {/* Toolbar */}
-      <div className="flex flex-col md:flex-row gap-3">
+      <div className="flex flex-col gap-2 sm:gap-3">
         <div className="flex-1 relative">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
           <input type="text" placeholder="Rechercher un contact, téléphone, email..." value={searchQuery}
@@ -206,8 +206,9 @@ export default function CRM() {
             className="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-11 pr-4 outline-none text-sm text-white placeholder-white/30" />
         </div>
 
-        {/* Tabs */}
-        <div className="flex gap-1 bg-white/5 rounded-xl p-1">
+        <div className="flex gap-2 sm:gap-3 overflow-x-auto" style={{ scrollbarWidth: 'none' }}>
+          {/* Tabs */}
+          <div className="flex gap-1 bg-white/5 rounded-xl p-1 shrink-0">
           {(['all', 'clients', 'prospects'] as const).map(tab => (
             <button key={tab} onClick={() => setActiveTab(tab)}
               className={`px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all ${activeTab === tab ? 'bg-blue-600 text-white' : 'text-slate-500 hover:text-white'}`}>
@@ -238,6 +239,7 @@ export default function CRM() {
           <button onClick={() => setShowAddContact(true)} className="btn-primary">
             <Plus className="w-4 h-4" /> Ajouter
           </button>
+          </div>
         </div>
       </div>
 
@@ -259,7 +261,7 @@ export default function CRM() {
               <motion.div key={contact.id} layout
                 className={`glass rounded-2xl p-5 cursor-pointer transition-all ${isSelected ? 'border-blue-500/50 bg-blue-500/5' : 'hover:border-white/20'}`}
                 onClick={() => toggleSelect(contact.id)}>
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
                   <div className="flex items-center gap-4 min-w-0">
                     {/* Checkbox */}
                     <div className={`w-5 h-5 rounded-md border-2 flex items-center justify-center shrink-0 transition-all ${isSelected ? 'bg-blue-600 border-blue-600' : 'border-white/20'}`}>
@@ -293,7 +295,7 @@ export default function CRM() {
                   </div>
 
                   {/* Right stats & actions */}
-                  <div className="flex items-center gap-4 shrink-0 flex-wrap">
+                  <div className="flex items-center gap-3 sm:gap-4 shrink-0 overflow-x-auto" style={{ scrollbarWidth: 'none' }}>
                     {contact.totalTrips > 0 && (
                       <div className="text-center min-w-[45px]">
                         <p className="text-base font-bold text-white">{contact.totalTrips}</p>
@@ -313,7 +315,7 @@ export default function CRM() {
                       </div>
                     )}
 
-                    <div className="flex items-center gap-1.5 border-l border-white/10 pl-3">
+                    <div className="flex items-center gap-1 border-l border-white/10 pl-2 sm:pl-3 shrink-0">
                       {contact.phone && (
                         <>
                           <a href={`https://wa.me/${contact.phone.replace(/[^0-9]/g, '')}`} target="_blank" rel="noreferrer"

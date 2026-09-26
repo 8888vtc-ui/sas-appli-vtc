@@ -53,7 +53,7 @@ export default function Vault({ controlMode = false }: { controlMode?: boolean }
             </div>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-4 mb-6">
+          <div className="grid sm:grid-cols-2 gap-3 sm:gap-4 mb-6">
             <div className="glass rounded-2xl p-5 border border-white/10">
               <h3 className="text-xs uppercase font-bold mb-3 flex items-center gap-2 tracking-wider text-slate-400"><User className="w-4 h-4 text-blue-400" /> Chauffeur VTC</h3>
               <p className="text-lg font-bold text-white">{settings.driverName || '—'}</p>
@@ -145,7 +145,7 @@ export default function Vault({ controlMode = false }: { controlMode?: boolean }
       <input type="file" ref={fileInputRef} onChange={handleFileChange} className="hidden" accept="image/*,.pdf" />
 
       {/* Progress & Compliance Banner */}
-      <div className="glass rounded-2xl p-6 border border-white/10">
+      <div className="glass rounded-xl sm:rounded-2xl p-4 sm:p-6 border border-white/10">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
           <div>
             <h3 className="text-lg font-bold text-white flex items-center gap-2">
@@ -169,9 +169,9 @@ export default function Vault({ controlMode = false }: { controlMode?: boolean }
       </div>
 
       {(['driver', 'vehicle', 'admin'] as const).map(cat => (
-        <div key={cat} className="glass rounded-2xl p-6 border border-white/10">
+        <div key={cat} className="glass rounded-xl sm:rounded-2xl p-4 sm:p-6 border border-white/10">
           <h3 className="flex items-center gap-2 text-lg font-bold mb-4 text-white">{catIcon(cat)} {catLabel(cat)}</h3>
-          <div className="grid md:grid-cols-2 gap-4">
+          <div className="grid sm:grid-cols-2 gap-3 sm:gap-4">
             {legalDocs.filter(d => d.category === cat).map(doc => {
               const status = getDocExpiryStatus(doc);
               const days = getDocExpiryDays(doc);

@@ -34,37 +34,37 @@ export default function Invoices() {
   return (
     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
       {/* Metric Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="glass rounded-2xl p-5 border border-white/10">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4">
+        <div className="glass rounded-xl sm:rounded-2xl p-3.5 sm:p-5 border border-white/10">
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs text-slate-400 font-medium">Total Facturé</span>
             <Receipt className="w-4 h-4 text-blue-400" />
           </div>
-          <p className="text-2xl font-bold text-white">{formatEUR(stats.totalTTC)}</p>
+          <p className="text-lg sm:text-2xl font-bold text-white">{formatEUR(stats.totalTTC)}</p>
           <p className="text-xs text-slate-500 mt-1">{invoices.length} facture(s) émises</p>
         </div>
 
-        <div className="glass rounded-2xl p-5 border border-white/10">
+        <div className="glass rounded-xl sm:rounded-2xl p-3.5 sm:p-5 border border-white/10">
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs text-slate-400 font-medium">Encaissé (Payé)</span>
             <CheckCircle2 className="w-4 h-4 text-emerald-400" />
           </div>
-          <p className="text-2xl font-bold text-emerald-400">{formatEUR(stats.paidTTC)}</p>
+          <p className="text-lg sm:text-2xl font-bold text-emerald-400">{formatEUR(stats.paidTTC)}</p>
           <p className="text-xs text-slate-500 mt-1">{invoices.filter(i => i.paymentStatus === 'paid').length} réglée(s)</p>
         </div>
 
-        <div className="glass rounded-2xl p-5 border border-white/10">
+        <div className="glass rounded-xl sm:rounded-2xl p-3.5 sm:p-5 border border-white/10">
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs text-slate-400 font-medium">En attente de règlement</span>
             <Clock className="w-4 h-4 text-amber-400" />
           </div>
-          <p className="text-2xl font-bold text-amber-400">{formatEUR(stats.pendingTTC)}</p>
+          <p className="text-lg sm:text-2xl font-bold text-amber-400">{formatEUR(stats.pendingTTC)}</p>
           <p className="text-xs text-slate-500 mt-1">{invoices.filter(i => i.paymentStatus !== 'paid').length} en attente</p>
         </div>
       </div>
 
       {/* Toolbar */}
-      <div className="flex flex-col md:flex-row gap-3 items-stretch md:items-center justify-between">
+      <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 items-stretch sm:items-center justify-between">
         <div className="flex flex-1 gap-3">
           <div className="flex-1 relative">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
@@ -104,7 +104,7 @@ export default function Invoices() {
           {filteredInvoices.map(inv => {
             const isPaid = inv.paymentStatus === 'paid';
             return (
-              <div key={inv.id} className="glass rounded-2xl p-5 flex flex-col md:flex-row md:items-center justify-between gap-4 border border-white/10 hover:border-white/20 transition-all">
+              <div key={inv.id} className="glass rounded-xl sm:rounded-2xl p-3.5 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 border border-white/10 hover:border-white/20 transition-all">
                 <div className="flex items-center gap-4 min-w-0">
                   <div className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0 shadow-md"
                     style={{ background: isPaid ? 'linear-gradient(135deg,#22c55e,#16a34a)' : 'linear-gradient(135deg,#f59e0b,#d97706)' }}>
@@ -125,9 +125,9 @@ export default function Invoices() {
                   </div>
                 </div>
 
-                <div className="flex items-center gap-4 justify-between md:justify-end shrink-0 border-t md:border-t-0 pt-3 md:pt-0 border-white/10">
+                <div className="flex items-center gap-3 sm:gap-4 justify-between sm:justify-end shrink-0 border-t sm:border-t-0 pt-3 sm:pt-0 border-white/10">
                   <div className="text-right">
-                    <p className="text-xl font-bold text-white">{formatEUR(inv.totalTTC)}</p>
+                    <p className="text-base sm:text-xl font-bold text-white">{formatEUR(inv.totalTTC)}</p>
                     <p className="text-xs text-slate-400">
                       HT: {formatEUR(inv.amount)} | {inv.tvaAmount > 0 ? `TVA (10%): ${formatEUR(inv.tvaAmount)}` : 'Franchise TVA (0%)'}
                     </p>

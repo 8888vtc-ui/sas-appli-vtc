@@ -75,11 +75,11 @@ export default function Settings() {
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
       {/* Entreprise */}
-      <div className="glass rounded-3xl p-8">
+      <div className="glass rounded-2xl sm:rounded-3xl p-4 sm:p-8">
         <h2 className="text-xl font-bold mb-6 text-white flex items-center gap-2">
           <Building2 className="w-5 h-5 text-blue-400" /> Entreprise
         </h2>
-        <div className="grid md:grid-cols-2 gap-5">
+        <div className="grid sm:grid-cols-2 gap-4 sm:gap-5">
           {([
             ['Nom Entreprise', 'companyName', 'text', 'SAS MON VTC'],
             ['Adresse', 'companyAddress', 'text', '123 Avenue de la Croisette, 06400 Cannes'],
@@ -159,7 +159,7 @@ export default function Settings() {
           </button>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-4">
+        <div className="grid sm:grid-cols-2 gap-3 sm:gap-4">
           {drivers.map(d => {
             const isPrimary = settings.driverName === d.fullName;
             return (
@@ -349,7 +349,7 @@ export default function Settings() {
         <h2 className="text-xl font-bold mb-6 text-white flex items-center gap-2">
           <User className="w-5 h-5 text-blue-400" /> Chauffeur Actif sur les Documents
         </h2>
-        <div className="grid md:grid-cols-2 gap-5">
+        <div className="grid sm:grid-cols-2 gap-4 sm:gap-5">
           {([
             ['Nom complet', 'driverName', 'text', 'Jean Dupont'],
             ['N° Carte Pro VTC', 'driverCardNumber', 'text', 'T-060-XXXX-XX-XXXXX-X'],
@@ -374,7 +374,7 @@ export default function Settings() {
         <h2 className="text-xl font-bold mb-6 text-white flex items-center gap-2">
           <Car className="w-5 h-5 text-blue-400" /> Véhicule
         </h2>
-        <div className="grid md:grid-cols-2 gap-5">
+        <div className="grid sm:grid-cols-2 gap-4 sm:gap-5">
           {([
             ['Modèle', 'vehicleModel', 'text', 'Tesla Model S'],
             ['Immatriculation', 'vehiclePlate', 'text', 'AB-123-CD'],
@@ -398,7 +398,7 @@ export default function Settings() {
         <h2 className="text-xl font-bold mb-6 text-white flex items-center gap-2">
           <Eye className="w-5 h-5 text-blue-400" /> Accueil Aéroport
         </h2>
-        <div className="grid md:grid-cols-2 gap-5">
+        <div className="grid sm:grid-cols-2 gap-4 sm:gap-5">
           <div className="space-y-2">
             <label className="block text-sm font-medium" style={{ color: '#94A3B8' }}>Message d'accueil</label>
             <input

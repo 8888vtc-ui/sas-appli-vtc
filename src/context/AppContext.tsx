@@ -2,7 +2,7 @@ import { createContext, useContext, useState, useEffect, useRef } from 'react';
 import type { ReactNode } from 'react';
 import { supabase, isLocalMode } from '../lib/supabase';
 import { useAuth } from './AuthContext';
-import type { Trip, AppSettings, LegalDocument, InvoiceRecord } from '../types';
+import type { Trip, AppSettings, LegalDocument, InvoiceRecord, Expense, MileageLog } from '../types';
 import { DEFAULT_SETTINGS, LEGAL_DOC_TEMPLATES } from '../types';
 import { generateBonDeCommande, generateMiseADisposition, generateFacture, downloadInvoicePDF } from '../lib/pdfGenerators';
 import { getStats, getVaultComplianceScore, getDocExpiryStatus } from '../lib/utils';
@@ -63,9 +63,14 @@ const SAMPLE_TRIPS: Trip[] = [
   }
 ];
 
-const SAMPLE_EXPENSES = [
-  { id: 'exp-1', description: 'Carburant TotalEnergies Excellium', amount: 85.50, category: 'fuel', date: format(new Date(), 'yyyy-MM-dd') },
-  { id: 'exp-2', description: 'Assurance RC Pro & Circulation', amount: 160.00, category: 'insurance', date: format(new Date(), 'yyyy-MM-dd') },
+const SAMPLE_EXPENSES: Expense[] = [
+  { id: 'exp-1', description: 'Carburant TotalEnergies Excellium', amount: 85.50, category: 'fuel', date: format(new Date(), 'yyyy-MM-dd'), tvaDeductible: false, tvaRate: 20, tvaAmount: 0, createdAt: new Date().toISOString() },
+  { id: 'exp-2', description: 'Assurance RC Pro & Circulation', amount: 160.00, category: 'insurance', date: format(new Date(), 'yyyy-MM-dd'), tvaDeductible: false, tvaRate: 20, tvaAmount: 0, createdAt: new Date().toISOString() },
+  { id: 'exp-3', description: 'Péage A8 Nice-Cannes A/R', amount: 12.40, category: 'toll', date: format(new Date(), 'yyyy-MM-dd'), tvaDeductible: true, tvaRate: 20, tvaAmount: 2.07, createdAt: new Date().toISOString() },
+];
+
+const SAMPLE_MILEAGE: MileageLog[] = [
+  { id: 'ml-1', date: format(new Date(), 'yyyy-MM-dd'), startKm: 45230, endKm: 45285, distance: 55, purpose: 'professional', description: 'Nice Aéroport → Cannes Martinez', createdAt: new Date().toISOString() },
 ];
 
 const DEFAULT_LEGAL_DOCS: LegalDocument[] = LEGAL_DOC_TEMPLATES.map((tmpl, idx) => ({
@@ -102,8 +107,12 @@ interface AppContextType {
   fileInputRef: React.RefObject<HTMLInputElement | null>;
   togglePayment: (invoiceId: string) => Promise<void>;
   addSignature: (tripId: string, signature: string) => Promise<void>;
-  expenses: any[];
+  expenses: Expense[];
   addExpense: (data: any) => Promise<void>;
+  deleteExpense: (id: string) => Promise<void>;
+  mileageLogs: MileageLog[];
+  addMileageLog: (data: any) => Promise<void>;
+  deleteMileageLog: (id: string) => Promise<void>;
 }
 
 const AppContext = createContext<AppContextType | null>(null);
@@ -114,7 +123,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [settings, setSettings] = useState<AppSettings>(DEFAULT_SETTINGS);
   const [legalDocs, setLegalDocs] = useState<LegalDocument[]>(DEFAULT_LEGAL_DOCS);
   const [invoices, setInvoices] = useState<InvoiceRecord[]>([]);
-  const [expenses, setExpenses] = useState<any[]>([]);
+  const [expenses, setExpenses] = useState<Expense[]>([]);
+  const [mileageLogs, setMileageLogs] = useState<MileageLog[]>([]);
   const [invoiceCounter, setInvoiceCounter] = useState(1);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [uploadDocId, setUploadDocId] = useState<string | null>(null);
@@ -159,6 +169,15 @@ export function AppProvider({ children }: { children: ReactNode }) {
     const i = localStorage.getItem('vtc_local_invoices');
     if (i) {
       try { setInvoices(JSON.parse(i)); } catch { setInvoices([]); }
+    }
+
+    // Mileage Logs
+    const ml = localStorage.getItem('vtc_local_mileage');
+    if (ml) {
+      try { setMileageLogs(JSON.parse(ml)); } catch { setMileageLogs(SAMPLE_MILEAGE); }
+    } else {
+      setMileageLogs(SAMPLE_MILEAGE);
+      localStorage.setItem('vtc_local_mileage', JSON.stringify(SAMPLE_MILEAGE));
     }
 
     // Invoice counter
@@ -364,7 +383,20 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
   const addExpense = async (data: any) => {
     if (isLocalMode) {
-      const newExp = { ...data, id: crypto.randomUUID(), created_at: new Date().toISOString() };
+      const newExp: Expense = {
+        id: crypto.randomUUID(),
+        description: data.description || '',
+        amount: Number(data.amount) || 0,
+        category: data.category || 'other',
+        date: data.date || format(new Date(), 'yyyy-MM-dd'),
+        tvaDeductible: data.tvaDeductible || false,
+        tvaRate: Number(data.tvaRate) || 20,
+        tvaAmount: Number(data.tvaAmount) || 0,
+        receiptPhoto: data.receiptPhoto,
+        receiptFileName: data.receiptFileName,
+        notes: data.notes,
+        createdAt: new Date().toISOString(),
+      };
       const updated = [newExp, ...expenses];
       setExpenses(updated);
       syncLocal('vtc_local_expenses', updated);
@@ -372,6 +404,45 @@ export function AppProvider({ children }: { children: ReactNode }) {
     }
     if (!profile?.company_id) return;
     await supabase.from('expenses').insert([{ ...data, company_id: profile.company_id }]);
+  };
+
+  const deleteExpense = async (id: string) => {
+    if (isLocalMode) {
+      const updated = expenses.filter(e => e.id !== id);
+      setExpenses(updated);
+      syncLocal('vtc_local_expenses', updated);
+      return;
+    }
+    await supabase.from('expenses').delete().eq('id', id);
+  };
+
+  const addMileageLog = async (data: any) => {
+    if (isLocalMode) {
+      const newLog: MileageLog = {
+        id: crypto.randomUUID(),
+        date: data.date || format(new Date(), 'yyyy-MM-dd'),
+        startKm: Number(data.startKm) || 0,
+        endKm: Number(data.endKm) || 0,
+        distance: (Number(data.endKm) || 0) - (Number(data.startKm) || 0),
+        purpose: data.purpose || 'professional',
+        description: data.description || '',
+        tripId: data.tripId,
+        createdAt: new Date().toISOString(),
+      };
+      const updated = [newLog, ...mileageLogs];
+      setMileageLogs(updated);
+      syncLocal('vtc_local_mileage', updated);
+      return;
+    }
+  };
+
+  const deleteMileageLog = async (id: string) => {
+    if (isLocalMode) {
+      const updated = mileageLogs.filter(m => m.id !== id);
+      setMileageLogs(updated);
+      syncLocal('vtc_local_mileage', updated);
+      return;
+    }
   };
 
   const addSignature = async (tripId: string, signature: string) => {
@@ -473,7 +544,11 @@ export function AppProvider({ children }: { children: ReactNode }) {
       generateMAD: (t) => generateMiseADisposition(t, settings),
       downloadInvoice,
       expenses,
-      addExpense
+      addExpense,
+      deleteExpense,
+      mileageLogs,
+      addMileageLog,
+      deleteMileageLog,
     }}>
       {children}
     </AppContext.Provider>

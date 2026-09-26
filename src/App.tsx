@@ -16,6 +16,7 @@ import Register from './pages/Register';
 
 import Accounting from './pages/Accounting';
 import CRM from './pages/CRM';
+import ExpenseReports from './pages/ExpenseReports';
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth();
@@ -48,6 +49,7 @@ function ProtectedLayout() {
                 <Route path="/coffre-fort" element={<Vault />} />
                 <Route path="/parametres" element={<Settings />} />
                 <Route path="/comptabilite" element={<Accounting />} />
+                <Route path="/notes-de-frais" element={<ExpenseReports />} />
               </Routes>
               <TripModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
             </Layout>

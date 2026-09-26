@@ -70,18 +70,18 @@ export default function Accounting() {
   return (
     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
       {/* Metrics Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4">
         {[
           { label: 'Chiffre d\'Affaires Total', value: formatEUR(metrics.totalRev), icon: TrendingUp, color: '#22c55e', trend: '+12%' },
           { label: 'Dépenses Totales', value: formatEUR(metrics.totalExp), icon: TrendingDown, color: '#ef4444', trend: '+5%' },
           { label: 'Bénéfice Net (Brut)', value: formatEUR(metrics.net), icon: Wallet, color: '#3b82f6', trend: '+15%' },
         ].map(m => (
-          <div key={m.label} className="glass rounded-2xl p-6 relative overflow-hidden group">
+          <div key={m.label} className="glass rounded-xl sm:rounded-2xl p-4 sm:p-6 relative overflow-hidden group">
             <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
               <m.icon className="w-16 h-16" style={{ color: m.color }} />
             </div>
             <p className="text-sm font-medium text-slate-400 mb-2">{m.label}</p>
-            <h3 className="text-3xl font-bold text-white mb-2">{m.value}</h3>
+            <h3 className="text-xl sm:text-3xl font-bold text-white mb-2">{m.value}</h3>
             <div className="flex items-center gap-2">
               <span className="text-xs px-2 py-0.5 rounded-full bg-white/5 text-white/60">Ce mois</span>
               <span className="text-xs font-bold" style={{ color: m.color }}>{m.trend}</span>
@@ -90,10 +90,10 @@ export default function Accounting() {
         ))}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
         {/* Main Chart */}
-        <div className="lg:col-span-2 glass rounded-3xl p-6">
-          <div className="flex items-center justify-between mb-8">
+        <div className="lg:col-span-2 glass rounded-2xl sm:rounded-3xl p-4 sm:p-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 sm:mb-8">
             <div>
               <h3 className="text-lg font-bold text-white">Performance Mensuelle</h3>
               <p className="text-xs text-slate-400">Comparaison CA vs Dépenses (6 derniers mois)</p>
@@ -108,7 +108,7 @@ export default function Accounting() {
             </div>
           </div>
           
-          <div className="h-80 w-full">
+          <div className="h-48 sm:h-80 w-full">
             <ResponsiveContainer width="100%" height="100%">
               <ReBarChart data={chartData} margin={{ top: 20, right: 30, left: 0, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />
@@ -126,7 +126,7 @@ export default function Accounting() {
         </div>
 
         {/* Expenses Quick List */}
-        <div className="glass rounded-3xl p-6 flex flex-col">
+        <div className="glass rounded-2xl sm:rounded-3xl p-4 sm:p-6 flex flex-col">
           <div className="flex items-center justify-between mb-6">
             <h3 className="text-lg font-bold text-white">Dépenses Récentes</h3>
             <button onClick={() => setShowAddExpense(true)} className="p-2 bg-blue-600 rounded-lg text-white hover:bg-blue-500">
