@@ -192,6 +192,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
             siren: parsed.company.siren || prev.siren,
             registreVTC: parsed.company.registre_vtc || prev.registreVTC,
             tvaRegime: parsed.company.tva_regime || prev.tvaRegime,
+            tvaRate: parsed.company.tva_rate || prev.tvaRate || 10,
             welcomeMessage: parsed.company.welcome_message || prev.welcomeMessage,
             logoColor: parsed.company.logo_color || prev.logoColor,
             driverName: parsed.full_name || prev.driverName,

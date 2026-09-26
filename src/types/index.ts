@@ -40,6 +40,7 @@ export interface AppSettings {
   welcomeMessage: string;
   logoColor: string;
   tvaRegime: 'franchise' | 'assujetti';
+  tvaRate?: number; // Taux de TVA (10% par défaut pour VTC)
   tvaNumber: string;
 }
 
@@ -90,6 +91,7 @@ export const DEFAULT_SETTINGS: AppSettings = {
   welcomeMessage: 'BIENVENUE / WELCOME',
   logoColor: '#3B82F6',
   tvaRegime: 'franchise',
+  tvaRate: 10,
   tvaNumber: ''
 };
 

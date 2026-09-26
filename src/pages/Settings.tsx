@@ -107,20 +107,34 @@ export default function Settings() {
               onChange={e => updateSettings({ ...settings, tvaRegime: e.target.value as 'franchise' | 'assujetti' })}
               className="w-full bg-[#1e293b] border border-white/10 rounded-xl p-3 outline-none text-white text-sm"
             >
-              <option value="franchise">Franchise (art. 293 B CGI)</option>
-              <option value="assujetti">Assujetti TVA (10% / 20%)</option>
+              <option value="franchise">Franchise en base (art. 293 B CGI - 0%)</option>
+              <option value="assujetti">Assujetti à la TVA</option>
             </select>
           </div>
           {settings.tvaRegime === 'assujetti' && (
-            <div className="space-y-2">
-              <label className="block text-sm font-medium" style={{ color: '#94A3B8' }}>N° TVA Intracom</label>
-              <input
-                type="text"
-                value={settings.tvaNumber}
-                onChange={e => updateSettings({ ...settings, tvaNumber: e.target.value })}
-                className="w-full bg-white/5 border border-white/10 rounded-xl p-3 outline-none text-white text-sm"
-              />
-            </div>
+            <>
+              <div className="space-y-2">
+                <label className="block text-sm font-medium" style={{ color: '#94A3B8' }}>Taux de TVA applicable</label>
+                <select
+                  value={settings.tvaRate ?? 10}
+                  onChange={e => updateSettings({ ...settings, tvaRate: Number(e.target.value) })}
+                  className="w-full bg-[#1e293b] border border-white/10 rounded-xl p-3 outline-none text-white text-sm"
+                >
+                  <option value={10}>10% — Transport de personnes VTC (Taux légal art. 279 b quater CGI)</option>
+                  <option value={20}>20% — Prestations annexes / Conciergerie (Taux normal)</option>
+                </select>
+              </div>
+              <div className="space-y-2">
+                <label className="block text-sm font-medium" style={{ color: '#94A3B8' }}>N° TVA Intracom</label>
+                <input
+                  type="text"
+                  placeholder="FRXX999999999"
+                  value={settings.tvaNumber}
+                  onChange={e => updateSettings({ ...settings, tvaNumber: e.target.value })}
+                  className="w-full bg-white/5 border border-white/10 rounded-xl p-3 outline-none text-white text-sm"
+                />
+              </div>
+            </>
           )}
         </div>
       </div>

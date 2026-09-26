@@ -233,7 +233,7 @@ export default function Register() {
                     formData.tvaRegime === 'assujetti' ? 'bg-blue-600 text-white shadow-md' : 'text-slate-400 hover:text-slate-200'
                   }`}
                 >
-                  Assujetti à la TVA (10% / 20%)
+                  Assujetti TVA (10% VTC)
                 </button>
               </div>
             </div>

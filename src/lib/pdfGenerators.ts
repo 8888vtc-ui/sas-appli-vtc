@@ -283,18 +283,19 @@ export function generateFacture(trip: Trip, s: AppSettings, invoiceNum: string) 
   doc.setFont('helvetica', 'bold'); doc.setFontSize(10);
   doc.text('Total HT:', 130, y);
   doc.text(`${trip.price.toFixed(2)} €`, 170, y); y += 7;
+  const tvaRate = s.tvaRate ?? 10;
   if (s.tvaRegime === 'franchise') {
     doc.setFontSize(8); doc.setFont('helvetica', 'normal');
     doc.text('TVA non applicable (art. 293 B du CGI)', 130, y); y += 7;
   } else {
-    doc.text('TVA 10%:', 130, y);
-    doc.text(`${(trip.price * 0.1).toFixed(2)} €`, 170, y); y += 7;
+    doc.text(`TVA ${tvaRate}%:`, 130, y);
+    doc.text(`${(trip.price * (tvaRate / 100)).toFixed(2)} €`, 170, y); y += 7;
   }
   doc.setFillColor(30, 41, 59);
   doc.setTextColor(255);
   doc.rect(120, y - 2, 70, 10, 'F');
   doc.setFontSize(12); doc.setFont('helvetica', 'bold');
-  const total = s.tvaRegime === 'franchise' ? trip.price : trip.price * 1.1;
+  const total = s.tvaRegime === 'franchise' ? trip.price : trip.price * (1 + tvaRate / 100);
   doc.text('TOTAL TTC:', 125, y + 5);
   doc.text(`${total.toFixed(2)} €`, 170, y + 5);
   doc.setTextColor(0);
@@ -306,7 +307,7 @@ export function generateFacture(trip: Trip, s: AppSettings, invoiceNum: string) 
   footer(doc, s);
   doc.save(`facture_${invoiceNum}_${trip.clientName.replace(/\s/g, '_')}.pdf`);
 
-  return { total, tvaAmount: s.tvaRegime === 'franchise' ? 0 : trip.price * 0.1 };
+  return { total, tvaAmount: s.tvaRegime === 'franchise' ? 0 : trip.price * (tvaRate / 100) };
 }
 
 export function downloadInvoicePDF(inv: InvoiceRecord, s: AppSettings, trip?: Trip) {
@@ -359,11 +360,12 @@ export function downloadInvoicePDF(inv: InvoiceRecord, s: AppSettings, trip?: Tr
   doc.setFont('helvetica', 'bold'); doc.setFontSize(10);
   doc.text('Total HT:', 130, y);
   doc.text(`${(inv.amount || 0).toFixed(2)} €`, 170, y); y += 7;
+  const tvaRate = s.tvaRate ?? 10;
   if (s.tvaRegime === 'franchise' || inv.tvaAmount === 0) {
     doc.setFontSize(8); doc.setFont('helvetica', 'normal');
     doc.text('TVA non applicable (art. 293 B du CGI)', 130, y); y += 7;
   } else {
-    doc.text('TVA 10%:', 130, y);
+    doc.text(`TVA ${tvaRate}%:`, 130, y);
     doc.text(`${(inv.tvaAmount || 0).toFixed(2)} €`, 170, y); y += 7;
   }
   doc.setFillColor(30, 41, 59);

@@ -10,6 +10,7 @@ export interface LocalCompany {
   siren?: string;
   registre_vtc?: string;
   tva_regime?: 'franchise' | 'assujetti';
+  tva_rate?: number;
   tva_number?: string;
   welcome_message?: string;
   logo_color?: string;
@@ -48,6 +49,7 @@ export const DEMO_COMPANY: LocalCompany = {
   siren: '892 456 789',
   registre_vtc: 'EVTC060240098',
   tva_regime: 'franchise',
+  tva_rate: 10,
   tva_number: '',
   welcome_message: 'BIENVENUE / WELCOME',
   logo_color: '#3B82F6',
@@ -123,6 +125,7 @@ export function saveActiveSession(user: { id: string; email?: string }, profile:
       siren: s.siren || s.siret?.slice(0, 9) || existing.siren || '',
       registreVTC: s.registre_vtc || existing.registreVTC || '',
       tvaRegime: s.tva_regime || existing.tvaRegime || 'franchise',
+      tvaRate: s.tva_rate || existing.tvaRate || 10,
       driverName: profile.full_name || existing.driverName || '',
       driverPhone: profile.phone || existing.driverPhone || '',
       driverCardNumber: profile.driver_card_number || existing.driverCardNumber || '',
@@ -169,6 +172,7 @@ export function registerLocalAccount(data: {
       siren: data.siret.trim().replace(/\s+/g, '').slice(0, 9),
       registre_vtc: data.registreVTC.trim(),
       tva_regime: data.tvaRegime,
+      tva_rate: 10,
       welcome_message: 'BIENVENUE / WELCOME',
       logo_color: '#3B82F6',
     };

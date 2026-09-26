@@ -128,7 +128,9 @@ export default function Invoices() {
                 <div className="flex items-center gap-4 justify-between md:justify-end shrink-0 border-t md:border-t-0 pt-3 md:pt-0 border-white/10">
                   <div className="text-right">
                     <p className="text-xl font-bold text-white">{formatEUR(inv.totalTTC)}</p>
-                    <p className="text-xs text-slate-400">HT: {formatEUR(inv.amount)} | TVA: {formatEUR(inv.tvaAmount)}</p>
+                    <p className="text-xs text-slate-400">
+                      HT: {formatEUR(inv.amount)} | {inv.tvaAmount > 0 ? `TVA (10%): ${formatEUR(inv.tvaAmount)}` : 'Franchise TVA (0%)'}
+                    </p>
                   </div>
 
                   <div className="flex items-center gap-2">
