@@ -35,6 +35,7 @@ function ProtectedLayout() {
     <AppProvider>
       <Routes>
         {/* Fullscreen Dedicated Views inside AppProvider */}
+        <Route path="/sign" element={<SignMode />} />
         <Route path="/sign/:id" element={<SignMode />} />
         <Route path="/controle" element={<Vault controlMode={true} />} />
 
