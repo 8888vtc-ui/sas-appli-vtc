@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom';
 import {
   Calendar, Receipt, Shield, Settings as SettingsIcon,
   Plus, AlertTriangle, PieChart, Users, LogOut, ShieldCheck,
-  Menu, X, Wallet
+  Menu, X, Wallet, QrCode
 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { useAuth } from '../context/AuthContext';
@@ -14,6 +14,7 @@ const navItems = [
   { to: '/comptabilite', label: 'Compta', icon: PieChart },
   { to: '/notes-de-frais', label: 'Frais', icon: Wallet },
   { to: '/crm', label: 'CRM', icon: Users },
+  { to: '/qrcode', label: 'QR Code', icon: QrCode },
   { to: '/coffre-fort', label: 'Coffre', icon: Shield },
   { to: '/parametres', label: 'Réglages', icon: SettingsIcon },
 ] as const;

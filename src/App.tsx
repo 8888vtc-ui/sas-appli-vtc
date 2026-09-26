@@ -17,6 +17,7 @@ import Register from './pages/Register';
 import Accounting from './pages/Accounting';
 import CRM from './pages/CRM';
 import ExpenseReports from './pages/ExpenseReports';
+import QRCodeHub from './pages/QRCodeHub';
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth();
@@ -47,6 +48,7 @@ function ProtectedLayout() {
                 <Route path="/factures" element={<Invoices />} />
                 <Route path="/crm" element={<CRM />} />
                 <Route path="/coffre-fort" element={<Vault />} />
+                <Route path="/qrcode" element={<QRCodeHub />} />
                 <Route path="/parametres" element={<Settings />} />
                 <Route path="/comptabilite" element={<Accounting />} />
                 <Route path="/notes-de-frais" element={<ExpenseReports />} />
