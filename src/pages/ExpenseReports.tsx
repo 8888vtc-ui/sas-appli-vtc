@@ -2,8 +2,7 @@ import { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Receipt, Plus, Search, ChevronDown, Download, Camera, X, Trash2,
-  Eye, Car, TrendingUp, TrendingDown, Calculator, FileText,
-  CheckCircle2, AlertCircle, Calendar
+  Car, TrendingUp, TrendingDown, Calculator, FileText, Calendar
 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { formatEUR } from '../lib/utils';
