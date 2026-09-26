@@ -21,6 +21,34 @@
           navigator.serviceWorker.register('/sw.js').catch(err => console.log('SW reg error:', err));
         });
       }
+      // Remove Netlify injected badge/drawer
+      function removeNetlifyBadge() {
+        document.querySelectorAll(
+          '[id*="netlify"], [class*="netlify"], [class*="Netlify"], [data-netlify-drawer], iframe[src*="netlify"], a[href*="netlify.com"]'
+        ).forEach(function(el) {
+          if (el && el.id !== 'root') el.remove();
+        });
+      }
+      // Run immediately, after load, and watch for late injections
+      removeNetlifyBadge();
+      window.addEventListener('load', removeNetlifyBadge);
+      setTimeout(removeNetlifyBadge, 1000);
+      setTimeout(removeNetlifyBadge, 3000);
+      setTimeout(removeNetlifyBadge, 6000);
+      new MutationObserver(function(mutations) {
+        mutations.forEach(function(m) {
+          m.addedNodes.forEach(function(n) {
+            if (n.nodeType === 1) {
+              var el = n;
+              var id = (el.id || '').toLowerCase();
+              var cls = (el.className || '').toString().toLowerCase();
+              if (id.indexOf('netlify') !== -1 || cls.indexOf('netlify') !== -1) {
+                el.remove();
+              }
+            }
+          });
+        });
+      }).observe(document.body || document.documentElement, { childList: true, subtree: true });
     </script>
   </body>
 </html>
