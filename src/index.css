@@ -180,3 +180,24 @@ button, a {
     min-width: 36px;
   }
 }
+
+/* ═══════ SUPPRESSION TOTALE BADGE & WIDGET NETLIFY ═══════ */
+iframe[src*="netlify"],
+iframe#netlify-drawer,
+[data-netlify-drawer],
+[data-netlify-identity],
+div[class*="netlify"],
+div[id*="netlify"],
+div[class*="Netlify"],
+a[href*="netlify.com"],
+.netlify-badge,
+#netlify-drawer {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  height: 0 !important;
+  width: 0 !important;
+  position: absolute !important;
+  z-index: -9999 !important;
+}
