@@ -192,7 +192,24 @@ export function AppProvider({ children }: { children: ReactNode }) {
     // Legal Docs (Vault)
     const d = localStorage.getItem('vtc_local_docs');
     if (d) {
-      try { setLegalDocs(JSON.parse(d)); } catch { setLegalDocs(DEFAULT_LEGAL_DOCS); }
+      try { 
+        const parsed = JSON.parse(d);
+        // Migration: Merge existing files with DEFAULT_LEGAL_DOCS to inject new fields like 'scope'
+        const migratedDocs = DEFAULT_LEGAL_DOCS.map(defaultDoc => {
+          const existing = parsed.find((p: any) => p.id === defaultDoc.id || p.name === defaultDoc.name);
+          if (existing) {
+            return {
+              ...defaultDoc,
+              expiryDate: existing.expiryDate,
+              fileData: existing.fileData,
+              fileName: existing.fileName,
+              uploadDate: existing.uploadDate,
+            };
+          }
+          return defaultDoc;
+        });
+        setLegalDocs(migratedDocs);
+      } catch { setLegalDocs(DEFAULT_LEGAL_DOCS); }
     } else {
       setLegalDocs(DEFAULT_LEGAL_DOCS);
       localStorage.setItem('vtc_local_docs', JSON.stringify(DEFAULT_LEGAL_DOCS));
@@ -257,7 +274,21 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
     const { data: dData } = await supabase.from('documents').select('*').eq('company_id', profile.company_id);
     if (dData && dData.length > 0) {
-      setLegalDocs(dData as any);
+      // Migration: Merge remote files with DEFAULT_LEGAL_DOCS to inject new fields like 'scope'
+      const migratedDocs = DEFAULT_LEGAL_DOCS.map(defaultDoc => {
+        const existing = dData.find((p: any) => p.id === defaultDoc.id || p.name === defaultDoc.name);
+        if (existing) {
+          return {
+            ...defaultDoc,
+            expiryDate: existing.expiryDate,
+            fileData: existing.fileData,
+            fileName: existing.fileName,
+            uploadDate: existing.uploadDate,
+          };
+        }
+        return defaultDoc;
+      });
+      setLegalDocs(migratedDocs);
     } else {
       setLegalDocs(DEFAULT_LEGAL_DOCS);
     }
