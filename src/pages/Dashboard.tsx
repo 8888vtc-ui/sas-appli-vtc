@@ -197,8 +197,8 @@ export default function Dashboard() {
 
                   {/* Date badge */}
                   <div style={{
-                    width: 40, height: 40,
-                    borderRadius: 10,
+                    width: 44, height: 44,
+                    borderRadius: 12,
                     background: trip.tripType === 'disposal' ? 'rgba(255, 159, 10, 0.15)' : 'rgba(10, 132, 255, 0.15)',
                     display: 'flex',
                     flexDirection: 'column',
@@ -238,14 +238,14 @@ export default function Dashboard() {
                         {st?.label}
                       </span>
                     </div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 2 }}>
-                      <Clock style={{ width: 12, height: 12, color: colors.gray }} />
-                      <span style={{ fontSize: 13, color: colors.gray }}>{trip.time}</span>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 3 }}>
+                      <Clock style={{ width: 14, height: 14, color: colors.gray, strokeWidth: 2 }} />
+                      <span style={{ fontSize: 13, color: colors.gray, fontWeight: 500 }}>{trip.time}</span>
                       {trip.flightNumber && (
                         <>
                           <span style={{ color: '#48484a' }}>·</span>
-                          <Plane style={{ width: 11, height: 11, color: colors.cyan }} />
-                          <span style={{ fontSize: 12, color: colors.cyan, fontWeight: 600 }}>{trip.flightNumber}</span>
+                          <Plane style={{ width: 13, height: 13, color: colors.cyan, strokeWidth: 2 }} />
+                          <span style={{ fontSize: 13, color: colors.cyan, fontWeight: 600 }}>{trip.flightNumber}</span>
                         </>
                       )}
                     </div>
@@ -274,11 +274,11 @@ export default function Dashboard() {
                           padding: '8px 0 12px',
                           fontSize: 13, color: '#ebebf5cc',
                         }}>
-                          <MapPin style={{ width: 14, height: 14, color: colors.blue, flexShrink: 0 }} />
+                          <MapPin style={{ width: 16, height: 16, color: colors.blue, flexShrink: 0, strokeWidth: 2 }} />
                           <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                             {trip.pickUpLocation}
                           </span>
-                          <ChevronRight style={{ width: 12, height: 12, color: '#48484a', flexShrink: 0 }} />
+                          <ChevronRight style={{ width: 14, height: 14, color: '#48484a', flexShrink: 0, strokeWidth: 2 }} />
                           <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', color: colors.gray }}>
                             {trip.dropOffLocation || 'MAD'}
                           </span>
@@ -288,7 +288,7 @@ export default function Dashboard() {
                         <div style={{
                           display: 'grid',
                           gridTemplateColumns: 'repeat(3, 1fr)',
-                          gap: 6,
+                          gap: 8,
                         }}>
                           {/* Status action */}
                           {trip.status === 'scheduled' && (
@@ -361,7 +361,8 @@ export default function Dashboard() {
 }
 
 /* ═══════════════════════════════════════════════════
-   ACTION BUTTON — iOS Compact Style
+   ACTION BUTTON — iOS Share Sheet Style
+   Bigger icons, better spacing, subtle glow
    ═══════════════════════════════════════════════════ */
 function ActionBtn({ icon: Icon, label, color, onClick, solid }:
   { icon: any; label: string; color: string; onClick: () => void; solid?: boolean }) {
@@ -370,23 +371,32 @@ function ActionBtn({ icon: Icon, label, color, onClick, solid }:
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
-      gap: 4,
-      padding: '10px 4px',
-      borderRadius: 12,
-      background: solid ? color : `${color}15`,
-      border: 'none',
-      minHeight: 52,
       justifyContent: 'center',
+      gap: 5,
+      padding: '12px 4px',
+      borderRadius: 14,
+      background: solid ? color : `${color}18`,
+      border: 'none',
+      minHeight: 64,
+      boxShadow: solid ? `0 4px 12px ${color}50` : 'none',
     }}>
-      <Icon style={{ width: 18, height: 18, color: solid ? '#fff' : color }} />
+      <Icon style={{
+        width: 22,
+        height: 22,
+        color: solid ? '#fff' : color,
+        strokeWidth: 2,
+        fill: solid ? 'rgba(255,255,255,0.15)' : `${color}15`,
+      }} />
       <span style={{
-        fontSize: 10,
+        fontSize: 11,
         fontWeight: 600,
         color: solid ? '#fff' : color,
         letterSpacing: '-0.01em',
+        lineHeight: 1.1,
       }}>
         {label}
       </span>
     </button>
   );
 }
+

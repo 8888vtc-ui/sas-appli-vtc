@@ -11,7 +11,27 @@ import { useAuth } from '../context/AuthContext';
 import { motion, AnimatePresence } from 'framer-motion';
 
 /* ───────────────────────────────────────────────
-   iOS-style Tab Bar (Bottom)
+   SF Symbol-style filled icons for tab bar
+   Apple uses FILLED icons for active tab state
+   ─────────────────────────────────────────────── */
+
+function TabIcon({ icon: Icon, active }: { icon: any; active: boolean }) {
+  return (
+    <Icon
+      style={{
+        width: 26,
+        height: 26,
+        color: active ? '#0a84ff' : '#636366',
+        strokeWidth: active ? 2.2 : 1.5,
+        fill: active ? 'rgba(10, 132, 255, 0.2)' : 'none',
+        transition: 'all 0.2s ease',
+      }}
+    />
+  );
+}
+
+/* ───────────────────────────────────────────────
+   Tab bar config
    ─────────────────────────────────────────────── */
 const tabs = [
   { to: '/', label: 'Courses', icon: Calendar },
@@ -55,11 +75,11 @@ export default function Layout({ children, onNewTrip }: { children: React.ReactN
   };
 
   return (
-    <div style={{ minHeight: '100dvh', paddingBottom: '80px' }}>
+    <div style={{ minHeight: '100dvh', paddingBottom: '88px' }}>
 
       {/* ═══════ HEADER ═══════ */}
       <header className="animate-fade-in" style={{
-        padding: '16px 20px 12px',
+        padding: '20px 20px 14px',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
@@ -67,14 +87,14 @@ export default function Layout({ children, onNewTrip }: { children: React.ReactN
         margin: '0 auto',
       }}>
         <div>
-          <h1 style={{ fontSize: 22, fontWeight: 800, letterSpacing: '-0.03em', color: '#fff' }}>
+          <h1 style={{ fontSize: 24, fontWeight: 800, letterSpacing: '-0.03em', color: '#fff' }}>
             {settings.companyName || 'VTC Pro'}
           </h1>
         </div>
         <button
           onClick={onNewTrip}
           style={{
-            width: 36, height: 36,
+            width: 40, height: 40,
             borderRadius: '50%',
             background: '#0a84ff',
             display: 'flex',
@@ -82,7 +102,7 @@ export default function Layout({ children, onNewTrip }: { children: React.ReactN
             justifyContent: 'center',
             boxShadow: '0 4px 14px rgba(10, 132, 255, 0.4)',
           }}>
-          <Plus style={{ width: 18, height: 18, color: '#fff', strokeWidth: 2.5 }} />
+          <Plus style={{ width: 20, height: 20, color: '#fff', strokeWidth: 3 }} />
         </button>
       </header>
 
@@ -102,7 +122,7 @@ export default function Layout({ children, onNewTrip }: { children: React.ReactN
         left: 0,
         right: 0,
         zIndex: 50,
-        background: 'rgba(28, 28, 30, 0.92)',
+        background: 'rgba(22, 22, 24, 0.95)',
         backdropFilter: 'saturate(180%) blur(20px)',
         WebkitBackdropFilter: 'saturate(180%) blur(20px)',
         borderTop: '0.5px solid rgba(84, 84, 88, 0.36)',
@@ -113,9 +133,9 @@ export default function Layout({ children, onNewTrip }: { children: React.ReactN
           gridTemplateColumns: 'repeat(5, 1fr)',
           maxWidth: 500,
           margin: '0 auto',
-          padding: '6px 0 8px',
+          padding: '8px 0 10px',
         }}>
-          {tabs.map(({ to, label, icon: Icon }) => {
+          {tabs.map(({ to, label, icon }) => {
             const active = to === '#menu' ? false : isActive(to);
             const handleClick = () => {
               if (to === '#menu') setMenuOpen(true);
@@ -127,24 +147,19 @@ export default function Layout({ children, onNewTrip }: { children: React.ReactN
                   display: 'flex',
                   flexDirection: 'column',
                   alignItems: 'center',
-                  gap: 2,
+                  gap: 3,
                   background: 'none',
-                  padding: '4px 0',
-                  minHeight: 44,
+                  padding: '2px 0',
+                  minHeight: 48,
                   justifyContent: 'center',
                 }}>
-                <Icon style={{
-                  width: 22, height: 22,
-                  color: active ? '#0a84ff' : '#8e8e93',
-                  strokeWidth: active ? 2 : 1.5,
-                  transition: 'color 0.2s',
-                }} />
+                <TabIcon icon={icon} active={active} />
                 <span style={{
                   fontSize: 10,
-                  fontWeight: active ? 600 : 500,
-                  color: active ? '#0a84ff' : '#8e8e93',
+                  fontWeight: active ? 700 : 500,
+                  color: active ? '#0a84ff' : '#636366',
                   letterSpacing: '-0.01em',
-                  transition: 'color 0.2s',
+                  lineHeight: 1,
                 }}>
                   {label}
                 </span>
@@ -176,7 +191,7 @@ export default function Layout({ children, onNewTrip }: { children: React.ReactN
               style={{
                 position: 'fixed',
                 top: 0, right: 0, bottom: 0,
-                width: 280,
+                width: 300,
                 zIndex: 60,
                 background: '#1c1c1e',
                 borderLeft: '0.5px solid rgba(84, 84, 88, 0.36)',
@@ -187,16 +202,16 @@ export default function Layout({ children, onNewTrip }: { children: React.ReactN
               {/* Panel header */}
               <div style={{
                 display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                padding: '20px 20px 16px',
+                padding: '22px 20px 18px',
               }}>
-                <span style={{ fontSize: 17, fontWeight: 700, color: '#fff' }}>Menu</span>
+                <span style={{ fontSize: 20, fontWeight: 700, color: '#fff' }}>Menu</span>
                 <button onClick={() => setMenuOpen(false)}
                   style={{
-                    width: 30, height: 30, borderRadius: '50%',
+                    width: 32, height: 32, borderRadius: '50%',
                     background: 'rgba(84, 84, 88, 0.36)',
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                   }}>
-                  <X style={{ width: 14, height: 14, color: '#ebebf5cc' }} />
+                  <X style={{ width: 15, height: 15, color: '#ebebf5cc', strokeWidth: 2.5 }} />
                 </button>
               </div>
 
@@ -204,7 +219,7 @@ export default function Layout({ children, onNewTrip }: { children: React.ReactN
               <div style={{ padding: '0 16px' }}>
                 <div style={{
                   background: '#2c2c2e',
-                  borderRadius: 12,
+                  borderRadius: 14,
                   overflow: 'hidden',
                 }}>
                   {menuItems.map((item, i) => (
@@ -214,53 +229,55 @@ export default function Layout({ children, onNewTrip }: { children: React.ReactN
                         width: '100%',
                         display: 'flex',
                         alignItems: 'center',
-                        gap: 12,
-                        padding: '12px 16px',
+                        gap: 14,
+                        padding: '13px 16px',
                         background: isActive(item.to) ? 'rgba(10, 132, 255, 0.12)' : 'transparent',
                         borderBottom: i < menuItems.length - 1 ? '0.5px solid rgba(84, 84, 88, 0.36)' : 'none',
                         textAlign: 'left',
                       }}>
+                      {/* iOS-style colored icon square */}
                       <div style={{
-                        width: 30, height: 30, borderRadius: 7,
+                        width: 32, height: 32, borderRadius: 8,
                         background: item.color,
                         display: 'flex', alignItems: 'center', justifyContent: 'center',
                         flexShrink: 0,
+                        boxShadow: `0 2px 8px ${item.color}40`,
                       }}>
-                        <item.icon style={{ width: 16, height: 16, color: '#fff' }} />
+                        <item.icon style={{ width: 18, height: 18, color: '#fff', strokeWidth: 2 }} />
                       </div>
                       <span style={{
                         flex: 1,
-                        fontSize: 15,
+                        fontSize: 16,
                         fontWeight: isActive(item.to) ? 600 : 400,
                         color: '#fff',
                       }}>
                         {item.label}
                       </span>
-                      <ChevronRight style={{ width: 14, height: 14, color: '#48484a' }} />
+                      <ChevronRight style={{ width: 16, height: 16, color: '#48484a', strokeWidth: 2 }} />
                     </button>
                   ))}
                 </div>
 
                 {/* Stats + Déconnexion */}
-                <div style={{ marginTop: 24, padding: '0 4px' }}>
-                  <p style={{ fontSize: 13, color: '#8e8e93', marginBottom: 12 }}>
+                <div style={{ marginTop: 28, padding: '0 4px' }}>
+                  <p style={{ fontSize: 13, color: '#8e8e93', marginBottom: 14 }}>
                     {trips.length} course{trips.length !== 1 ? 's' : ''} enregistrée{trips.length !== 1 ? 's' : ''}
                   </p>
                   <button onClick={handleLogout}
                     style={{
                       width: '100%',
-                      padding: '12px 0',
-                      borderRadius: 12,
+                      padding: '14px 0',
+                      borderRadius: 14,
                       background: 'rgba(255, 69, 58, 0.12)',
                       color: '#ff453a',
-                      fontSize: 15,
+                      fontSize: 16,
                       fontWeight: 600,
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
                       gap: 8,
                     }}>
-                    <LogOut style={{ width: 16, height: 16 }} />
+                    <LogOut style={{ width: 18, height: 18, strokeWidth: 2 }} />
                     Déconnexion
                   </button>
                 </div>
