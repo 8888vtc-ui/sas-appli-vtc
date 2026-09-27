@@ -18,7 +18,7 @@
     <script>
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/sw.js').catch(err => console.log('SW reg error:', err));
+          navigator.serviceWorker.register('/sw.js?v=10').catch(err => console.log('SW reg error:', err));
         });
       }
       // Remove Netlify injected badge/drawer
