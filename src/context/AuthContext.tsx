@@ -86,6 +86,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return;
     }
 
+    // 1.b Si paramètre ?demo ou premier chargement sans compte créé, activer automatiquement le mode Démo
+    const hasExistingUsers = localStorage.getItem('vtc_users_database');
+    const isExplicitDemo = typeof window !== 'undefined' && (window.location.search.includes('demo') || (!hasExistingUsers && !localStorage.getItem('vtc_logged_out')));
+    if (isExplicitDemo) {
+      const demoRes = loginAsDemo();
+      setUser(demoRes.user);
+      setProfile(demoRes.profile);
+      setLoading(false);
+      return;
+    }
+
     // 2. Si pas de session locale et Supabase activé, vérifier la session Supabase
     if (!isLocalMode && supabase) {
       supabase.auth.getSession().then(({ data: { session } }: any) => {
@@ -124,6 +135,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const loginWithLocal = (email: string, password: string) => {
+    localStorage.removeItem('vtc_logged_out');
     const res = loginLocalAccount(email, password);
     if (res.success && res.user && res.profile) {
       setUser(res.user);
@@ -134,18 +146,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const loginDemo = () => {
+    localStorage.removeItem('vtc_logged_out');
     const res = loginAsDemo();
     setUser(res.user);
     setProfile(res.profile);
   };
 
   const setSession = (u: AuthUser, p: Profile) => {
+    localStorage.removeItem('vtc_logged_out');
     setUser(u);
     setProfile(p);
     saveActiveSession(u, p);
   };
 
   const signOut = async () => {
+    localStorage.setItem('vtc_logged_out', 'true');
     clearActiveSession();
     if (!isLocalMode && supabase) {
       try {

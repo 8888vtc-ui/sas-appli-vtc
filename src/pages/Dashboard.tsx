@@ -71,10 +71,24 @@ export default function Dashboard() {
   ];
 
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} style={{
+      display: 'flex',
+      flexDirection: 'column',
+      gap: 20,
+      width: '100%',
+      maxWidth: '100%',
+      minWidth: 0,
+      boxSizing: 'border-box',
+    }}>
 
       {/* ═══════ STATS — Apple Wallet Style ═══════ */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 8 }}>
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
+        gap: 8,
+        width: '100%',
+        boxSizing: 'border-box',
+      }}>
         {([
           { label: "Aujourd'hui", amount: stats.todayRevenue, count: stats.todayCount, accent: colors.green },
           { label: 'Semaine', amount: stats.weekRevenue, count: stats.weekCount, accent: colors.blue },
@@ -83,16 +97,18 @@ export default function Dashboard() {
           <div key={s.label} className="animate-slide-up" style={{
             background: colors.elevated,
             borderRadius: 16,
-            padding: '14px 12px',
+            padding: '12px 10px',
             border: `0.5px solid ${colors.separator}`,
+            minWidth: 0,
+            overflow: 'hidden',
           }}>
-            <p style={{ fontSize: 11, fontWeight: 500, color: colors.gray, marginBottom: 6 }}>{s.label}</p>
-            <p style={{ fontSize: 20, fontWeight: 800, color: '#fff', letterSpacing: '-0.03em' }}>
+            <p style={{ fontSize: 11, fontWeight: 500, color: colors.gray, marginBottom: 4, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{s.label}</p>
+            <p style={{ fontSize: 17, fontWeight: 800, color: '#fff', letterSpacing: '-0.03em', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
               {formatEUR(s.amount)}
             </p>
             <div style={{ display: 'flex', alignItems: 'center', gap: 4, marginTop: 4 }}>
-              <div style={{ width: 6, height: 6, borderRadius: 3, background: s.accent }} />
-              <span style={{ fontSize: 11, color: colors.gray }}>
+              <div style={{ width: 6, height: 6, borderRadius: 3, background: s.accent, flexShrink: 0 }} />
+              <span style={{ fontSize: 10, color: colors.gray, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                 {s.count} course{s.count !== 1 ? 's' : ''}
               </span>
             </div>
@@ -101,7 +117,7 @@ export default function Dashboard() {
       </div>
 
       {/* ═══════ SEARCH BAR ═══════ */}
-      <div style={{ position: 'relative' }}>
+      <div style={{ position: 'relative', width: '100%', boxSizing: 'border-box' }}>
         <Search style={{
           position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)',
           width: 16, height: 16, color: colors.gray,
@@ -119,16 +135,22 @@ export default function Dashboard() {
             padding: '11px 12px 11px 38px',
             color: '#fff',
             fontSize: 15,
+            boxSizing: 'border-box',
           }}
         />
       </div>
 
       {/* ═══════ FILTER CHIPS ═══════ */}
       <div style={{
-        display: 'flex', gap: 6,
+        display: 'flex',
+        gap: 6,
         overflowX: 'auto',
+        width: '100%',
+        maxWidth: '100%',
+        WebkitOverflowScrolling: 'touch',
         paddingBottom: 2,
         scrollbarWidth: 'none',
+        boxSizing: 'border-box',
       }}>
         {chips.map(c => (
           <button key={c.key}
@@ -142,6 +164,7 @@ export default function Dashboard() {
               background: statusFilter === c.key ? colors.blue : colors.secondary,
               color: statusFilter === c.key ? '#fff' : colors.gray,
               border: 'none',
+              flexShrink: 0,
             }}>
             {c.label}
           </button>

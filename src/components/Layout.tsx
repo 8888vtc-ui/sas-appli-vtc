@@ -75,16 +75,18 @@ export default function Layout({ children, onNewTrip }: { children: React.ReactN
   };
 
   return (
-    <div style={{ minHeight: '100dvh', paddingBottom: '88px' }}>
+    <div style={{ minHeight: '100dvh', width: '100%', overflowX: 'hidden', paddingBottom: 'calc(88px + env(safe-area-inset-bottom, 0px))' }}>
 
       {/* ═══════ HEADER ═══════ */}
       <header className="animate-fade-in" style={{
-        padding: '20px 20px 14px',
+        padding: '20px 16px 14px',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        maxWidth: 600,
+        width: '100%',
+        maxWidth: 720,
         margin: '0 auto',
+        boxSizing: 'border-box',
       }}>
         <div>
           <h1 style={{ fontSize: 24, fontWeight: 800, letterSpacing: '-0.03em', color: '#fff' }}>
@@ -101,6 +103,7 @@ export default function Layout({ children, onNewTrip }: { children: React.ReactN
             alignItems: 'center',
             justifyContent: 'center',
             boxShadow: '0 4px 14px rgba(10, 132, 255, 0.4)',
+            flexShrink: 0,
           }}>
           <Plus style={{ width: 20, height: 20, color: '#fff', strokeWidth: 3 }} />
         </button>
@@ -109,8 +112,11 @@ export default function Layout({ children, onNewTrip }: { children: React.ReactN
       {/* ═══════ MAIN CONTENT ═══════ */}
       <main style={{
         padding: '0 16px',
-        maxWidth: 600,
+        width: '100%',
+        maxWidth: 720,
         margin: '0 auto',
+        boxSizing: 'border-box',
+        overflowX: 'hidden',
       }}>
         {children}
       </main>

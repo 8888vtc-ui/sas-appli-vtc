@@ -66,50 +66,129 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 md:p-8 bg-[#0F172A]">
+    <div style={{
+      minHeight: '100dvh',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: '20px 16px',
+      background: '#000000',
+    }}>
       <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        className="glass max-w-md w-full p-8 md:p-10 rounded-3xl border border-white/10 shadow-2xl relative overflow-hidden"
+        initial={{ opacity: 0, y: 15 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.35, ease: 'easeOut' }}
+        style={{
+          width: '100%',
+          maxWidth: 420,
+          background: '#1c1c1e',
+          borderRadius: 24,
+          padding: '32px 24px',
+          border: '0.5px solid rgba(84, 84, 88, 0.36)',
+          boxShadow: '0 20px 40px rgba(0, 0, 0, 0.6)',
+        }}
       >
-        <div className="text-center mb-8">
-          <div className="w-16 h-16 bg-blue-500/20 border border-blue-500/30 rounded-2xl flex items-center justify-center mx-auto mb-4 text-blue-400 shadow-lg shadow-blue-500/10">
-            <ShieldCheck className="w-8 h-8" />
+        <div style={{ textAlign: 'center', marginBottom: 28 }}>
+          <div style={{
+            width: 60,
+            height: 60,
+            borderRadius: 18,
+            background: 'linear-gradient(135deg, rgba(10, 132, 255, 0.2), rgba(10, 132, 255, 0.05))',
+            border: '1px solid rgba(10, 132, 255, 0.3)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            margin: '0 auto 16px',
+            boxShadow: '0 8px 24px rgba(10, 132, 255, 0.25)',
+          }}>
+            <ShieldCheck style={{ width: 32, height: 32, color: '#0a84ff', strokeWidth: 2 }} />
           </div>
-          <h1 className="text-3xl font-bold text-white tracking-tight">Connexion VTC Pro</h1>
-          <p className="text-[#94A3B8] text-sm mt-2">Accédez à votre espace de gestion et facturation</p>
+          <h1 style={{ fontSize: 24, fontWeight: 800, color: '#fff', letterSpacing: '-0.03em' }}>
+            Connexion VTC Pro
+          </h1>
+          <p style={{ fontSize: 13, color: '#8e8e93', marginTop: 6 }}>
+            Accédez à votre espace de gestion et facturation
+          </p>
         </div>
 
         {error && (
-          <div className="bg-red-500/10 border border-red-500/20 text-red-400 p-4 rounded-xl text-sm mb-6 flex items-start gap-3">
-            <div className="w-5 h-5 rounded-full bg-red-500/20 flex items-center justify-center text-red-400 font-bold text-xs shrink-0 mt-0.5">!</div>
+          <div style={{
+            background: 'rgba(255, 69, 58, 0.12)',
+            border: '0.5px solid rgba(255, 69, 58, 0.3)',
+            color: '#ff453a',
+            padding: '12px 14px',
+            borderRadius: 14,
+            fontSize: 13,
+            marginBottom: 20,
+            display: 'flex',
+            alignItems: 'center',
+            gap: 10,
+          }}>
+            <div style={{
+              width: 20, height: 20, borderRadius: 10,
+              background: '#ff453a', color: '#fff',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontWeight: 800, fontSize: 11, flexShrink: 0,
+            }}>!</div>
             <span>{error}</span>
           </div>
         )}
 
-        <form onSubmit={handleLogin} className="space-y-4">
-          <div className="space-y-3">
-            <div className="flex items-center gap-4 bg-white/5 border border-white/10 rounded-2xl px-5 focus-within:border-blue-500/50 focus-within:bg-white/[0.08] transition-all group">
-              <Mail className="w-5 h-5 text-[#64748b] group-focus-within:text-blue-400 transition-colors" />
+        <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 12,
+              background: '#2c2c2e',
+              border: '0.5px solid rgba(84, 84, 88, 0.36)',
+              borderRadius: 14,
+              padding: '0 16px',
+            }}>
+              <Mail style={{ width: 18, height: 18, color: '#8e8e93', flexShrink: 0 }} />
               <input
                 required
                 type="email"
                 placeholder="Email de connexion"
                 value={email}
                 onChange={e => setEmail(e.target.value)}
-                className="flex-1 bg-transparent py-3.5 text-white text-sm outline-none placeholder:text-white/20"
+                style={{
+                  width: '100%',
+                  background: 'transparent',
+                  border: 'none',
+                  padding: '14px 0',
+                  color: '#fff',
+                  fontSize: 15,
+                  outline: 'none',
+                }}
               />
             </div>
 
-            <div className="flex items-center gap-4 bg-white/5 border border-white/10 rounded-2xl px-5 focus-within:border-blue-500/50 focus-within:bg-white/[0.08] transition-all group">
-              <Lock className="w-5 h-5 text-[#64748b] group-focus-within:text-blue-400 transition-colors" />
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 12,
+              background: '#2c2c2e',
+              border: '0.5px solid rgba(84, 84, 88, 0.36)',
+              borderRadius: 14,
+              padding: '0 16px',
+            }}>
+              <Lock style={{ width: 18, height: 18, color: '#8e8e93', flexShrink: 0 }} />
               <input
                 required
                 type="password"
                 placeholder="Mot de passe"
                 value={password}
                 onChange={e => setPassword(e.target.value)}
-                className="flex-1 bg-transparent py-3.5 text-white text-sm outline-none placeholder:text-white/20"
+                style={{
+                  width: '100%',
+                  background: 'transparent',
+                  border: 'none',
+                  padding: '14px 0',
+                  color: '#fff',
+                  fontSize: 15,
+                  outline: 'none',
+                }}
               />
             </div>
           </div>
@@ -117,23 +196,49 @@ export default function Login() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full btn-primary justify-center py-3.5 text-base font-bold shadow-xl shadow-blue-600/30 hover:shadow-blue-600/50 active:scale-[0.98] transition-all mt-2"
+            style={{
+              width: '100%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: 8,
+              padding: '14px',
+              borderRadius: 14,
+              background: '#0a84ff',
+              color: '#ffffff',
+              fontSize: 16,
+              fontWeight: 700,
+              boxShadow: '0 4px 16px rgba(10, 132, 255, 0.35)',
+              marginTop: 6,
+            }}
           >
             {loading ? (
               <Loader2 className="w-5 h-5 animate-spin" />
             ) : (
               <>
-                Se connecter <LogIn className="w-5 h-5 ml-2" />
+                <span>Se connecter</span>
+                <LogIn style={{ width: 18, height: 18 }} />
               </>
             )}
           </button>
         </form>
 
-        <div className="relative my-6 text-center">
-          <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-white/10" />
-          </div>
-          <span className="relative bg-[#162032] px-3 text-xs text-[#64748b] uppercase font-bold tracking-wider rounded-md">
+        <div style={{
+          position: 'relative',
+          margin: '24px 0',
+          textAlign: 'center',
+        }}>
+          <div style={{ position: 'absolute', inset: '50% 0 0 0', height: 0.5, background: 'rgba(84, 84, 88, 0.36)' }} />
+          <span style={{
+            position: 'relative',
+            background: '#1c1c1e',
+            padding: '0 12px',
+            fontSize: 11,
+            color: '#8e8e93',
+            textTransform: 'uppercase',
+            fontWeight: 700,
+            letterSpacing: '0.05em',
+          }}>
             ou tester directement
           </span>
         </div>
@@ -141,20 +246,34 @@ export default function Login() {
         <button
           type="button"
           onClick={handleDemoClick}
-          className="w-full py-3.5 px-4 rounded-2xl bg-white/5 border border-white/10 text-white font-semibold text-sm hover:bg-white/10 hover:border-white/20 active:scale-[0.98] transition-all flex items-center justify-center gap-2"
+          style={{
+            width: '100%',
+            padding: '14px',
+            borderRadius: 14,
+            background: 'rgba(255, 214, 10, 0.12)',
+            border: '0.5px solid rgba(255, 214, 10, 0.3)',
+            color: '#ffd60a',
+            fontSize: 15,
+            fontWeight: 700,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: 8,
+          }}
         >
-          <Sparkles className="w-4 h-4 text-amber-400" /> Accéder en Mode Démo (1 Clic)
+          <Sparkles style={{ width: 18, height: 18, color: '#ffd60a' }} />
+          Accéder en Mode Démo (1 Clic)
         </button>
 
-        <p className="text-center mt-8 text-sm text-[#94A3B8]">
+        <p style={{ textAlign: 'center', marginTop: 24, fontSize: 13, color: '#8e8e93' }}>
           Pas encore de compte ?{' '}
-          <Link to="/register" className="text-blue-400 font-bold hover:underline">
+          <Link to="/register" style={{ color: '#0a84ff', fontWeight: 600, textDecoration: 'none' }}>
             Inscrire ma société VTC
           </Link>
         </p>
 
-        <p className="text-center mt-6 text-xs text-[#64748b]">
-          VTC Pro Console • Réalisé par <span className="text-slate-300 font-semibold">David Chemla</span>
+        <p style={{ textAlign: 'center', marginTop: 18, fontSize: 11, color: '#636366' }}>
+          VTC Pro Console • Réalisé par <span style={{ color: '#8e8e93', fontWeight: 600 }}>David Chemla</span>
         </p>
       </motion.div>
     </div>
