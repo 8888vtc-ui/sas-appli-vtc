@@ -44,11 +44,14 @@ export interface AppSettings {
   tvaNumber: string;
 }
 
-// ─── LEGAL DOCUMENT (VAULT) ───
+// ─── LEGAL DOCUMENT (VAULT & CONTRÔLE ROUTIER) ───
 export interface LegalDocument {
   id: string;
   name: string;
   category: 'driver' | 'vehicle' | 'admin';
+  scope: 'road_control' | 'platform_compliance';
+  legalBasis?: string;
+  description?: string;
   expiryDate?: string;
   fileData?: string;
   fileName?: string;
@@ -96,18 +99,113 @@ export const DEFAULT_SETTINGS: AppSettings = {
 };
 
 export const LEGAL_DOC_TEMPLATES: Omit<LegalDocument, 'id'>[] = [
-  { name: 'Carte Professionnelle VTC', category: 'driver', isRequired: true },
-  { name: 'Permis de Conduire', category: 'driver', isRequired: true },
-  { name: 'Certificat Médical', category: 'driver', isRequired: true },
-  { name: 'Attestation de Formation Continue', category: 'driver', isRequired: false },
-  { name: 'Carte Grise', category: 'vehicle', isRequired: true },
-  { name: 'Attestation Assurance RC Pro', category: 'vehicle', isRequired: true },
-  { name: 'Contrôle Technique Annuel', category: 'vehicle', isRequired: true },
-  { name: 'Vignette Crit\'Air', category: 'vehicle', isRequired: false },
-  { name: 'Inscription Registre VTC', category: 'admin', isRequired: true },
-  { name: 'Extrait Kbis / INSEE', category: 'admin', isRequired: true },
-  { name: 'Attestation URSSAF', category: 'admin', isRequired: false },
-  { name: 'Attestation de Vigilance', category: 'admin', isRequired: false },
+  // ── 🚨 1. PIÈCES OBLIGATOIRES À BORD (Contrôle Routier Police, Gendarmerie, Boers) ──
+  {
+    name: 'Carte Professionnelle VTC (Physique)',
+    category: 'driver',
+    scope: 'road_control',
+    legalBasis: 'Art. L. 3120-2-1 Code des transports',
+    description: 'Carte physique sécurisée apposée de manière visible sur le pare-brise.',
+    isRequired: true,
+  },
+  {
+    name: 'Permis de Conduire (Catégorie B)',
+    category: 'driver',
+    scope: 'road_control',
+    legalBasis: 'Art. R. 221-1 Code de la route',
+    description: 'Permis de conduire valide pour la conduite de véhicules légers.',
+    isRequired: true,
+  },
+  {
+    name: 'Certificat d\'Immatriculation (Carte Grise)',
+    category: 'vehicle',
+    scope: 'road_control',
+    legalBasis: 'Art. R. 322-1 Code de la route',
+    description: 'Carte grise originale ou contrat de location/leasing au nom de l\'exploitant.',
+    isRequired: true,
+  },
+  {
+    name: 'Assurance RC Circulation - Transport de Personnes à Titre Onéreux (TPTI)',
+    category: 'vehicle',
+    scope: 'road_control',
+    legalBasis: 'Art. L. 211-1 Code des assurances & TPTI',
+    description: 'Attestation mentionnant expressément la couverture transport public de personnes à titre onéreux.',
+    isRequired: true,
+  },
+  {
+    name: 'Assurance RC Professionnelle Exploitation VTC',
+    category: 'vehicle',
+    scope: 'road_control',
+    legalBasis: 'Art. L. 3120-4 Code des transports',
+    description: 'Assurance Responsabilité Civile Professionnelle obligatoire pour l\'activité VTC.',
+    isRequired: true,
+  },
+  {
+    name: 'Contrôle Technique Périodique VTC Annuel',
+    category: 'vehicle',
+    scope: 'road_control',
+    legalBasis: 'Arrêté du 18 juin 1991 (CT annuel)',
+    description: 'Contrôle technique spécifique VTC obligatoire dès le 1er anniversaire du véhicule.',
+    isRequired: true,
+  },
+  {
+    name: 'Attestation Inscription Registre VTC (REVTC) & Macarons',
+    category: 'vehicle',
+    scope: 'road_control',
+    legalBasis: 'Art. R. 3122-1 Code des transports',
+    description: 'Numéro EVTC actif + macarons rouge/or apposés à l\'avant gauche et à l\'arrière droit.',
+    isRequired: true,
+  },
+  {
+    name: 'Vignette Crit\'Air (Contexte ZFE-m uniquement)',
+    category: 'vehicle',
+    scope: 'road_control',
+    legalBasis: 'Art. L. 318-1 Code de la route',
+    description: 'Exigible uniquement dans les agglomérations soumises à une Zone à Faibles Émissions active.',
+    isRequired: false,
+  },
+
+  // ── 🏢 2. DOSSIER CONFORMITÉ ENTREPRISE & PLATEFORMES (Non requis en contrôle routier) ──
+  {
+    name: 'Extrait Kbis ou Avis de Situation SIRENE (RCS)',
+    category: 'admin',
+    scope: 'platform_compliance',
+    legalBasis: 'RCS / Code de commerce (Dossier entreprise & banques)',
+    description: 'Preuve d\'existence de la société. Aucune obligation de détention physique dans l\'habitacle.',
+    isRequired: false,
+  },
+  {
+    name: 'Attestation de Vigilance URSSAF (Travail Dissimulé)',
+    category: 'admin',
+    scope: 'platform_compliance',
+    legalBasis: 'Art. L. 8222-1 Code du travail (Lutte travail dissimulé)',
+    description: 'Exigée tous les 6 mois par Uber, Bolt, donneurs d\'ordres B2B et plateformes partenaires.',
+    isRequired: false,
+  },
+  {
+    name: 'Attestation de Régularité Fiscale (DGFIP)',
+    category: 'admin',
+    scope: 'platform_compliance',
+    legalBasis: 'Conformité fiscale annuelle entreprise',
+    description: 'Attestation d\'acquittement de la TVA et de l\'IS pour comptes entreprise et marchés.',
+    isRequired: false,
+  },
+  {
+    name: 'Attestation de Formation Continue (14 heures)',
+    category: 'driver',
+    scope: 'platform_compliance',
+    legalBasis: 'Arrêté du 11 août 2017 (Renouvellement quinquennal préfecture)',
+    description: 'À fournir à la préfecture tous les 5 ans pour renouveler la carte pro. Non exigible au volant.',
+    isRequired: false,
+  },
+  {
+    name: 'Avis Médical d\'Aptitude Physique Préfectorale',
+    category: 'driver',
+    scope: 'platform_compliance',
+    legalBasis: 'CERFA préfecture délivré par médecin agréé',
+    description: 'Dossier préfectoral d\'aptitude médicale pour délivrance de carte pro (secret médical / non exigible en contrôle).',
+    isRequired: false,
+  },
 ];
 
 export interface CompanyDriver {
