@@ -18,6 +18,8 @@ import Accounting from './pages/Accounting';
 import CRM from './pages/CRM';
 import ExpenseReports from './pages/ExpenseReports';
 import QRCodeHub from './pages/QRCodeHub';
+import FinancesHub from './pages/FinancesHub';
+import ToolsHub from './pages/ToolsHub';
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth();
@@ -46,6 +48,10 @@ function ProtectedLayout() {
             <Layout onNewTrip={() => setIsModalOpen(true)}>
               <Routes>
                 <Route path="/" element={<Dashboard />} />
+                <Route path="/finances" element={<FinancesHub />} />
+                <Route path="/outils" element={<ToolsHub />} />
+                
+                {/* Legacy individual routes kept for direct linking from ToolsHub */}
                 <Route path="/factures" element={<Invoices />} />
                 <Route path="/crm" element={<CRM />} />
                 <Route path="/coffre-fort" element={<Vault />} />

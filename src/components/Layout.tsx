@@ -1,10 +1,9 @@
 import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import {
-  Calendar, Receipt, Shield, Settings as SettingsIcon,
-  Plus, PieChart, Users, LogOut, ShieldCheck,
-  Wallet, QrCode, Plane, LayoutGrid, X,
-  ChevronRight, Car
+  Calendar, ShieldCheck,
+  Wallet, LayoutGrid, X,
+  ChevronRight, Car, LogOut, Plus
 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { useAuth } from '../context/AuthContext';
@@ -31,27 +30,18 @@ function TabIcon({ icon: Icon, active }: { icon: any; active: boolean }) {
    Tab bar config (Mobile bottom bar)
    ─────────────────────────────────────────────── */
 const tabs = [
-  { to: '/', label: 'Courses', icon: Calendar },
-  { to: '/factures', label: 'Factures', icon: Receipt },
-  { to: '/notes-de-frais', label: 'Frais', icon: Wallet },
-  { to: '/crm', label: 'Clients', icon: Users },
-  { to: '#menu', label: 'Menu', icon: LayoutGrid },
+  { to: '/', label: 'Planning', icon: Calendar },
+  { to: '/finances', label: 'Finances', icon: Wallet },
+  { to: '/outils', label: 'Outils', icon: LayoutGrid },
 ];
 
 /* ───────────────────────────────────────────────
    All Apps list (Desktop sidebar + Mobile drawer)
    ─────────────────────────────────────────────── */
 const menuItems = [
-  { to: '/', label: 'Courses & Planning', icon: Calendar, color: '#0a84ff' },
-  { to: '/factures', label: 'Facturation Client', icon: Receipt, color: '#30d158' },
-  { to: '/notes-de-frais', label: 'Notes de Frais & Carburant', icon: Wallet, color: '#bf5af2' },
-  { to: '/crm', label: 'Clients & CRM', icon: Users, color: '#64d2ff' },
-  { to: '/comptabilite', label: 'Comptabilité & Bilan', icon: PieChart, color: '#ff9f0a' },
-  { to: '/qrcode', label: 'QR Code & Réservations', icon: QrCode, color: '#ffd60a' },
-  { to: '/sign', label: 'Pancarte Accueil Aéroport', icon: Plane, color: '#ff9f0a' },
-  { to: '/controle', label: 'Mode Contrôle Police / Boers', icon: ShieldCheck, color: '#ff453a' },
-  { to: '/coffre-fort', label: 'Coffre-Fort & Conformité', icon: Shield, color: '#5e5ce6' },
-  { to: '/parametres', label: 'Réglages & Chauffeurs', icon: SettingsIcon, color: '#8e8e93' },
+  { to: '/', label: 'Opérationnel & Courses', icon: Calendar, color: '#0a84ff' },
+  { to: '/finances', label: 'Finances & Gestion', icon: Wallet, color: '#30d158' },
+  { to: '/outils', label: 'Outils & Réglages', icon: LayoutGrid, color: '#ff9f0a' },
 ];
 
 export default function Layout({ children, onNewTrip }: { children: React.ReactNode; onNewTrip: () => void }) {
@@ -203,7 +193,7 @@ export default function Layout({ children, onNewTrip }: { children: React.ReactN
            MOBILE BOTTOM TAB BAR (iOS Style, < 1024px)
            ═══════════════════════════════════════════ */}
       <nav className="block lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#161618]/95 backdrop-blur-2xl border-t border-white/10 pb-[max(env(safe-area-inset-bottom,0px),0px)]">
-        <div className="grid grid-cols-5 max-w-md mx-auto py-2">
+        <div className="grid grid-cols-3 max-w-md mx-auto py-2">
           {tabs.map(({ to, label, icon }) => {
             const active = to === '#menu' ? false : isActive(to);
             const handleClick = () => {
