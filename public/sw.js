@@ -1,4 +1,4 @@
-const CACHE_NAME = 'vtc-pro-v2';
+const CACHE_NAME = 'vtc-pro-v3-10-sur-10';
 
 self.addEventListener('install', (event) => {
   self.skipWaiting();
@@ -9,7 +9,9 @@ self.addEventListener('activate', (event) => {
     caches.keys().then((keys) => {
       return Promise.all(
         keys.map((key) => {
-          return caches.delete(key);
+          if (key !== CACHE_NAME) {
+            return caches.delete(key);
+          }
         })
       );
     }).then(() => self.clients.claim())
