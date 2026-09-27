@@ -280,15 +280,40 @@ export default function SignMode() {
             exit={{ opacity: 0, y: -20 }}
             className="z-30 my-2 mx-auto w-full max-w-xl bg-slate-900/95 border border-white/20 rounded-2xl p-4 text-white shadow-2xl backdrop-blur-xl"
           >
-            <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center justify-between mb-3 pb-2 border-b border-white/10">
               <h3 className="text-sm font-bold flex items-center gap-2">
                 <Type className="w-4 h-4 text-blue-400" />
                 Modifier l'affichage à la volée
               </h3>
-              <button onClick={() => setShowEditor(false)} className="p-1 text-slate-400 hover:text-white">
+              <button onClick={() => setShowEditor(false)} className="p-1 text-slate-400 hover:text-white cursor-pointer">
                 <X className="w-4 h-4" />
               </button>
             </div>
+
+            {/* Raccourcis 1-Tap passagers des courses */}
+            {trips.filter(t => t.status === 'scheduled' || t.status === 'in_progress').length > 0 && (
+              <div className="mb-3 pb-3 border-b border-white/10">
+                <span className="text-[11px] text-slate-400 block mb-1.5 font-medium">Passagers des courses (cliquez pour basculer en 1-tap) :</span>
+                <div className="flex gap-1.5 flex-wrap max-h-24 overflow-y-auto">
+                  {trips.filter(t => t.status === 'scheduled' || t.status === 'in_progress').map(t => (
+                    <button
+                      key={t.id}
+                      type="button"
+                      onClick={() => {
+                        setClientName(t.clientName);
+                        setFlightNumber(t.flightNumber || '');
+                        setShowEditor(false);
+                      }}
+                      className="px-2.5 py-1.5 rounded-lg bg-blue-600/20 hover:bg-blue-600/40 text-blue-300 text-xs border border-blue-500/30 flex items-center gap-1.5 cursor-pointer active:scale-95 transition-all"
+                    >
+                      <span>{t.clientName}</span>
+                      {t.flightNumber && <span className="text-amber-400 font-mono text-[10px]">({t.flightNumber})</span>}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
               <div>
                 <label className="text-slate-400 block mb-1">Nom du Passager</label>

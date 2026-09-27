@@ -1,12 +1,13 @@
 import { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
-import { Receipt, CreditCard, Download, Search, ChevronDown, CheckCircle2, Clock, FileDown } from 'lucide-react';
+import { Receipt, CreditCard, Download, Search, ChevronDown, CheckCircle2, Clock, FileDown, MessageCircle } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { formatEUR } from '../lib/utils';
 import { exportInvoicesCSV } from '../lib/exportUtils';
+import { showToast } from '../components/Toast';
 
 export default function Invoices() {
-  const { invoices, trips, togglePayment, downloadInvoice } = useApp();
+  const { invoices, trips, togglePayment, downloadInvoice, settings } = useApp();
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<'all' | 'paid' | 'pending'>('all');
 
@@ -134,16 +135,37 @@ export default function Invoices() {
                   </div>
 
                   <div className="flex items-center gap-2">
-                    <button onClick={() => downloadInvoice(inv)}
+                    <button onClick={() => {
+                      downloadInvoice(inv);
+                      showToast('Génération du PDF...', 'info');
+                    }}
                       title="Télécharger la facture en PDF"
-                      className="p-2.5 rounded-xl bg-blue-600/20 border border-blue-500/30 hover:bg-blue-600/30 text-blue-400 text-xs font-semibold flex items-center gap-1.5 transition-all">
+                      className="p-2.5 rounded-xl bg-blue-600/20 border border-blue-500/30 hover:bg-blue-600/30 text-blue-400 text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer">
                       <FileDown className="w-4 h-4" />
                       <span className="hidden sm:inline">PDF</span>
                     </button>
 
-                    <button onClick={() => togglePayment(inv.id)}
+                    {/* Partage WhatsApp Facture 1-Tap */}
+                    <button
+                      onClick={() => {
+                        const text = `Bonjour ${inv.clientName}, voici votre facture VTC N° ${inv.invoiceNumber} d'un montant de ${formatEUR(inv.totalTTC)}. ${settings.companyName || 'VTC Pro'}. Merci pour votre confiance !`;
+                        const phone = (inv.clientPhone || '').replace(/[^0-9]/g, '');
+                        window.open(phone ? `https://wa.me/${phone}?text=${encodeURIComponent(text)}` : `https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+                        showToast(`WhatsApp ouvert pour ${inv.clientName}`, 'success');
+                      }}
+                      title="Envoyer la facture sur WhatsApp"
+                      className="p-2.5 rounded-xl bg-emerald-500/15 border border-emerald-500/30 hover:bg-emerald-500/25 text-emerald-400 text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer"
+                    >
+                      <MessageCircle className="w-4 h-4" />
+                      <span className="hidden sm:inline">WhatsApp</span>
+                    </button>
+
+                    <button onClick={() => {
+                      togglePayment(inv.id);
+                      showToast(isPaid ? 'Facture marquée en attente' : 'Facture marquée réglée ✓', 'success');
+                    }}
                       title={isPaid ? 'Marquer comme non payée' : 'Valider le paiement'}
-                      className={`p-2.5 rounded-xl border flex items-center gap-1.5 text-xs font-semibold transition-all ${
+                      className={`p-2.5 rounded-xl border flex items-center gap-1.5 text-xs font-semibold transition-all cursor-pointer ${
                         isPaid
                           ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/20'
                           : 'bg-amber-500/10 border-amber-500/30 text-amber-400 hover:bg-amber-500/20'

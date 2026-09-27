@@ -26,10 +26,13 @@ import {
   deleteCompanyDriver,
 } from '../lib/authService';
 
+import { showToast } from '../components/Toast';
+
 export default function Settings() {
   const { settings, updateSettings } = useApp();
   const [drivers, setDrivers] = useState<CompanyDriver[]>(() => getCompanyDrivers());
   const [isDriverModalOpen, setIsDriverModalOpen] = useState(false);
+  const [driverToDelete, setDriverToDelete] = useState<string | null>(null);
   const [newDriver, setNewDriver] = useState({
     fullName: '',
     phone: '',
@@ -46,6 +49,7 @@ export default function Settings() {
     const added = addCompanyDriver(newDriver);
     setDrivers([...drivers, added]);
     setIsDriverModalOpen(false);
+    showToast(`Chauffeur ${newDriver.fullName} ajouté avec succès`, 'success');
     setNewDriver({
       fullName: '',
       phone: '',
@@ -56,11 +60,11 @@ export default function Settings() {
     });
   };
 
-  const handleDeleteDriver = (id: string) => {
-    if (confirm('Êtes-vous sûr de vouloir retirer ce chauffeur / utilisateur ?')) {
-      deleteCompanyDriver(id);
-      setDrivers(drivers.filter(d => d.id !== id));
-    }
+  const confirmDeleteDriver = (id: string) => {
+    deleteCompanyDriver(id);
+    setDrivers(drivers.filter(d => d.id !== id));
+    setDriverToDelete(null);
+    showToast('Chauffeur retiré avec succès', 'info');
   };
 
   const handleSetPrimaryDriver = (d: CompanyDriver) => {
@@ -193,14 +197,34 @@ export default function Settings() {
                     </div>
 
                     {drivers.length > 1 && !isPrimary && (
-                      <button
-                        type="button"
-                        onClick={() => handleDeleteDriver(d.id)}
-                        className="p-1.5 text-slate-400 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
-                        title="Retirer le chauffeur"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
+                      driverToDelete === d.id ? (
+                        <div className="flex items-center gap-1.5 bg-red-500/20 p-1 rounded-xl border border-red-500/30">
+                          <span className="text-[10px] text-red-300 font-bold pl-1">Sûr ?</span>
+                          <button
+                            type="button"
+                            onClick={() => confirmDeleteDriver(d.id)}
+                            className="px-2 py-0.5 bg-red-600 hover:bg-red-500 text-white rounded-lg text-[11px] font-bold"
+                          >
+                            Oui
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => setDriverToDelete(null)}
+                            className="px-2 py-0.5 bg-white/10 hover:bg-white/20 text-white rounded-lg text-[11px]"
+                          >
+                            Non
+                          </button>
+                        </div>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={() => setDriverToDelete(d.id)}
+                          className="p-1.5 text-slate-400 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors cursor-pointer"
+                          title="Retirer le chauffeur"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      )
                     )}
                   </div>
 

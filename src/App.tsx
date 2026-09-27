@@ -83,11 +83,14 @@ function AppRoutes() {
   );
 }
 
+import ToastContainer from './components/Toast';
+
 export default function App() {
   return (
     <Router>
       <AuthProvider>
         <AppRoutes />
+        <ToastContainer />
       </AuthProvider>
     </Router>
   );

@@ -2,12 +2,13 @@ import { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Receipt, Plus, Search, ChevronDown, Download, Camera, X, Trash2,
-  Car, TrendingUp, TrendingDown, Calculator, FileText, Calendar
+  Car, TrendingUp, TrendingDown, Calculator, FileText, Calendar, Zap
 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { formatEUR } from '../lib/utils';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
+import QuickSnapExpenseModal from '../components/QuickSnapExpenseModal';
 import {
   EXPENSE_CATEGORIES,
   URSSAF_MILEAGE_SCALE_2025,
@@ -42,6 +43,7 @@ export default function ExpenseReports() {
   const [searchQuery, setSearchQuery] = useState('');
   const [categoryFilter, setCategoryFilter] = useState<string>('all');
   const [showAddExpense, setShowAddExpense] = useState(false);
+  const [showQuickSnap, setShowQuickSnap] = useState(false);
   const [showAddMileage, setShowAddMileage] = useState(false);
   const [previewReceipt, setPreviewReceipt] = useState<{ name: string; data: string } | null>(null);
   const [fiscalPower, setFiscalPower] = useState<FiscalPower>('5cv');
@@ -165,6 +167,13 @@ export default function ExpenseReports() {
           <div className="flex gap-2 ml-auto shrink-0">
             {activeTab === 'expenses' && (
               <>
+                <button
+                  onClick={() => setShowQuickSnap(true)}
+                  className="px-3.5 py-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-black font-extrabold rounded-xl text-xs flex items-center gap-1.5 shadow-lg shadow-amber-500/25 active:scale-95 transition-all cursor-pointer"
+                >
+                  <Zap className="w-4 h-4 fill-black" />
+                  <span>Ticket Express (3s)</span>
+                </button>
                 <button onClick={() => exportExpensesFullCSV(expenses)}
                   className="px-3 py-2 bg-white/5 border border-white/10 hover:bg-white/10 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all">
                   <Download className="w-3.5 h-3.5 text-blue-400" /> <span className="hidden sm:inline">Export CSV</span>
@@ -606,6 +615,13 @@ export default function ExpenseReports() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Quick-Snap Ticket Modal Express */}
+      <QuickSnapExpenseModal
+        isOpen={showQuickSnap}
+        onClose={() => setShowQuickSnap(false)}
+        onSave={(exp) => addExpense(exp as any)}
+      />
     </motion.div>
   );
 }
