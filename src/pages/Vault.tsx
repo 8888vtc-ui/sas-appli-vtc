@@ -2,8 +2,8 @@ import { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   ShieldCheck, User, Car, XCircle, FileWarning, AlertTriangle,
-  CheckCircle2, Eye, Upload, Trash2, X, Download, Shield, FileText,
-  FileCheck, AlertOctagon, Info
+  CheckCircle2, Eye, Upload, X, Download, Shield, FileText,
+  FileCheck, AlertOctagon, Info, ChevronRight, FileBadge
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
@@ -18,6 +18,7 @@ export default function Vault({ controlMode = false }: { controlMode?: boolean }
 
   const [activeTab, setActiveTab] = useState<'road_control' | 'platform_compliance'>('road_control');
   const [previewDoc, setPreviewDoc] = useState<{ name: string; data: string } | null>(null);
+  const [selectedDoc, setSelectedDoc] = useState<any>(null);
 
   // Trouver la course en cours ou la plus proche pour le bon de commande préalable
   const activeTrip = useMemo(() => {
@@ -407,107 +408,139 @@ export default function Vault({ controlMode = false }: { controlMode?: boolean }
         </div>
       </div>
 
-      {/* LISTE DES DOCUMENTS DE L'ONGLET ACTIF */}
-      <div className="grid sm:grid-cols-2 gap-3 sm:gap-4">
-        {displayedDocs.map(doc => {
+      {/* LISTE DES DOCUMENTS (STYLE iOS SETTINGS) */}
+      <div className="bg-[#1c1c1e] rounded-[10px] overflow-hidden">
+        {displayedDocs.map((doc, index) => {
           const status = getDocExpiryStatus(doc);
-          const days = getDocExpiryDays(doc);
+          
+          let IconComp = FileBadge;
+          if (doc.category === 'vehicle') IconComp = Car;
+          if (doc.category === 'driver') IconComp = User;
+
           return (
-            <div
-              key={doc.id}
-              className="p-5 rounded-3xl bg-[#1c1c1e]/60 backdrop-blur-xl border border-white/5 hover:border-white/20 flex flex-col justify-between gap-4 transition-all duration-300 shadow-lg hover:shadow-2xl hover:shadow-black/50 group"
-            >
-              <div>
-                <div className="flex items-start justify-between gap-2">
-                  <div className="flex-1">
-                    <p className="font-extrabold text-[15px] text-white flex items-center gap-2 flex-wrap">
-                      {doc.name}
-                      {doc.isRequired && (
-                        <span className="text-[10px] uppercase font-black text-red-500 bg-red-500/10 px-2 py-0.5 rounded-md border border-red-500/20 shadow-[0_0_10px_rgba(239,68,68,0.2)]">
-                          Obligatoire à bord
-                        </span>
-                      )}
-                    </p>
-                    {doc.legalBasis && (
-                      <p className="text-[11px] text-blue-400/80 font-mono mt-1.5 bg-blue-500/10 inline-block px-2 py-0.5 rounded-md border border-blue-500/20">{doc.legalBasis}</p>
-                    )}
-                    {doc.description && (
-                      <p className="text-[13px] text-slate-400 mt-2 font-medium leading-snug">{doc.description}</p>
-                    )}
+            <div key={doc.id} className="relative">
+              {index > 0 && <div className="absolute left-[52px] right-0 top-0 h-[1px] bg-[#38383a]" />}
+              <button
+                type="button"
+                onClick={() => setSelectedDoc(doc)}
+                className="w-full flex items-center justify-between p-3.5 hover:bg-[#2c2c2e] transition-colors active:bg-[#3a3a3c] text-left"
+              >
+                <div className="flex items-center gap-3.5 min-w-0 flex-1 pr-3">
+                  <div
+                    className="w-[30px] h-[30px] rounded-[7px] flex items-center justify-center shrink-0"
+                    style={{
+                      background: !doc.fileData
+                        ? '#38383a'
+                        : status === 'expired'
+                        ? '#ef4444'
+                        : status === 'soon'
+                        ? '#f59e0b'
+                        : '#34c759',
+                    }}
+                  >
+                    <IconComp className="w-[18px] h-[18px] text-white" />
+                  </div>
+                  <div className="truncate flex items-center gap-2">
+                     <span className="text-[17px] text-white tracking-tight">{doc.name}</span>
+                     {doc.isRequired && (
+                       <span className="text-[10px] font-bold text-red-500 uppercase tracking-wider bg-red-500/10 px-1.5 py-0.5 rounded">Obligatoire</span>
+                     )}
                   </div>
                 </div>
-
-                <div className="mt-4 pt-3 border-t border-white/5 flex items-center justify-between text-[13px] font-bold">
-                  {doc.fileName ? (
-                    <span className="text-emerald-400 flex items-center gap-1.5 truncate">
-                      <CheckCircle2 className="w-4 h-4 shrink-0" /> {doc.fileName}
+                
+                <div className="flex items-center gap-2 shrink-0">
+                  {doc.fileData ? (
+                    <span className="text-[15px] text-[#8e8e93] flex items-center gap-1">
+                      {status === 'expired' ? <span className="text-red-500">Expiré</span> : '✓'}
                     </span>
                   ) : (
-                    <span className="text-red-400 flex items-center gap-1.5 opacity-80">
-                      <XCircle className="w-4 h-4 shrink-0" /> Document manquant
-                    </span>
+                    <span className="text-[15px] text-[#ef4444]">Manquant</span>
                   )}
-
-                  {days !== null && (
-                    <span
-                      className="px-2 py-1 rounded-md"
-                      style={{ 
-                        color: status === 'expired' ? '#ef4444' : status === 'soon' ? '#f59e0b' : '#30d158',
-                        backgroundColor: status === 'expired' ? 'rgba(239,68,68,0.1)' : status === 'soon' ? 'rgba(245,158,11,0.1)' : 'rgba(48,209,88,0.1)'
-                      }}
-                    >
-                      {status === 'expired' ? `Expiré (${Math.abs(days)}j)` : `${days}j restants`}
-                    </span>
-                  )}
+                  <ChevronRight className="w-4 h-4 text-[#48484a]" />
                 </div>
-              </div>
-
-              {/* Actions Téléversement / Expiration */}
-              <div className="flex items-center gap-2 pt-3 border-t border-white/5 flex-wrap">
-                <div className="flex items-center gap-2 flex-1 min-w-[140px] bg-black/40 px-3 py-1.5 rounded-xl border border-white/5 shadow-inner">
-                  <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Expire le</span>
-                  <input
-                    type="date"
-                    value={doc.expiryDate || ''}
-                    onChange={e => updateDocExpiry(doc.id, e.target.value)}
-                    className="bg-transparent border-none text-[13px] font-bold text-white outline-none focus:ring-0 flex-1 cursor-pointer"
-                  />
-                </div>
-
-                <button
-                  type="button"
-                  onClick={() => triggerUpload(doc.id)}
-                  title="Téléverser le fichier"
-                  className="p-2.5 rounded-xl bg-blue-500/15 hover:bg-blue-500/30 border border-blue-500/30 text-blue-400 transition-all cursor-pointer shadow-lg"
-                >
-                  <Upload className="w-4 h-4" />
-                </button>
-
-                {doc.fileData && (
-                  <>
-                    <button
-                      type="button"
-                      onClick={() => viewFile(doc.name, doc.fileData!)}
-                      title="Visualiser le document"
-                      className="p-2.5 rounded-xl bg-emerald-500/15 hover:bg-emerald-500/30 border border-emerald-500/30 text-emerald-400 transition-all cursor-pointer shadow-lg"
-                    >
-                      <Eye className="w-4 h-4" />
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => removeDocumentFile(doc.id)}
-                      title="Supprimer le fichier"
-                      className="p-2.5 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-400 transition-all cursor-pointer"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
-                  </>
-                )}
-              </div>
+              </button>
             </div>
           );
         })}
       </div>
+
+      {/* Modal Actions Document (iOS Action Sheet style) */}
+      <AnimatePresence>
+        {selectedDoc && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setSelectedDoc(null)}
+              className="fixed inset-0 z-[100] bg-black/60 backdrop-blur-sm"
+            />
+            <motion.div
+              initial={{ y: '100%' }}
+              animate={{ y: 0 }}
+              exit={{ y: '100%' }}
+              transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+              className="fixed bottom-0 left-0 right-0 z-[110] bg-[#1c1c1e] rounded-t-[30px] p-6 pb-safe border-t border-white/10 shadow-2xl"
+            >
+              <div className="w-12 h-1.5 bg-[#38383a] rounded-full mx-auto mb-6" />
+              
+              <h3 className="text-xl font-bold text-white mb-1">{selectedDoc.name}</h3>
+              {selectedDoc.legalBasis && <p className="text-xs text-slate-400 font-mono mb-6">{selectedDoc.legalBasis}</p>}
+
+              <div className="space-y-4">
+                {/* Expiration */}
+                <div className="flex items-center justify-between p-4 rounded-xl bg-[#2c2c2e]">
+                  <span className="text-sm font-semibold text-white">Date d'expiration</span>
+                  <input
+                    type="date"
+                    value={selectedDoc.expiryDate || ''}
+                    onChange={e => {
+                      updateDocExpiry(selectedDoc.id, e.target.value);
+                      setSelectedDoc({ ...selectedDoc, expiryDate: e.target.value });
+                    }}
+                    className="bg-transparent border-none text-right text-sm font-medium text-emerald-400 outline-none focus:ring-0 cursor-pointer"
+                  />
+                </div>
+
+                {/* Actions */}
+                <div className="grid grid-cols-2 gap-3">
+                  <button
+                    onClick={() => { triggerUpload(selectedDoc.id); setSelectedDoc(null); }}
+                    className="flex flex-col items-center justify-center gap-2 p-4 rounded-xl bg-[#2c2c2e] hover:bg-[#3a3a3c] transition-colors cursor-pointer"
+                  >
+                    <Upload className="w-6 h-6 text-blue-500" />
+                    <span className="text-xs font-semibold text-blue-500">Téléverser</span>
+                  </button>
+                  
+                  {selectedDoc.fileData ? (
+                    <button
+                      onClick={() => { viewFile(selectedDoc.name, selectedDoc.fileData!); setSelectedDoc(null); }}
+                      className="flex flex-col items-center justify-center gap-2 p-4 rounded-xl bg-[#2c2c2e] hover:bg-[#3a3a3c] transition-colors cursor-pointer"
+                    >
+                      <Eye className="w-6 h-6 text-emerald-500" />
+                      <span className="text-xs font-semibold text-emerald-500">Voir</span>
+                    </button>
+                  ) : (
+                    <div className="flex flex-col items-center justify-center gap-2 p-4 rounded-xl bg-[#2c2c2e] opacity-50">
+                      <Eye className="w-6 h-6 text-slate-500" />
+                      <span className="text-xs font-semibold text-slate-500">Aucun fichier</span>
+                    </div>
+                  )}
+                </div>
+
+                {selectedDoc.fileData && (
+                  <button
+                    onClick={() => { removeDocumentFile(selectedDoc.id); setSelectedDoc(null); }}
+                    className="w-full py-4 rounded-xl bg-red-500/10 text-red-500 font-bold text-sm hover:bg-red-500/20 transition-colors cursor-pointer"
+                  >
+                    Supprimer le document
+                  </button>
+                )}
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
 
       {/* Modal Visualisation */}
       <AnimatePresence>

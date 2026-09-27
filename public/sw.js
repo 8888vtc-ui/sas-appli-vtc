@@ -1,4 +1,4 @@
-const CACHE_NAME = 'vtc-pro-v7-vault-premium';
+const CACHE_NAME = 'vtc-pro-v8-ios-style';
 
 self.addEventListener('install', (event) => {
   self.skipWaiting();
