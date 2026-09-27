@@ -1,4 +1,4 @@
-const CACHE_NAME = 'vtc-pro-v6-vault-fix';
+const CACHE_NAME = 'vtc-pro-v7-vault-premium';
 
 self.addEventListener('install', (event) => {
   self.skipWaiting();

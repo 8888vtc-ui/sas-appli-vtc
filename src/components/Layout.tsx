@@ -84,26 +84,26 @@ export default function Layout({ children, onNewTrip }: { children: React.ReactN
         </div>
 
         {/* 🚨 ÉTAPE 4 : BOUTON URGENCE CONTRÔLE POLICE (Desktop) */}
-        <div className="pt-4 pb-2">
+        <div className="pt-5 pb-3">
           <button
             onClick={() => navigate('/controle')}
-            className="w-full flex items-center justify-between px-3.5 py-3 rounded-2xl bg-gradient-to-r from-red-500/15 via-red-500/10 to-transparent border border-red-500/30 hover:border-red-500/60 text-red-400 font-bold text-xs uppercase tracking-wider transition-all shadow-sm group"
+            className="w-full flex items-center justify-between px-4 py-3.5 rounded-[18px] bg-gradient-to-r from-red-500/10 to-transparent border border-red-500/20 hover:border-red-500/50 hover:from-red-500/20 text-red-400 font-extrabold text-[13px] uppercase tracking-wider transition-all duration-300 shadow-[0_0_20px_rgba(239,68,68,0.05)] group"
           >
-            <div className="flex items-center gap-2.5">
-              <ShieldCheck className="w-5 h-5 text-red-400 group-hover:scale-110 transition-transform" />
-              <span>Contrôle Police / Boers</span>
+            <div className="flex items-center gap-3">
+              <ShieldCheck className="w-5 h-5 text-red-400 group-hover:scale-110 group-hover:text-red-300 transition-all duration-300" />
+              <span>Contrôle Routier</span>
             </div>
-            <span className="px-2 py-0.5 rounded-full bg-red-500/20 text-[10px] text-red-300">1-TAP</span>
+            <span className="px-2 py-1 rounded-md bg-red-500/20 text-[10px] text-red-300 font-bold border border-red-500/20">1-TAP</span>
           </button>
         </div>
 
         {/* Bouton Nouvelle Course */}
-        <div className="py-2">
+        <div className="pb-4">
           <button
             onClick={onNewTrip}
-            className="w-full flex items-center justify-center gap-2 py-3.5 rounded-2xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-sm shadow-lg shadow-blue-600/30 transition-all cursor-pointer"
+            className="w-full flex items-center justify-center gap-2.5 py-3.5 rounded-[18px] bg-gradient-to-b from-blue-500 to-blue-600 hover:from-blue-400 hover:to-blue-500 text-white font-black text-[14px] shadow-[0_8px_20px_rgba(37,99,235,0.25)] hover:shadow-[0_8px_25px_rgba(37,99,235,0.4)] transition-all duration-300 cursor-pointer border border-blue-400/30"
           >
-            <Plus className="w-5 h-5 stroke-[2.5]" /> Nouvelle Course
+            <Plus className="w-5 h-5 stroke-[3]" /> Nouvelle Course
           </button>
         </div>
 

@@ -331,47 +331,64 @@ export default function Vault({ controlMode = false }: { controlMode?: boolean }
 
       {/* Progress & Compliance Banner */}
       <div className="p-5 sm:p-6 rounded-3xl bg-white/[0.03] border border-white/10 space-y-4">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-5">
           <div>
-            <h2 className="text-xl font-bold text-white flex items-center gap-2">
-              <ShieldCheck className="w-6 h-6 text-emerald-400" /> Coffre-Fort Documentaire VTC
+            <h2 className="text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-200 tracking-tight flex items-center gap-3">
+              <div className="p-2 rounded-xl bg-emerald-500/10 border border-emerald-500/20 shadow-[0_0_15px_rgba(16,185,129,0.2)]">
+                <ShieldCheck className="w-6 h-6 text-emerald-400" />
+              </div>
+              Coffre-Fort Documentaire
             </h2>
-            <p className="text-xs text-slate-400 mt-1">
-              Distinction stricte entre le Contrôle Routier immédiat et la Conformité Entreprise / Plateformes.
+            <p className="text-sm font-medium text-slate-400 mt-2">
+              Vos justificatifs légaux classés par cadre réglementaire.
             </p>
           </div>
 
           <button
             onClick={() => navigate('/controle')}
-            className="px-5 py-3 rounded-2xl flex items-center gap-2 text-xs font-bold text-white bg-gradient-to-r from-red-600 to-red-500 hover:from-red-500 hover:to-red-400 shadow-lg shadow-red-500/25 active:scale-95 transition-all cursor-pointer"
+            className="px-5 py-3.5 rounded-2xl flex items-center gap-2.5 text-[13px] font-black uppercase tracking-wider text-white bg-gradient-to-r from-red-600 to-red-500 hover:from-red-500 hover:to-red-400 shadow-[0_0_20px_rgba(239,68,68,0.3)] active:scale-95 transition-all cursor-pointer border border-red-500/50"
           >
-            <ShieldCheck className="w-4 h-4" /> Activer Mode Contrôle Police (Boers)
+            <ShieldCheck className="w-5 h-5" /> Mode Contrôle Routier
           </button>
         </div>
 
-        {/* 2 ONGLETS DISTINCTS : CONTRÔLE ROUTIER VS ENTREPRISE / PLATEFORMES */}
-        <div className="flex gap-2 p-1 bg-black/40 rounded-2xl border border-white/10">
+        {/* 2 ONGLETS DISTINCTS */}
+        <div className="flex gap-2 p-1.5 bg-[#161618]/80 backdrop-blur-xl rounded-2xl border border-white/5 shadow-inner">
           <button
             type="button"
             onClick={() => setActiveTab('road_control')}
-            className={`flex-1 py-3 px-4 rounded-xl text-xs sm:text-sm font-bold transition-all text-center ${
+            className={`flex-1 py-3.5 px-4 rounded-[14px] text-[13px] font-extrabold transition-all duration-300 text-center relative overflow-hidden ${
               activeTab === 'road_control'
-                ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-600/30'
-                : 'text-slate-400 hover:text-white'
+                ? 'text-white shadow-[0_4px_20px_rgba(16,185,129,0.2)]'
+                : 'text-slate-500 hover:text-slate-300 hover:bg-white/5'
             }`}
           >
-            🚨 1. Contrôle Routier à Bord ({roadControlDocs.length} pièces)
+            {activeTab === 'road_control' && (
+              <motion.div
+                layoutId="vaultTab"
+                className="absolute inset-0 bg-gradient-to-b from-emerald-500 to-emerald-700 border border-emerald-400/30 rounded-[14px] -z-10"
+                transition={{ type: 'spring', bounce: 0.2, duration: 0.5 }}
+              />
+            )}
+            🚨 1. Contrôle Routier à Bord ({roadControlDocs.length})
           </button>
           <button
             type="button"
             onClick={() => setActiveTab('platform_compliance')}
-            className={`flex-1 py-3 px-4 rounded-xl text-xs sm:text-sm font-bold transition-all text-center ${
+            className={`flex-1 py-3.5 px-4 rounded-[14px] text-[13px] font-extrabold transition-all duration-300 text-center relative overflow-hidden ${
               activeTab === 'platform_compliance'
-                ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/30'
-                : 'text-slate-400 hover:text-white'
+                ? 'text-white shadow-[0_4px_20px_rgba(59,130,246,0.2)]'
+                : 'text-slate-500 hover:text-slate-300 hover:bg-white/5'
             }`}
           >
-            🏢 2. Dossier Entreprise & Plateformes ({platformDocs.length} pièces)
+            {activeTab === 'platform_compliance' && (
+              <motion.div
+                layoutId="vaultTab"
+                className="absolute inset-0 bg-gradient-to-b from-blue-500 to-blue-700 border border-blue-400/30 rounded-[14px] -z-10"
+                transition={{ type: 'spring', bounce: 0.2, duration: 0.5 }}
+              />
+            )}
+            🏢 2. Dossier Entreprise ({platformDocs.length})
           </button>
         </div>
 
@@ -398,43 +415,46 @@ export default function Vault({ controlMode = false }: { controlMode?: boolean }
           return (
             <div
               key={doc.id}
-              className="p-4 rounded-2xl bg-white/[0.03] border border-white/10 hover:border-white/20 flex flex-col justify-between gap-3 transition-all"
+              className="p-5 rounded-3xl bg-[#1c1c1e]/60 backdrop-blur-xl border border-white/5 hover:border-white/20 flex flex-col justify-between gap-4 transition-all duration-300 shadow-lg hover:shadow-2xl hover:shadow-black/50 group"
             >
               <div>
                 <div className="flex items-start justify-between gap-2">
                   <div className="flex-1">
-                    <p className="font-bold text-sm text-white flex items-center gap-1.5 flex-wrap">
+                    <p className="font-extrabold text-[15px] text-white flex items-center gap-2 flex-wrap">
                       {doc.name}
                       {doc.isRequired && (
-                        <span className="text-[10px] uppercase font-bold text-red-400 bg-red-500/10 px-1.5 py-0.5 rounded">
+                        <span className="text-[10px] uppercase font-black text-red-500 bg-red-500/10 px-2 py-0.5 rounded-md border border-red-500/20 shadow-[0_0_10px_rgba(239,68,68,0.2)]">
                           Obligatoire à bord
                         </span>
                       )}
                     </p>
                     {doc.legalBasis && (
-                      <p className="text-[11px] text-slate-400 font-mono mt-0.5">{doc.legalBasis}</p>
+                      <p className="text-[11px] text-blue-400/80 font-mono mt-1.5 bg-blue-500/10 inline-block px-2 py-0.5 rounded-md border border-blue-500/20">{doc.legalBasis}</p>
                     )}
                     {doc.description && (
-                      <p className="text-xs text-slate-300 mt-1">{doc.description}</p>
+                      <p className="text-[13px] text-slate-400 mt-2 font-medium leading-snug">{doc.description}</p>
                     )}
                   </div>
                 </div>
 
-                <div className="mt-2 pt-2 border-t border-white/5 flex items-center justify-between text-xs">
+                <div className="mt-4 pt-3 border-t border-white/5 flex items-center justify-between text-[13px] font-bold">
                   {doc.fileName ? (
-                    <span className="text-emerald-400 font-medium flex items-center gap-1 truncate">
-                      <CheckCircle2 className="w-3.5 h-3.5 shrink-0" /> {doc.fileName}
+                    <span className="text-emerald-400 flex items-center gap-1.5 truncate">
+                      <CheckCircle2 className="w-4 h-4 shrink-0" /> {doc.fileName}
                     </span>
                   ) : (
-                    <span className="text-red-400 flex items-center gap-1">
-                      <XCircle className="w-3.5 h-3.5 shrink-0" /> Non téléchargé
+                    <span className="text-red-400 flex items-center gap-1.5 opacity-80">
+                      <XCircle className="w-4 h-4 shrink-0" /> Document manquant
                     </span>
                   )}
 
                   {days !== null && (
                     <span
-                      className="text-[11px] font-semibold"
-                      style={{ color: status === 'expired' ? '#ef4444' : status === 'soon' ? '#f59e0b' : '#30d158' }}
+                      className="px-2 py-1 rounded-md"
+                      style={{ 
+                        color: status === 'expired' ? '#ef4444' : status === 'soon' ? '#f59e0b' : '#30d158',
+                        backgroundColor: status === 'expired' ? 'rgba(239,68,68,0.1)' : status === 'soon' ? 'rgba(245,158,11,0.1)' : 'rgba(48,209,88,0.1)'
+                      }}
                     >
                       {status === 'expired' ? `Expiré (${Math.abs(days)}j)` : `${days}j restants`}
                     </span>
@@ -443,14 +463,14 @@ export default function Vault({ controlMode = false }: { controlMode?: boolean }
               </div>
 
               {/* Actions Téléversement / Expiration */}
-              <div className="flex items-center gap-2 pt-2 border-t border-white/5 flex-wrap">
-                <div className="flex items-center gap-1 flex-1 min-w-[130px]">
-                  <span className="text-[10px] text-slate-400">Expire le :</span>
+              <div className="flex items-center gap-2 pt-3 border-t border-white/5 flex-wrap">
+                <div className="flex items-center gap-2 flex-1 min-w-[140px] bg-black/40 px-3 py-1.5 rounded-xl border border-white/5 shadow-inner">
+                  <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Expire le</span>
                   <input
                     type="date"
                     value={doc.expiryDate || ''}
                     onChange={e => updateDocExpiry(doc.id, e.target.value)}
-                    className="bg-white/5 border border-white/10 rounded-lg p-1.5 text-xs text-white outline-none focus:border-blue-500 flex-1"
+                    className="bg-transparent border-none text-[13px] font-bold text-white outline-none focus:ring-0 flex-1 cursor-pointer"
                   />
                 </div>
 
@@ -458,7 +478,7 @@ export default function Vault({ controlMode = false }: { controlMode?: boolean }
                   type="button"
                   onClick={() => triggerUpload(doc.id)}
                   title="Téléverser le fichier"
-                  className="p-2 rounded-xl bg-blue-500/15 hover:bg-blue-500/25 border border-blue-500/30 text-blue-400 transition-all cursor-pointer"
+                  className="p-2.5 rounded-xl bg-blue-500/15 hover:bg-blue-500/30 border border-blue-500/30 text-blue-400 transition-all cursor-pointer shadow-lg"
                 >
                   <Upload className="w-4 h-4" />
                 </button>
@@ -469,7 +489,7 @@ export default function Vault({ controlMode = false }: { controlMode?: boolean }
                       type="button"
                       onClick={() => viewFile(doc.name, doc.fileData!)}
                       title="Visualiser le document"
-                      className="p-2 rounded-xl bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-500/30 text-emerald-400 transition-all cursor-pointer"
+                      className="p-2.5 rounded-xl bg-emerald-500/15 hover:bg-emerald-500/30 border border-emerald-500/30 text-emerald-400 transition-all cursor-pointer shadow-lg"
                     >
                       <Eye className="w-4 h-4" />
                     </button>
@@ -477,7 +497,7 @@ export default function Vault({ controlMode = false }: { controlMode?: boolean }
                       type="button"
                       onClick={() => removeDocumentFile(doc.id)}
                       title="Supprimer le fichier"
-                      className="p-2 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-400 transition-all cursor-pointer"
+                      className="p-2.5 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-400 transition-all cursor-pointer"
                     >
                       <Trash2 className="w-4 h-4" />
                     </button>

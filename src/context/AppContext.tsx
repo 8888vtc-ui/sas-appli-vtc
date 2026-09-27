@@ -194,20 +194,28 @@ export function AppProvider({ children }: { children: ReactNode }) {
     if (d) {
       try { 
         const parsed = JSON.parse(d);
-        // Migration: Merge existing files with DEFAULT_LEGAL_DOCS to inject new fields like 'scope'
-        const migratedDocs = DEFAULT_LEGAL_DOCS.map(defaultDoc => {
-          const existing = parsed.find((p: any) => p.id === defaultDoc.id || p.name === defaultDoc.name);
-          if (existing) {
+        // Force migration: Always ensure existing docs get the correct scope from templates
+        const migratedDocs = parsed.map((p: any) => {
+          const template = DEFAULT_LEGAL_DOCS.find(d => d.id === p.id || d.name === p.name);
+          if (template) {
             return {
-              ...defaultDoc,
-              expiryDate: existing.expiryDate,
-              fileData: existing.fileData,
-              fileName: existing.fileName,
-              uploadDate: existing.uploadDate,
+              ...p,
+              scope: template.scope,
+              legalBasis: template.legalBasis,
+              category: template.category,
+              isRequired: template.isRequired
             };
           }
-          return defaultDoc;
+          return p;
         });
+        
+        // Add any new templates that might be missing from localStorage
+        DEFAULT_LEGAL_DOCS.forEach(template => {
+          if (!migratedDocs.find((m: any) => m.id === template.id)) {
+            migratedDocs.push(template);
+          }
+        });
+        
         setLegalDocs(migratedDocs);
       } catch { setLegalDocs(DEFAULT_LEGAL_DOCS); }
     } else {
@@ -274,20 +282,27 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
     const { data: dData } = await supabase.from('documents').select('*').eq('company_id', profile.company_id);
     if (dData && dData.length > 0) {
-      // Migration: Merge remote files with DEFAULT_LEGAL_DOCS to inject new fields like 'scope'
-      const migratedDocs = DEFAULT_LEGAL_DOCS.map(defaultDoc => {
-        const existing = dData.find((p: any) => p.id === defaultDoc.id || p.name === defaultDoc.name);
-        if (existing) {
+      // Force migration for remote docs
+      const migratedDocs = dData.map((p: any) => {
+        const template = DEFAULT_LEGAL_DOCS.find(d => d.id === p.id || d.name === p.name);
+        if (template) {
           return {
-            ...defaultDoc,
-            expiryDate: existing.expiryDate,
-            fileData: existing.fileData,
-            fileName: existing.fileName,
-            uploadDate: existing.uploadDate,
+            ...p,
+            scope: template.scope,
+            legalBasis: template.legalBasis,
+            category: template.category,
+            isRequired: template.isRequired
           };
         }
-        return defaultDoc;
+        return p;
       });
+      
+      DEFAULT_LEGAL_DOCS.forEach(template => {
+        if (!migratedDocs.find((m: any) => m.id === template.id)) {
+          migratedDocs.push(template);
+        }
+      });
+      
       setLegalDocs(migratedDocs);
     } else {
       setLegalDocs(DEFAULT_LEGAL_DOCS);
