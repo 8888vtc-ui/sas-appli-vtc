@@ -1,4 +1,4 @@
-const CACHE_NAME = 'vtc-pro-v8-ios-style';
+const CACHE_NAME = 'vtc-pro-v9-ios-os-layout';
 
 self.addEventListener('install', (event) => {
   self.skipWaiting();
