@@ -16,6 +16,7 @@ import {
   CreditCard,
   Phone,
   Mail,
+  Sparkles,
 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import type { AppSettings, CompanyDriver } from '../types';
@@ -444,6 +445,26 @@ export default function Settings() {
               />
               <span className="text-sm text-white font-mono">{settings.logoColor}</span>
             </div>
+          </div>
+        </div>
+      </div>
+
+      {/* AI Settings */}
+      <div className="glass rounded-3xl p-8">
+        <h2 className="text-xl font-bold mb-6 text-white flex items-center gap-2">
+          <Sparkles className="w-5 h-5 text-purple-400" /> Intelligence Artificielle (Gemini)
+        </h2>
+        <div className="grid sm:grid-cols-1 gap-4 sm:gap-5">
+          <div className="space-y-2">
+            <label className="block text-sm font-medium" style={{ color: '#94A3B8' }}>Clé API Google Gemini</label>
+            <input
+              type="password"
+              placeholder="AIzaSy..."
+              value={settings.geminiApiKey || ''}
+              onChange={e => updateSettings({ ...settings, geminiApiKey: e.target.value })}
+              className="w-full bg-white/5 border border-white/10 rounded-xl p-3 outline-none text-white text-sm"
+            />
+            <p className="text-xs text-slate-400 mt-1">Nécessaire pour le Copilote IA et la génération de PDF par intelligence artificielle.</p>
           </div>
         </div>
       </div>

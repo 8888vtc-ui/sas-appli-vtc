@@ -1,4 +1,4 @@
-const CACHE_NAME = 'vtc-pro-v11-ai-copilot';
+const CACHE_NAME = 'vtc-pro-v12-gemini-integration';
 
 self.addEventListener('install', (event) => {
   self.skipWaiting();
