@@ -1,10 +1,12 @@
+import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import {
   Calendar, ShieldCheck, Wallet, LayoutGrid,
-  Car, Plus, Shield
+  Car, Plus, Shield, Sparkles
 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { motion } from 'framer-motion';
+import AICopilot from './AICopilot';
 
 /* ───────────────────────────────────────────────
    SF Symbol-style filled icons for tab bar
@@ -27,6 +29,7 @@ export default function Layout({ children, onNewTrip }: { children: React.ReactN
   const { settings } = useApp();
   const location = useLocation();
   const navigate = useNavigate();
+  const [aiOpen, setAiOpen] = useState(false);
 
   const isActive = (path: string) => {
     if (path === '/') return location.pathname === '/';
@@ -74,6 +77,18 @@ export default function Layout({ children, onNewTrip }: { children: React.ReactN
           </motion.div>
         </main>
 
+        {/* BOUTON FLOTTANT COPILOTE IA */}
+        <div className="fixed bottom-[110px] right-4 z-[45]">
+          <button
+            onClick={() => setAiOpen(true)}
+            className="w-[52px] h-[52px] rounded-full bg-[#1c1c1e] flex items-center justify-center shadow-[0_0_20px_rgba(168,85,247,0.3)] border border-purple-500/30 active:scale-90 transition-all group"
+          >
+            <Sparkles className="w-6 h-6 text-purple-400 group-hover:text-purple-300" />
+            <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full animate-ping opacity-75" />
+            <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full border border-[#1c1c1e]" />
+          </button>
+        </div>
+
         {/* ═══════════════════════════════════════════
              OS-STYLE BOTTOM TAB BAR (DOCK)
              ═══════════════════════════════════════════ */}
@@ -113,6 +128,9 @@ export default function Layout({ children, onNewTrip }: { children: React.ReactN
           </div>
         </nav>
       </div>
+
+      {/* IA COPILOT MODAL */}
+      <AICopilot isOpen={aiOpen} onClose={() => setAiOpen(false)} />
     </div>
   );
 }

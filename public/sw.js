@@ -1,4 +1,4 @@
-const CACHE_NAME = 'vtc-pro-v10-cache-bust';
+const CACHE_NAME = 'vtc-pro-v11-ai-copilot';
 
 self.addEventListener('install', (event) => {
   self.skipWaiting();
