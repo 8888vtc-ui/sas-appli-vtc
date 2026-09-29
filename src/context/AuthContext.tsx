@@ -86,9 +86,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return;
     }
 
-    // 1.b Si paramètre ?demo ou premier chargement sans compte créé, activer automatiquement le mode Démo
-    const hasExistingUsers = localStorage.getItem('vtc_users_database');
-    const isExplicitDemo = typeof window !== 'undefined' && (window.location.search.includes('demo') || (!hasExistingUsers && !localStorage.getItem('vtc_logged_out')));
+    // 1.b Si paramètre ?demo, activer le mode Démo
+    const isExplicitDemo = typeof window !== 'undefined' && window.location.search.includes('demo');
     if (isExplicitDemo) {
       const demoRes = loginAsDemo();
       setUser(demoRes.user);

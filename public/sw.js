@@ -1,4 +1,4 @@
-const CACHE_NAME = 'vtc-pro-v16-header-logout';
+const CACHE_NAME = 'vtc-pro-v17-auth-fix';
 
 self.addEventListener('install', (event) => {
   self.skipWaiting();
