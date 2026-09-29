@@ -1,4 +1,4 @@
-const CACHE_NAME = 'vtc-pro-v15-logout-button';
+const CACHE_NAME = 'vtc-pro-v16-header-logout';
 
 self.addEventListener('install', (event) => {
   self.skipWaiting();

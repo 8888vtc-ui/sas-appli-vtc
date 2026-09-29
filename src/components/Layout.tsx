@@ -2,8 +2,9 @@ import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import {
   Calendar, ShieldCheck, Wallet, LayoutGrid,
-  Car, Plus, Shield, Sparkles
+  Car, Plus, Shield, Sparkles, LogOut
 } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 import { useApp } from '../context/AppContext';
 import { motion } from 'framer-motion';
 import AICopilot from './AICopilot';
@@ -27,6 +28,7 @@ function TabIcon({ icon: Icon, active }: { icon: any; active: boolean }) {
 
 export default function Layout({ children, onNewTrip }: { children: React.ReactNode; onNewTrip: () => void }) {
   const { settings } = useApp();
+  const { signOut } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
   const [aiOpen, setAiOpen] = useState(false);
@@ -61,13 +63,24 @@ export default function Layout({ children, onNewTrip }: { children: React.ReactN
             </div>
           </div>
           
-          {/* URGENCE POLICE ICON */}
-          <button
-            onClick={() => navigate('/controle')}
-            className="w-10 h-10 rounded-full bg-red-500/15 border border-red-500/30 text-red-400 flex items-center justify-center shadow-[0_0_15px_rgba(239,68,68,0.2)] active:scale-90 transition-all"
-          >
-            <Shield className="w-5 h-5 animate-pulse" />
-          </button>
+          <div className="flex items-center gap-2">
+            {/* LOGOUT ICON */}
+            <button
+              onClick={() => {
+                if(window.confirm('Se déconnecter ?')) signOut();
+              }}
+              className="w-10 h-10 rounded-full bg-white/5 border border-white/10 text-slate-400 flex items-center justify-center active:scale-90 transition-all"
+            >
+              <LogOut className="w-4 h-4" />
+            </button>
+            {/* URGENCE POLICE ICON */}
+            <button
+              onClick={() => navigate('/controle')}
+              className="w-10 h-10 rounded-full bg-red-500/15 border border-red-500/30 text-red-400 flex items-center justify-center shadow-[0_0_15px_rgba(239,68,68,0.2)] active:scale-90 transition-all"
+            >
+              <Shield className="w-5 h-5 animate-pulse" />
+            </button>
+          </div>
         </header>
 
         {/* CONTENU PRINCIPAL */}
