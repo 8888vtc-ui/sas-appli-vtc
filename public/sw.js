@@ -1,4 +1,4 @@
-const CACHE_NAME = 'vtc-pro-v14-supabase-bugfix';
+const CACHE_NAME = 'vtc-pro-v15-logout-button';
 
 self.addEventListener('install', (event) => {
   self.skipWaiting();
