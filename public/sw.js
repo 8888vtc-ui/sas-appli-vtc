@@ -1,4 +1,4 @@
-const CACHE_NAME = 'vtc-pro-v21-no-demo';
+const CACHE_NAME = 'vtc-pro-v22-forgot-pwd';
 
 self.addEventListener('install', (event) => {
   self.skipWaiting();

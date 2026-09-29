@@ -213,6 +213,12 @@ export default function Login() {
               </>
             )}
           </button>
+          
+          <div style={{ textAlign: 'right', marginTop: -4 }}>
+            <Link to="/forgot-password" style={{ color: '#0a84ff', fontSize: 13, textDecoration: 'none', fontWeight: 500 }}>
+              Mot de passe oublié ?
+            </Link>
+          </div>
         </form>
 
         <p style={{ textAlign: 'center', marginTop: 24, fontSize: 13, color: '#8e8e93' }}>
