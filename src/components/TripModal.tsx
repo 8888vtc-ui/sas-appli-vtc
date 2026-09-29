@@ -271,7 +271,7 @@ export default function TripModal({ isOpen, onClose }: { isOpen: boolean; onClos
 
                 <div className="grid sm:grid-cols-2 gap-3">
                   {/* Nom Client avec autocomplétion CRM */}
-                  <div className="relative">
+                  <div className="relative z-50">
                     <label className="text-xs text-slate-400 mb-1 block">Nom & Prénom *</label>
                     <input
                       required
@@ -392,7 +392,7 @@ export default function TripModal({ isOpen, onClose }: { isOpen: boolean; onClos
                 </div>
 
                 {/* Lieu de prise en charge avec autocomplétion */}
-                <div className="relative">
+                <div className="relative z-40">
                   <label className="text-xs text-slate-400 mb-1 block">Lieu de Prise en Charge *</label>
                   <input
                     required
@@ -432,7 +432,7 @@ export default function TripModal({ isOpen, onClose }: { isOpen: boolean; onClos
 
                 {/* Destination (si transfert) */}
                 {formData.tripType === 'transfer' && (
-                  <div className="relative">
+                  <div className="relative z-30">
                     <label className="text-xs text-slate-400 mb-1 block">Destination Finale *</label>
                     <input
                       required
