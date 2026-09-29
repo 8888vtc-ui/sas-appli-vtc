@@ -19,14 +19,6 @@ export default function Login() {
     setError(null);
 
     try {
-      // 1. D'abord tester la connexion locale (comptes créés sur cette machine ou démo)
-      const localRes = loginWithLocal(email, password);
-      if (localRes.success) {
-        navigate('/');
-        return;
-      }
-
-      // 2. Si le mode Supabase est activé, tenter la connexion Supabase
       if (!isLocalMode && supabase) {
         const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
           email: email.trim(),
@@ -49,10 +41,15 @@ export default function Login() {
           navigate('/');
           return;
         }
+      } else {
+        // 2. Fallback mode local (si pas de Supabase configuré)
+        const localRes = loginWithLocal(email, password);
+        if (localRes.success) {
+          navigate('/');
+          return;
+        }
+        setError(localRes.error || 'Email ou mot de passe incorrect.');
       }
-
-      // Si aucune méthode n'a validé les identifiants
-      setError(localRes.error || 'Email ou mot de passe incorrect.');
     } catch (err: any) {
       setError(err.message || 'Email ou mot de passe incorrect.');
     } finally {
