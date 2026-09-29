@@ -1,4 +1,4 @@
-const CACHE_NAME = 'vtc-pro-v12-gemini-integration';
+const CACHE_NAME = 'vtc-pro-v13-supabase-cloud';
 
 self.addEventListener('install', (event) => {
   self.skipWaiting();
