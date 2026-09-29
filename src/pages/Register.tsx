@@ -95,7 +95,15 @@ export default function Register() {
 
             setSession(
               { id: authData.user.id, email: authData.user.email },
-              { id: authData.user.id, company_id: compData.id, role: 'admin', company: compData }
+              { 
+                id: authData.user.id, 
+                company_id: compData.id, 
+                role: 'admin', 
+                company: compData,
+                full_name: formData.fullName,
+                phone: formData.phone,
+                driver_card_number: formData.driverCardNumber
+              }
             );
           }
         }
