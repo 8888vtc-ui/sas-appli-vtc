@@ -53,73 +53,74 @@ export default function Register() {
     }
 
     try {
-      // 1. Toujours enregistrer en local pour garantir un accès immédiat sans blocage
-      const localResult = registerLocalAccount({
-        email: formData.email,
-        password: formData.password,
-        fullName: formData.fullName,
-        phone: formData.phone,
-        companyName: formData.companyName,
-        registreVTC: formData.registreVTC,
-        siret: formData.siret,
-        address: formData.address,
-        tvaRegime: formData.tvaRegime,
-        driverCardNumber: formData.driverCardNumber,
-      });
-
-      if (!localResult.success || !localResult.user || !localResult.profile) {
-        throw new Error(localResult.error || 'Erreur lors de la création du compte.');
-      }
-
-      // 2. Si le mode Supabase est activé, tenter la synchronisation Cloud
       if (!isLocalMode && supabase) {
-        try {
-          const { data: authData, error: authError } = await supabase.auth.signUp({
-            email: formData.email,
-            password: formData.password,
-          });
+        // --- 1. CLOUD MODE (Supabase) ---
+        const { data: authData, error: authError } = await supabase.auth.signUp({
+          email: formData.email,
+          password: formData.password,
+        });
 
-          if (!authError && authData.user) {
-            const { data: compData } = await supabase
-              .from('companies')
-              .insert([{
-                name: formData.companyName,
-                registre_vtc: formData.registreVTC,
-                siret: formData.siret,
-                address: formData.address,
-                tva_regime: formData.tvaRegime,
-                email: formData.email,
-                phone: formData.phone,
-              }])
-              .select()
-              .single();
-
-            if (compData) {
-              await supabase.from('profiles').insert([{
-                id: authData.user.id,
-                company_id: compData.id,
-                full_name: formData.fullName,
-                phone: formData.phone,
-                driver_card_number: formData.driverCardNumber,
-                role: 'admin',
-              }]);
-              
-              // Use Supabase data for the session instead of local fake IDs
-              localResult.user.id = authData.user.id;
-              localResult.profile.id = authData.user.id;
-              localResult.profile.company_id = compData.id;
-              if (localResult.profile.company) {
-                 localResult.profile.company.id = compData.id;
-              }
-            }
-          }
-        } catch (cloudErr) {
-          console.warn('Supabase sync skipped, working in local mode:', cloudErr);
+        if (authError) {
+          throw new Error(authError.message);
         }
+
+        if (authData.user) {
+          const { data: compData, error: compErr } = await supabase
+            .from('companies')
+            .insert([{
+              name: formData.companyName,
+              registre_vtc: formData.registreVTC,
+              siret: formData.siret,
+              address: formData.address,
+              tva_regime: formData.tvaRegime,
+              email: formData.email,
+              phone: formData.phone,
+            }])
+            .select()
+            .single();
+
+          if (compErr) throw new Error("Erreur société: " + compErr.message);
+
+          if (compData) {
+            const { error: profErr } = await supabase.from('profiles').insert([{
+              id: authData.user.id,
+              company_id: compData.id,
+              full_name: formData.fullName,
+              phone: formData.phone,
+              driver_card_number: formData.driverCardNumber,
+              role: 'admin',
+            }]);
+
+            if (profErr) throw new Error("Erreur profil: " + profErr.message);
+
+            setSession(
+              { id: authData.user.id, email: authData.user.email },
+              { id: authData.user.id, company_id: compData.id, role: 'admin', company: compData }
+            );
+          }
+        }
+      } else {
+        // --- 2. LOCAL MODE (Fallback if no Supabase) ---
+        const localResult = registerLocalAccount({
+          email: formData.email,
+          password: formData.password,
+          fullName: formData.fullName,
+          phone: formData.phone,
+          companyName: formData.companyName,
+          registreVTC: formData.registreVTC,
+          siret: formData.siret,
+          address: formData.address,
+          tvaRegime: formData.tvaRegime,
+          driverCardNumber: formData.driverCardNumber,
+        });
+
+        if (!localResult.success || !localResult.user || !localResult.profile) {
+          throw new Error(localResult.error || 'Erreur lors de la création du compte local.');
+        }
+
+        setSession(localResult.user, localResult.profile);
       }
 
-      // 3. Activer la session immédiatement
-      setSession(localResult.user, localResult.profile);
       setSuccessMsg('Compte créé avec succès ! Initialisation de votre espace...');
 
       setTimeout(() => {
