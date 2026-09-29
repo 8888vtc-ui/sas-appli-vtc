@@ -149,11 +149,14 @@ export default function TripModal({ isOpen, onClose }: { isOpen: boolean; onClos
   // Client Name change & CRM Autocomplete
   const handleClientNameChange = (value: string) => {
     setFormData((prev) => ({ ...prev, clientName: value }));
-    if (value.trim().length >= 2 && knownClients.length > 0) {
+    if (value.trim().length > 0 && knownClients.length > 0) {
       const q = value.toLowerCase();
       const matches = knownClients.filter((c) => c.name.toLowerCase().includes(q));
       setClientSuggestions(matches);
       setShowClientSuggestions(matches.length > 0);
+    } else if (value.trim().length === 0) {
+      setClientSuggestions(knownClients.slice(0, 10));
+      setShowClientSuggestions(knownClients.length > 0);
     } else {
       setShowClientSuggestions(false);
     }
@@ -281,7 +284,10 @@ export default function TripModal({ isOpen, onClose }: { isOpen: boolean; onClos
                       value={formData.clientName}
                       onChange={(e) => handleClientNameChange(e.target.value)}
                       onFocus={() => {
-                        if (formData.clientName.trim().length >= 2 && clientSuggestions.length > 0) {
+                        if (formData.clientName.trim().length === 0 && knownClients.length > 0) {
+                          setClientSuggestions(knownClients.slice(0, 10));
+                          setShowClientSuggestions(true);
+                        } else if (clientSuggestions.length > 0) {
                           setShowClientSuggestions(true);
                         }
                       }}
