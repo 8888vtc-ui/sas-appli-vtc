@@ -17,7 +17,10 @@ import {
   Phone,
   Mail,
   Sparkles,
+  Save,
+  Loader2,
 } from 'lucide-react';
+import { useEffect } from 'react';
 import { useApp } from '../context/AppContext';
 import type { AppSettings, CompanyDriver } from '../types';
 import { exportFullBackupJSON, importFullBackupJSON } from '../lib/exportUtils';
@@ -33,6 +36,23 @@ import { useAuth } from '../context/AuthContext';
 export default function Settings() {
   const { settings, updateSettings } = useApp();
   const { signOut } = useAuth();
+  
+  const [localSettings, setLocalSettings] = useState<AppSettings>(settings);
+  const [isSaving, setIsSaving] = useState(false);
+  
+  useEffect(() => {
+    setLocalSettings(settings);
+  }, [settings]);
+
+  const hasChanges = JSON.stringify(localSettings) !== JSON.stringify(settings);
+
+  const handleSaveSettings = async () => {
+    setIsSaving(true);
+    await updateSettings(localSettings);
+    setIsSaving(false);
+    showToast('Paramètres enregistrés avec succès', 'success');
+  };
+
   const [drivers, setDrivers] = useState<CompanyDriver[]>(() => getCompanyDrivers());
   const [isDriverModalOpen, setIsDriverModalOpen] = useState(false);
   const [driverToDelete, setDriverToDelete] = useState<string | null>(null);
@@ -70,12 +90,11 @@ export default function Settings() {
     showToast('Chauffeur retiré avec succès', 'info');
   };
 
-  const handleSetPrimaryDriver = (d: CompanyDriver) => {
-    updateSettings({
-      ...settings,
+    setLocalSettings({
+      ...localSettings,
       driverName: d.fullName,
-      driverPhone: d.phone,
-      driverCardNumber: d.driverCardNumber,
+      driverPhone: d.phone || '',
+      driverCardNumber: d.driverCardNumber || '',
     });
   };
 
@@ -101,8 +120,8 @@ export default function Settings() {
               <input
                 type={type}
                 placeholder={ph}
-                value={settings[key as keyof AppSettings] as string}
-                onChange={e => updateSettings({ ...settings, [key]: e.target.value })}
+                value={localSettings[key as keyof AppSettings] as string}
+                onChange={e => setLocalSettings({ ...localSettings, [key]: e.target.value })}
                 className="w-full bg-white/5 border border-white/10 rounded-xl p-3 outline-none text-white text-sm placeholder-white/20 focus:border-blue-500/50 transition-all"
               />
             </div>
@@ -110,21 +129,21 @@ export default function Settings() {
           <div className="space-y-2">
             <label className="block text-sm font-medium" style={{ color: '#94A3B8' }}>Régime TVA</label>
             <select
-              value={settings.tvaRegime}
-              onChange={e => updateSettings({ ...settings, tvaRegime: e.target.value as 'franchise' | 'assujetti' })}
+              value={localSettings.tvaRegime}
+              onChange={e => setLocalSettings({ ...localSettings, tvaRegime: e.target.value as 'franchise' | 'assujetti' })}
               className="w-full bg-[#1e293b] border border-white/10 rounded-xl p-3 outline-none text-white text-sm"
             >
               <option value="franchise">Franchise en base (art. 293 B CGI - 0%)</option>
               <option value="assujetti">Assujetti à la TVA</option>
             </select>
           </div>
-          {settings.tvaRegime === 'assujetti' && (
+          {localSettings.tvaRegime === 'assujetti' && (
             <>
               <div className="space-y-2">
                 <label className="block text-sm font-medium" style={{ color: '#94A3B8' }}>Taux de TVA applicable</label>
                 <select
-                  value={settings.tvaRate ?? 10}
-                  onChange={e => updateSettings({ ...settings, tvaRate: Number(e.target.value) })}
+                  value={localSettings.tvaRate ?? 10}
+                  onChange={e => setLocalSettings({ ...localSettings, tvaRate: Number(e.target.value) })}
                   className="w-full bg-[#1e293b] border border-white/10 rounded-xl p-3 outline-none text-white text-sm"
                 >
                   <option value={10}>10% — Transport de personnes VTC (Taux légal art. 279 b quater CGI)</option>
@@ -136,8 +155,8 @@ export default function Settings() {
                 <input
                   type="text"
                   placeholder="FRXX999999999"
-                  value={settings.tvaNumber}
-                  onChange={e => updateSettings({ ...settings, tvaNumber: e.target.value })}
+                  value={localSettings.tvaNumber}
+                  onChange={e => setLocalSettings({ ...localSettings, tvaNumber: e.target.value })}
                   className="w-full bg-white/5 border border-white/10 rounded-xl p-3 outline-none text-white text-sm"
                 />
               </div>
@@ -168,7 +187,7 @@ export default function Settings() {
 
         <div className="grid sm:grid-cols-2 gap-3 sm:gap-4">
           {drivers.map(d => {
-            const isPrimary = settings.driverName === d.fullName;
+            const isPrimary = localSettings.driverName === d.fullName;
             return (
               <div
                 key={d.id}
@@ -387,8 +406,8 @@ export default function Settings() {
               <input
                 type={type}
                 placeholder={ph}
-                value={settings[key as keyof AppSettings] as string}
-                onChange={e => updateSettings({ ...settings, [key]: e.target.value })}
+                value={localSettings[key as keyof AppSettings] as string}
+                onChange={e => setLocalSettings({ ...localSettings, [key]: e.target.value })}
                 className="w-full bg-white/5 border border-white/10 rounded-xl p-3 outline-none text-white text-sm placeholder-white/20 focus:border-blue-500/50 transition-all"
               />
             </div>
@@ -411,8 +430,8 @@ export default function Settings() {
               <input
                 type={type}
                 placeholder={ph}
-                value={settings[key as keyof AppSettings] as string}
-                onChange={e => updateSettings({ ...settings, [key]: e.target.value })}
+                value={localSettings[key as keyof AppSettings] as string}
+                onChange={e => setLocalSettings({ ...localSettings, [key]: e.target.value })}
                 className="w-full bg-white/5 border border-white/10 rounded-xl p-3 outline-none text-white text-sm placeholder-white/20 focus:border-blue-500/50 transition-all"
               />
             </div>
@@ -431,8 +450,8 @@ export default function Settings() {
             <input
               type="text"
               placeholder="BIENVENUE"
-              value={settings.welcomeMessage}
-              onChange={e => updateSettings({ ...settings, welcomeMessage: e.target.value })}
+              value={localSettings.welcomeMessage}
+              onChange={e => setLocalSettings({ ...localSettings, welcomeMessage: e.target.value })}
               className="w-full bg-white/5 border border-white/10 rounded-xl p-3 outline-none text-white text-sm"
             />
           </div>
@@ -441,11 +460,11 @@ export default function Settings() {
             <div className="flex items-center gap-3">
               <input
                 type="color"
-                value={settings.logoColor}
-                onChange={e => updateSettings({ ...settings, logoColor: e.target.value })}
+                value={localSettings.logoColor}
+                onChange={e => setLocalSettings({ ...localSettings, logoColor: e.target.value })}
                 className="w-12 h-12 rounded-xl border border-white/10 bg-transparent cursor-pointer"
               />
-              <span className="text-sm text-white font-mono">{settings.logoColor}</span>
+              <span className="text-sm text-white font-mono">{localSettings.logoColor}</span>
             </div>
           </div>
         </div>
@@ -462,8 +481,8 @@ export default function Settings() {
             <input
               type="password"
               placeholder="AIzaSy..."
-              value={settings.geminiApiKey || ''}
-              onChange={e => updateSettings({ ...settings, geminiApiKey: e.target.value })}
+              value={localSettings.geminiApiKey || ''}
+              onChange={e => setLocalSettings({ ...localSettings, geminiApiKey: e.target.value })}
               className="w-full bg-white/5 border border-white/10 rounded-xl p-3 outline-none text-white text-sm"
             />
             <p className="text-xs text-slate-400 mt-1">Nécessaire pour le Copilote IA et la génération de PDF par intelligence artificielle.</p>
@@ -526,6 +545,33 @@ export default function Settings() {
           Se déconnecter
         </button>
       </div>
+
+      {/* Floating Save Button */}
+      <AnimatePresence>
+        {hasChanges && (
+          <motion.div
+            initial={{ y: 100, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: 100, opacity: 0 }}
+            className="fixed bottom-20 sm:bottom-8 left-0 right-0 z-40 flex justify-center px-4"
+          >
+            <div className="bg-[#1e293b]/90 backdrop-blur-md border border-white/10 p-3 sm:p-4 rounded-3xl shadow-2xl flex items-center gap-4 max-w-lg w-full">
+              <div className="flex-1">
+                <p className="text-white font-bold text-sm">Modifications non enregistrées</p>
+                <p className="text-xs text-slate-400">N'oubliez pas de sauvegarder.</p>
+              </div>
+              <button
+                onClick={handleSaveSettings}
+                disabled={isSaving}
+                className="btn-primary py-2.5 px-6 font-bold flex items-center justify-center gap-2"
+              >
+                {isSaving ? <Loader2 className="w-5 h-5 animate-spin" /> : <Save className="w-5 h-5" />}
+                <span>Enregistrer</span>
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
       
     </motion.div>
   );
