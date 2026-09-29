@@ -12,12 +12,13 @@ export default function ResetPassword() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Vérifier si on est bien arrivé via un lien de réinitialisation
-    supabase?.auth.getSession().then(({ data: { session } }: any) => {
-      if (!session) {
-        setError("Lien invalide ou expiré. Veuillez refaire une demande de réinitialisation.");
-      }
-    });
+    // Gestion du flux PKCE de Supabase (si un 'code' est présent dans l'URL)
+    const code = new URLSearchParams(window.location.search).get('code');
+    if (code) {
+      supabase?.auth.exchangeCodeForSession(code).then(({ error }) => {
+        if (error) setError("Le lien de réinitialisation est invalide ou a expiré.");
+      });
+    }
   }, []);
 
   const handleReset = async (e: React.FormEvent) => {
