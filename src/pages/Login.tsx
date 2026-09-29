@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { isLocalMode, supabase } from '../lib/supabase';
 import { useAuth } from '../context/AuthContext';
-import { Mail, Lock, LogIn, Loader2, Sparkles, ShieldCheck } from 'lucide-react';
+import { Mail, Lock, LogIn, Loader2, ShieldCheck } from 'lucide-react';
 import { useNavigate, Link } from 'react-router-dom';
 
 export default function Login() {
@@ -10,7 +10,7 @@ export default function Login() {
   const [error, setError] = useState<string | null>(null);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { loginWithLocal, loginDemo, setSession } = useAuth();
+  const { loginWithLocal, setSession } = useAuth();
   const navigate = useNavigate();
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -55,11 +55,6 @@ export default function Login() {
     } finally {
       setLoading(false);
     }
-  };
-
-  const handleDemoClick = () => {
-    loginDemo();
-    navigate('/');
   };
 
   return (
@@ -219,48 +214,6 @@ export default function Login() {
             )}
           </button>
         </form>
-
-        <div style={{
-          position: 'relative',
-          margin: '24px 0',
-          textAlign: 'center',
-        }}>
-          <div style={{ position: 'absolute', inset: '50% 0 0 0', height: 0.5, background: 'rgba(84, 84, 88, 0.36)' }} />
-          <span style={{
-            position: 'relative',
-            background: '#1c1c1e',
-            padding: '0 12px',
-            fontSize: 11,
-            color: '#8e8e93',
-            textTransform: 'uppercase',
-            fontWeight: 700,
-            letterSpacing: '0.05em',
-          }}>
-            ou tester directement
-          </span>
-        </div>
-
-        <button
-          type="button"
-          onClick={handleDemoClick}
-          style={{
-            width: '100%',
-            padding: '14px',
-            borderRadius: 14,
-            background: 'rgba(255, 214, 10, 0.12)',
-            border: '0.5px solid rgba(255, 214, 10, 0.3)',
-            color: '#ffd60a',
-            fontSize: 15,
-            fontWeight: 700,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: 8,
-          }}
-        >
-          <Sparkles style={{ width: 18, height: 18, color: '#ffd60a' }} />
-          Accéder en Mode Démo (1 Clic)
-        </button>
 
         <p style={{ textAlign: 'center', marginTop: 24, fontSize: 13, color: '#8e8e93' }}>
           Pas encore de compte ?{' '}

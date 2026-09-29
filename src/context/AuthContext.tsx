@@ -6,7 +6,6 @@ import {
   saveActiveSession,
   clearActiveSession,
   loginLocalAccount,
-  loginAsDemo,
 } from '../lib/authService';
 
 export interface Company {
@@ -47,7 +46,6 @@ interface AuthContextType {
   isLocal: boolean;
   signOut: () => Promise<void>;
   loginWithLocal: (email: string, password: string) => { success: boolean; error?: string };
-  loginDemo: () => void;
   setSession: (user: AuthUser, profile: Profile) => void;
 }
 
@@ -82,16 +80,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (saved) {
       setUser(saved.user);
       setProfile(saved.profile);
-      setLoading(false);
-      return;
-    }
-
-    // 1.b Si paramètre ?demo, activer le mode Démo
-    const isExplicitDemo = typeof window !== 'undefined' && window.location.search.includes('demo');
-    if (isExplicitDemo) {
-      const demoRes = loginAsDemo();
-      setUser(demoRes.user);
-      setProfile(demoRes.profile);
       setLoading(false);
       return;
     }
@@ -144,13 +132,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return { success: false, error: res.error || 'Identifiants invalides' };
   };
 
-  const loginDemo = () => {
-    localStorage.removeItem('vtc_logged_out');
-    const res = loginAsDemo();
-    setUser(res.user);
-    setProfile(res.profile);
-  };
-
   const setSession = (u: AuthUser, p: Profile) => {
     localStorage.removeItem('vtc_logged_out');
     setUser(u);
@@ -181,7 +162,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         isLocal: isLocalMode,
         signOut,
         loginWithLocal,
-        loginDemo,
         setSession,
       }}
     >

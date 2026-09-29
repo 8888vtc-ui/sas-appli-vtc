@@ -39,32 +39,6 @@ export interface RegisteredAccount {
   createdAt: string;
 }
 
-export const DEMO_COMPANY: LocalCompany = {
-  id: 'comp-demo-01',
-  name: 'AZUR PRESTIGE VTC',
-  address: '15 Boulevard de la Croisette, 06400 Cannes',
-  phone: '+33 4 93 00 11 22',
-  email: 'contact@azur-prestige-vtc.fr',
-  siret: '892 456 789 00015',
-  siren: '892 456 789',
-  registre_vtc: 'EVTC060240098',
-  tva_regime: 'franchise',
-  tva_rate: 10,
-  tva_number: '',
-  welcome_message: 'BIENVENUE / WELCOME',
-  logo_color: '#3B82F6',
-};
-
-export const DEMO_PROFILE: LocalProfile = {
-  id: 'user-demo-01',
-  company_id: 'comp-demo-01',
-  full_name: 'Alexandre Martin',
-  phone: '+33 6 12 34 56 78',
-  driver_card_number: 'T-060-24-00128-V',
-  role: 'admin',
-  email: 'demo@vtc.pro',
-  company: DEMO_COMPANY,
-};
 
 const USERS_STORAGE_KEY = 'vtc_users_database';
 const ACTIVE_SESSION_KEY = 'vtc_active_session';
@@ -233,17 +207,6 @@ export function loginLocalAccount(
 ): { success: boolean; user?: { id: string; email: string }; profile?: LocalProfile; error?: string } {
   const cleanEmail = emailInput.trim().toLowerCase();
 
-  // 1. Vérification compte démo
-  if (
-    cleanEmail === 'demo@vtc.pro' ||
-    cleanEmail === 'alexandre.martin@azur-prestige-vtc.fr' ||
-    cleanEmail === 'demo'
-  ) {
-    if (passwordInput === 'demo' || passwordInput === 'demo123' || passwordInput === '123456' || passwordInput === '') {
-      return loginAsDemo();
-    }
-  }
-
   // 2. Recherche dans les comptes enregistrés
   const accounts = getRegisteredAccounts();
   const account = accounts.find(a => a.email.toLowerCase() === cleanEmail);
@@ -279,16 +242,6 @@ export function loginLocalAccount(
   return { success: true, user, profile };
 }
 
-// Connexion rapide au compte Démo
-export function loginAsDemo(): {
-  success: boolean;
-  user: { id: string; email: string };
-  profile: LocalProfile;
-} {
-  const user = { id: DEMO_PROFILE.id, email: DEMO_PROFILE.email || 'demo@vtc.pro' };
-  saveActiveSession(user, DEMO_PROFILE);
-  return { success: true, user, profile: DEMO_PROFILE };
-}
 
 // Déconnexion
 export function clearActiveSession() {

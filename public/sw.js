@@ -1,4 +1,4 @@
-const CACHE_NAME = 'vtc-pro-v20-login-fix';
+const CACHE_NAME = 'vtc-pro-v21-no-demo';
 
 self.addEventListener('install', (event) => {
   self.skipWaiting();
