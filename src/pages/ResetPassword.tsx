@@ -15,7 +15,7 @@ export default function ResetPassword() {
     // Gestion du flux PKCE de Supabase (si un 'code' est présent dans l'URL)
     const code = new URLSearchParams(window.location.search).get('code');
     if (code) {
-      supabase?.auth.exchangeCodeForSession(code).then(({ error }) => {
+      supabase?.auth.exchangeCodeForSession(code).then(({ error }: any) => {
         if (error) setError("Le lien de réinitialisation est invalide ou a expiré.");
       });
     }
