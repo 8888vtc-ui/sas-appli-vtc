@@ -65,6 +65,7 @@ export default function TripModal({ isOpen, onClose }: { isOpen: boolean; onClos
   const [isSearchingDropoff, setIsSearchingDropoff] = useState(false);
   const [clientSuggestions, setClientSuggestions] = useState<KnownClient[]>([]);
   const [showClientSuggestions, setShowClientSuggestions] = useState(false);
+  const [showAdvanced, setShowAdvanced] = useState(false);
 
   const pickupTimerRef = useRef<any>(null);
   const dropoffTimerRef = useRef<any>(null);
@@ -326,45 +327,82 @@ export default function TripModal({ isOpen, onClose }: { isOpen: boolean; onClos
                     </AnimatePresence>
                   </div>
 
-                  {/* Téléphone Client */}
-                  <div>
-                    <label className="text-xs text-slate-400 mb-1 block">Téléphone Mobile *</label>
-                    <input
-                      required
-                      type="tel"
-                      placeholder="+33 6 12 34 56 78"
-                      value={formData.clientPhone}
-                      onChange={(e) => setFormData({ ...formData, clientPhone: e.target.value })}
-                      className="w-full bg-[#2c2c2e] border border-white/10 focus:border-blue-500 rounded-xl p-3 text-sm text-white placeholder-slate-500 outline-none"
-                    />
+                  {/* Options Avancées Bouton */}
+                  <div className="sm:col-span-2 mt-2">
+                    <button
+                      type="button"
+                      onClick={() => setShowAdvanced(!showAdvanced)}
+                      className="w-full py-2.5 rounded-xl border border-white/10 text-slate-400 text-xs font-semibold hover:bg-white/5 transition-colors"
+                    >
+                      {showAdvanced ? 'Masquer les options avancées' : '➕ Ajouter Téléphone, Email, N° Vol...'}
+                    </button>
                   </div>
 
-                  {/* Email */}
-                  <div>
-                    <label className="text-xs text-slate-400 mb-1 block">Email Client (Optionnel)</label>
-                    <input
-                      type="email"
-                      placeholder="client@entreprise.com"
-                      value={formData.clientEmail}
-                      onChange={(e) => setFormData({ ...formData, clientEmail: e.target.value })}
-                      className="w-full bg-[#2c2c2e] border border-white/10 focus:border-blue-500 rounded-xl p-3 text-sm text-white placeholder-slate-500 outline-none"
-                    />
-                  </div>
+                  {/* Options Avancées Contenu */}
+                  <AnimatePresence>
+                    {showAdvanced && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: 'auto', opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        className="sm:col-span-2 overflow-hidden"
+                      >
+                        <div className="grid sm:grid-cols-2 gap-3 pt-3 border-t border-white/5 mt-2">
+                          {/* Téléphone Client */}
+                          <div>
+                            <label className="text-xs text-slate-400 mb-1 block">Téléphone Mobile (Optionnel)</label>
+                            <input
+                              type="tel"
+                              placeholder="+33 6 12 34 56 78"
+                              value={formData.clientPhone}
+                              onChange={(e) => setFormData({ ...formData, clientPhone: e.target.value })}
+                              className="w-full bg-[#2c2c2e] border border-white/10 focus:border-blue-500 rounded-xl p-3 text-sm text-white placeholder-slate-500 outline-none"
+                            />
+                          </div>
 
-                  {/* N° Vol ou Train */}
-                  <div>
-                    <label className="text-xs text-slate-400 mb-1 block">N° Vol / Train (Pour pancarte)</label>
-                    <div className="relative">
-                      <Plane className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-amber-400" />
-                      <input
-                        type="text"
-                        placeholder="Ex: AF1234 ou TGV 6120"
-                        value={formData.flightNumber}
-                        onChange={(e) => setFormData({ ...formData, flightNumber: e.target.value.toUpperCase() })}
-                        className="w-full bg-[#2c2c2e] border border-white/10 focus:border-blue-500 rounded-xl py-3 pl-10 pr-3 text-sm text-white placeholder-slate-500 outline-none font-mono"
-                      />
-                    </div>
-                  </div>
+                          {/* Email */}
+                          <div>
+                            <label className="text-xs text-slate-400 mb-1 block">Email Client (Optionnel)</label>
+                            <input
+                              type="email"
+                              placeholder="client@entreprise.com"
+                              value={formData.clientEmail}
+                              onChange={(e) => setFormData({ ...formData, clientEmail: e.target.value })}
+                              className="w-full bg-[#2c2c2e] border border-white/10 focus:border-blue-500 rounded-xl p-3 text-sm text-white placeholder-slate-500 outline-none"
+                            />
+                          </div>
+
+                          {/* N° Vol ou Train */}
+                          <div>
+                            <label className="text-xs text-slate-400 mb-1 block">N° Vol / Train</label>
+                            <div className="relative">
+                              <Plane className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-amber-400" />
+                              <input
+                                type="text"
+                                placeholder="Ex: AF1234"
+                                value={formData.flightNumber}
+                                onChange={(e) => setFormData({ ...formData, flightNumber: e.target.value.toUpperCase() })}
+                                className="w-full bg-[#2c2c2e] border border-white/10 focus:border-blue-500 rounded-xl py-3 pl-10 pr-3 text-sm text-white placeholder-slate-500 outline-none font-mono"
+                              />
+                            </div>
+                          </div>
+
+                          {/* Passagers */}
+                          <div>
+                            <label className="text-xs text-slate-400 mb-1 block">Passagers</label>
+                            <input
+                              type="number"
+                              min={1}
+                              max={8}
+                              value={formData.passengerCount}
+                              onChange={(e) => setFormData({ ...formData, passengerCount: parseInt(e.target.value) || 1 })}
+                              className="w-full bg-[#2c2c2e] border border-white/10 focus:border-blue-500 rounded-xl p-3 text-sm text-white outline-none"
+                            />
+                          </div>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
               </div>
 
@@ -524,18 +562,8 @@ export default function TripModal({ isOpen, onClose }: { isOpen: boolean; onClos
                       className="w-full bg-[#2c2c2e] border border-white/10 focus:border-amber-500 rounded-xl p-3 text-sm text-white outline-none"
                     />
                   </div>
-                  <div>
-                    <label className="text-xs text-slate-400 mb-1 block">Passagers</label>
-                    <input
-                      type="number"
-                      min={1}
-                      max={8}
-                      value={formData.passengerCount}
-                      onChange={(e) => setFormData({ ...formData, passengerCount: parseInt(e.target.value) || 1 })}
-                      className="w-full bg-[#2c2c2e] border border-white/10 focus:border-amber-500 rounded-xl p-3 text-sm text-white outline-none"
-                    />
-                  </div>
-                  <div>
+                  {/* Price */}
+                  <div className="sm:col-span-2">
                     <label className="text-xs text-slate-400 mb-1 block">Tarif TTC (€) *</label>
                     <input
                       required
