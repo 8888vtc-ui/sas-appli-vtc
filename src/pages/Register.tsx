@@ -292,6 +292,7 @@ export default function Register() {
               <div className="flex items-center gap-4 bg-white/5 border border-white/10 rounded-2xl px-5 focus-within:border-blue-500/50 transition-all group">
                 <CreditCard className="w-5 h-5 text-[#64748b] group-focus-within:text-blue-400 transition-colors" />
                 <input
+                  required
                   type="text"
                   placeholder="N° Carte Professionnelle VTC (ex: T-060-XXXXXXXX)"
                   value={formData.driverCardNumber}

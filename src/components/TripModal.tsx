@@ -590,6 +590,7 @@ export default function TripModal({ isOpen, onClose }: { isOpen: boolean; onClos
                     <div>
                       <label className="text-xs text-slate-400 mb-1 block">Date Fin MAD</label>
                       <input
+                        required
                         type="date"
                         value={formData.disposalEndDate}
                         onChange={(e) => setFormData({ ...formData, disposalEndDate: e.target.value })}
@@ -599,6 +600,7 @@ export default function TripModal({ isOpen, onClose }: { isOpen: boolean; onClos
                     <div>
                       <label className="text-xs text-slate-400 mb-1 block">Heure Fin MAD</label>
                       <input
+                        required
                         type="time"
                         value={formData.disposalEndTime}
                         onChange={(e) => setFormData({ ...formData, disposalEndTime: e.target.value })}
@@ -608,6 +610,7 @@ export default function TripModal({ isOpen, onClose }: { isOpen: boolean; onClos
                     <div>
                       <label className="text-xs text-slate-400 mb-1 block">Zone Géographique</label>
                       <input
+                        required
                         type="text"
                         placeholder="Ex: Île-de-France"
                         value={formData.disposalZone}
