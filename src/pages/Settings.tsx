@@ -90,6 +90,7 @@ export default function Settings() {
     showToast('Chauffeur retiré avec succès', 'info');
   };
 
+  const handleSetPrimaryDriver = (d: CompanyDriver) => {
     setLocalSettings({
       ...localSettings,
       driverName: d.fullName,
