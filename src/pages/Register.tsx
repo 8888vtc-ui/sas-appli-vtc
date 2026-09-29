@@ -103,6 +103,14 @@ export default function Register() {
                 driver_card_number: formData.driverCardNumber,
                 role: 'admin',
               }]);
+              
+              // Use Supabase data for the session instead of local fake IDs
+              localResult.user.id = authData.user.id;
+              localResult.profile.id = authData.user.id;
+              localResult.profile.company_id = compData.id;
+              if (localResult.profile.company) {
+                 localResult.profile.company.id = compData.id;
+              }
             }
           }
         } catch (cloudErr) {

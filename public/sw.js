@@ -1,4 +1,4 @@
-const CACHE_NAME = 'vtc-pro-v13-supabase-cloud';
+const CACHE_NAME = 'vtc-pro-v14-supabase-bugfix';
 
 self.addEventListener('install', (event) => {
   self.skipWaiting();
