@@ -28,9 +28,11 @@ import {
 } from '../lib/authService';
 
 import { showToast } from '../components/Toast';
+import { useAuth } from '../context/AuthContext';
 
 export default function Settings() {
   const { settings, updateSettings } = useApp();
+  const { signOut } = useAuth();
   const [drivers, setDrivers] = useState<CompanyDriver[]>(() => getCompanyDrivers());
   const [isDriverModalOpen, setIsDriverModalOpen] = useState(false);
   const [driverToDelete, setDriverToDelete] = useState<string | null>(null);
@@ -509,6 +511,22 @@ export default function Settings() {
           </label>
         </div>
       </div>
+
+      {/* Logout */}
+      <div className="pt-6 border-t border-white/10 flex justify-center">
+        <button
+          type="button"
+          onClick={() => {
+            if(window.confirm('Voulez-vous vraiment vous déconnecter ?')) {
+              signOut();
+            }
+          }}
+          className="py-3 px-8 rounded-2xl bg-red-500/10 border border-red-500/20 text-red-500 font-bold text-sm hover:bg-red-500/20 hover:text-red-400 transition-all"
+        >
+          Se déconnecter
+        </button>
+      </div>
+      
     </motion.div>
   );
 }
