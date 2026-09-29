@@ -13,7 +13,7 @@ export default function ResetPassword() {
 
   useEffect(() => {
     // Vérifier si on est bien arrivé via un lien de réinitialisation
-    supabase?.auth.getSession().then(({ data: { session } }) => {
+    supabase?.auth.getSession().then(({ data: { session } }: any) => {
       if (!session) {
         setError("Lien invalide ou expiré. Veuillez refaire une demande de réinitialisation.");
       }
