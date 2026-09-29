@@ -327,6 +327,19 @@ export default function TripModal({ isOpen, onClose }: { isOpen: boolean; onClos
                     </AnimatePresence>
                   </div>
 
+                  {/* Téléphone Client */}
+                  <div>
+                    <label className="text-xs text-slate-400 mb-1 block">Téléphone Mobile *</label>
+                    <input
+                      required
+                      type="tel"
+                      placeholder="+33 6 12 34 56 78"
+                      value={formData.clientPhone}
+                      onChange={(e) => setFormData({ ...formData, clientPhone: e.target.value })}
+                      className="w-full bg-[#2c2c2e] border border-white/10 focus:border-blue-500 rounded-xl p-3 text-sm text-white placeholder-slate-500 outline-none"
+                    />
+                  </div>
+
                   {/* Options Avancées Bouton */}
                   <div className="sm:col-span-2 mt-2">
                     <button
@@ -334,7 +347,7 @@ export default function TripModal({ isOpen, onClose }: { isOpen: boolean; onClos
                       onClick={() => setShowAdvanced(!showAdvanced)}
                       className="w-full py-2.5 rounded-xl border border-white/10 text-slate-400 text-xs font-semibold hover:bg-white/5 transition-colors"
                     >
-                      {showAdvanced ? 'Masquer les options avancées' : '➕ Ajouter Téléphone, Email, N° Vol...'}
+                      {showAdvanced ? 'Masquer les options avancées' : '➕ Ajouter Email, N° Vol, Passagers...'}
                     </button>
                   </div>
 
@@ -348,18 +361,6 @@ export default function TripModal({ isOpen, onClose }: { isOpen: boolean; onClos
                         className="sm:col-span-2 overflow-hidden"
                       >
                         <div className="grid sm:grid-cols-2 gap-3 pt-3 border-t border-white/5 mt-2">
-                          {/* Téléphone Client */}
-                          <div>
-                            <label className="text-xs text-slate-400 mb-1 block">Téléphone Mobile (Optionnel)</label>
-                            <input
-                              type="tel"
-                              placeholder="+33 6 12 34 56 78"
-                              value={formData.clientPhone}
-                              onChange={(e) => setFormData({ ...formData, clientPhone: e.target.value })}
-                              className="w-full bg-[#2c2c2e] border border-white/10 focus:border-blue-500 rounded-xl p-3 text-sm text-white placeholder-slate-500 outline-none"
-                            />
-                          </div>
-
                           {/* Email */}
                           <div>
                             <label className="text-xs text-slate-400 mb-1 block">Email Client (Optionnel)</label>
