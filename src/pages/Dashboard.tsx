@@ -156,13 +156,13 @@ export default function Dashboard() {
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               <div style={{
-                width: 8, height: 8, borderRadius: 4,
+                width: 10, height: 10, borderRadius: 5,
                 background: nextTrip.status === 'in_progress' ? c.green : c.blue,
-                boxShadow: `0 0 8px ${nextTrip.status === 'in_progress' ? c.green : c.blue}`,
+                boxShadow: `0 0 10px ${nextTrip.status === 'in_progress' ? c.green : c.blue}`,
                 animation: nextTrip.status === 'in_progress' ? 'pulse 2s infinite' : 'none',
               }} />
               <span style={{
-                fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em',
+                fontSize: 13, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em',
                 color: nextTrip.status === 'in_progress' ? c.green : c.blue,
               }}>
                 {nextTrip.status === 'in_progress' ? '🚗 Course en cours' : '📅 Prochaine course'}
@@ -186,8 +186,8 @@ export default function Dashboard() {
 
           {/* Client + Prix */}
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 4 }}>
-            <span style={{ fontSize: 19, fontWeight: 700, color: '#fff' }}>{nextTrip.clientName}</span>
-            <span style={{ fontSize: 21, fontWeight: 800, color: '#fff', flexShrink: 0, marginLeft: 8 }}>
+            <span style={{ fontSize: 22, fontWeight: 700, color: '#fff' }}>{nextTrip.clientName}</span>
+            <span style={{ fontSize: 24, fontWeight: 800, color: '#fff', flexShrink: 0, marginLeft: 8 }}>
               {formatEUR(nextTrip.price)}
             </span>
           </div>
@@ -200,15 +200,15 @@ export default function Dashboard() {
 
           {/* Trajet */}
           <div style={{
-            display: 'flex', alignItems: 'center', gap: 8,
-            padding: '10px 12px', background: 'rgba(0,0,0,0.2)', borderRadius: 12, marginBottom: 14,
+            display: 'flex', alignItems: 'center', gap: 10,
+            padding: '14px 16px', background: 'rgba(0,0,0,0.3)', borderRadius: 12, marginBottom: 16,
           }}>
-            <MapPin style={{ width: 15, height: 15, color: c.blue, flexShrink: 0 }} />
-            <span style={{ fontSize: 13, color: '#ebebf5cc', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', flex: 1 }}>
+            <MapPin style={{ width: 18, height: 18, color: c.blue, flexShrink: 0 }} />
+            <span style={{ fontSize: 15, color: '#ebebf5cc', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', flex: 1 }}>
               {nextTrip.pickUpLocation}
             </span>
             <span style={{ color: '#48484a' }}>→</span>
-            <span style={{ fontSize: 13, color: c.gray, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', flex: 1, textAlign: 'right' }}>
+            <span style={{ fontSize: 15, color: c.gray, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', flex: 1, textAlign: 'right' }}>
               {nextTrip.dropOffLocation || 'Mise à disposition'}
             </span>
           </div>
@@ -272,15 +272,15 @@ export default function Dashboard() {
       {/* ═══════════════════════════════════════════
            RÉSUMÉ + RECHERCHE (ligne compacte)
            ═══════════════════════════════════════════ */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 2px' }}>
-        <span style={{ fontSize: 13, color: c.gray }}>
-          Aujourd'hui : {todayCount.n} course{todayCount.n !== 1 ? 's' : ''} • {formatEUR(todayCount.rev)}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 4px', marginBottom: 6 }}>
+        <span style={{ fontSize: 15, color: c.gray, fontWeight: 500 }}>
+          Aujourd'hui : {todayCount.n} course{todayCount.n !== 1 ? 's' : ''} • <strong style={{color:'#fff'}}>{formatEUR(todayCount.rev)}</strong>
         </span>
         {trips.length > 4 && (
           <button onClick={() => { setShowSearch(!showSearch); if (showSearch) setSearchQuery(''); }}
-            style={{ width: 32, height: 32, borderRadius: 10, background: showSearch ? c.blue : c.card2, border: 'none',
+            style={{ width: 36, height: 36, borderRadius: 12, background: showSearch ? c.blue : c.card2, border: 'none',
               display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <Search style={{ width: 15, height: 15, color: showSearch ? '#fff' : c.gray }} />
+            <Search style={{ width: 18, height: 18, color: showSearch ? '#fff' : c.gray }} />
           </button>
         )}
       </div>
@@ -345,27 +345,27 @@ export default function Dashboard() {
                 <button
                   onClick={() => { setExpandedId(isOpen ? null : trip.id); setMoreId(null); }}
                   style={{
-                    width: '100%', display: 'flex', alignItems: 'center', gap: 12,
-                    padding: '13px 16px', background: isOpen ? 'rgba(10,132,255,0.05)' : 'transparent',
+                    width: '100%', display: 'flex', alignItems: 'center', gap: 14,
+                    padding: '16px', background: isOpen ? 'rgba(10,132,255,0.05)' : 'transparent',
                     textAlign: 'left', border: 'none',
                   }}
                 >
                   {/* Date compacte */}
-                  <div style={{ width: 42, textAlign: 'center', flexShrink: 0 }}>
-                    <div style={{ fontSize: 18, fontWeight: 800, color: '#fff', lineHeight: 1.1 }}>
+                  <div style={{ width: 46, textAlign: 'center', flexShrink: 0 }}>
+                    <div style={{ fontSize: 20, fontWeight: 800, color: '#fff', lineHeight: 1.1 }}>
                       {format(new Date(trip.date + 'T00:00:00'), 'd')}
                     </div>
-                    <div style={{ fontSize: 10, fontWeight: 600, color: c.gray, textTransform: 'capitalize' }}>
+                    <div style={{ fontSize: 12, fontWeight: 600, color: c.gray, textTransform: 'capitalize' }}>
                       {format(new Date(trip.date + 'T00:00:00'), 'MMM', { locale: fr })}
                     </div>
                   </div>
 
                   {/* Infos */}
                   <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ fontSize: 15, fontWeight: 600, color: '#fff', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                    <div style={{ fontSize: 16, fontWeight: 600, color: '#fff', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                       {trip.clientName}
                     </div>
-                    <div style={{ fontSize: 13, color: c.gray, marginTop: 2 }}>
+                    <div style={{ fontSize: 14, color: c.gray, marginTop: 4 }}>
                       {trip.time}
                       {trip.flightNumber && <span style={{ color: c.cyan }}> • ✈ {trip.flightNumber}</span>}
                     </div>
@@ -373,9 +373,9 @@ export default function Dashboard() {
 
                   {/* Prix + Statut */}
                   <div style={{ textAlign: 'right', flexShrink: 0 }}>
-                    <div style={{ fontSize: 16, fontWeight: 700, color: '#fff' }}>{formatEUR(trip.price)}</div>
+                    <div style={{ fontSize: 18, fontWeight: 700, color: '#fff', marginBottom: 4 }}>{formatEUR(trip.price)}</div>
                     <span style={{
-                      fontSize: 10, fontWeight: 700, padding: '2px 6px', borderRadius: 4,
+                      fontSize: 11, fontWeight: 700, padding: '4px 8px', borderRadius: 6,
                       background: `${st?.color}20`, color: st?.color,
                     }}>{st?.label}</span>
                   </div>

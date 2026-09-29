@@ -1,4 +1,4 @@
-const CACHE_NAME = 'vtc-pro-v17-auth-fix';
+const CACHE_NAME = 'vtc-pro-v18-ui-cleanup';
 
 self.addEventListener('install', (event) => {
   self.skipWaiting();

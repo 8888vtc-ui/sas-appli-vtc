@@ -53,12 +53,12 @@ export default function Layout({ children, onNewTrip }: { children: React.ReactN
               <Car className="w-6 h-6 text-white" />
             </div>
             <div className="overflow-hidden">
-              <h1 className="text-[17px] font-extrabold text-white truncate tracking-tight">
+              <h1 className="text-xl font-bold text-white truncate tracking-tight">
                 {settings.companyName || 'VTC Pro'}
               </h1>
-              <div className="flex items-center gap-1.5 text-[10px] text-emerald-400 font-black uppercase tracking-widest">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                Service Actif
+              <div className="flex items-center gap-2 text-xs text-emerald-400 font-medium">
+                <span className="w-2 h-2 rounded-full bg-emerald-500" />
+                En service
               </div>
             </div>
           </div>
@@ -106,36 +106,36 @@ export default function Layout({ children, onNewTrip }: { children: React.ReactN
              OS-STYLE BOTTOM TAB BAR (DOCK)
              ═══════════════════════════════════════════ */}
         <nav className="fixed bottom-0 left-0 right-0 z-50 flex justify-center pointer-events-none">
-          <div className="w-full max-w-md pointer-events-auto bg-[#1c1c1e]/85 backdrop-blur-3xl border-t border-white/10 pb-[max(env(safe-area-inset-bottom,0px),10px)] pt-3 px-2 rounded-t-[36px] shadow-[0_-20px_40px_rgba(0,0,0,0.6)] flex items-center justify-around relative">
+          <div className="w-full max-w-md pointer-events-auto bg-[#1c1c1e] border-t border-white/5 pb-[max(env(safe-area-inset-bottom,0px),16px)] pt-4 px-4 rounded-t-3xl shadow-[0_-10px_40px_rgba(0,0,0,0.8)] flex items-center justify-between">
             
             <button onClick={() => navigate('/')} className="flex flex-col items-center justify-center gap-1.5 min-w-[64px] active:scale-90 transition-all">
               <TabIcon icon={Calendar} active={isActive('/')} />
-              <span className={`text-[10px] font-semibold tracking-tight ${isActive('/') ? 'text-blue-500 font-bold' : 'text-slate-500'}`}>Planning</span>
+              <span className={`text-xs font-medium ${isActive('/') ? 'text-blue-500' : 'text-slate-500'}`}>Planning</span>
             </button>
 
             <button onClick={() => navigate('/coffre-fort')} className="flex flex-col items-center justify-center gap-1.5 min-w-[64px] active:scale-90 transition-all">
               <TabIcon icon={ShieldCheck} active={isActive('/coffre-fort')} />
-              <span className={`text-[10px] font-semibold tracking-tight ${isActive('/coffre-fort') ? 'text-blue-500 font-bold' : 'text-slate-500'}`}>Coffre</span>
+              <span className={`text-xs font-medium ${isActive('/coffre-fort') ? 'text-blue-500' : 'text-slate-500'}`}>Documents</span>
             </button>
 
             {/* BIG CENTER FAB FOR NEW TRIP */}
             <div className="relative -top-8 px-2">
               <button
                 onClick={onNewTrip}
-                className="w-[68px] h-[68px] rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-[0_10px_35px_rgba(10,132,255,0.5)] border-[5px] border-black active:scale-95 transition-all"
+                className="w-16 h-16 rounded-full bg-blue-600 flex items-center justify-center shadow-lg shadow-blue-600/30 border-4 border-[#1c1c1e] active:scale-95 transition-all"
               >
-                <Plus className="w-8 h-8 text-white stroke-[3.5]" />
+                <Plus className="w-8 h-8 text-white stroke-[3]" />
               </button>
             </div>
 
             <button onClick={() => navigate('/finances')} className="flex flex-col items-center justify-center gap-1.5 min-w-[64px] active:scale-90 transition-all">
               <TabIcon icon={Wallet} active={isActive('/finances')} />
-              <span className={`text-[10px] font-semibold tracking-tight ${isActive('/finances') ? 'text-blue-500 font-bold' : 'text-slate-500'}`}>Finances</span>
+              <span className={`text-xs font-medium ${isActive('/finances') ? 'text-blue-500' : 'text-slate-500'}`}>Finances</span>
             </button>
 
             <button onClick={() => navigate('/outils')} className="flex flex-col items-center justify-center gap-1.5 min-w-[64px] active:scale-90 transition-all">
               <TabIcon icon={LayoutGrid} active={isActive('/outils')} />
-              <span className={`text-[10px] font-semibold tracking-tight ${isActive('/outils') ? 'text-blue-500 font-bold' : 'text-slate-500'}`}>Outils</span>
+              <span className={`text-xs font-medium ${isActive('/outils') ? 'text-blue-500' : 'text-slate-500'}`}>Réglages</span>
             </button>
 
           </div>
