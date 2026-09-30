@@ -43,9 +43,6 @@ export default function Layout({ children, onNewTrip }: { children: React.ReactN
            ═══════════════════════════════════════════ */}
       <nav className="hidden md:flex flex-col w-72 shrink-0 bg-[#111111] border-r border-white/5 h-screen sticky top-0 p-6 shadow-2xl">
         <button onClick={() => navigate('/')} className="flex items-center gap-3 mb-12 text-left cursor-pointer hover:opacity-80 transition-opacity">
-          <div className="w-12 h-12 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center shadow-lg shadow-blue-500/20">
-            <Car className="w-7 h-7 text-white" />
-          </div>
           <div className="overflow-hidden">
             <h1 className="text-xl font-extrabold text-white truncate tracking-tight">
               {settings.companyName || 'VTC Pro'}
@@ -88,9 +85,6 @@ export default function Layout({ children, onNewTrip }: { children: React.ReactN
         {/* HEADER */}
         <header className="flex items-center justify-between px-5 py-4 border-b border-white/5 sticky top-0 z-40 bg-black/85 md:bg-[#0a0a0a]/85 backdrop-blur-xl md:px-10 md:py-6">
           <button onClick={() => navigate('/')} className="flex items-center gap-3 md:hidden text-left cursor-pointer hover:opacity-80 transition-opacity">
-            <div className="w-10 h-10 rounded-[12px] bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center shadow-lg shadow-blue-500/20">
-              <Car className="w-6 h-6 text-white" />
-            </div>
             <div className="overflow-hidden">
               <h1 className="text-xl font-bold text-white truncate tracking-tight">
                 {settings.companyName || 'VTC Pro'}
