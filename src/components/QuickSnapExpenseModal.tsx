@@ -40,6 +40,7 @@ const PRESETS: Array<{
   { id: 'parking', label: 'Parking', icon: '🅿️', category: 'parking', description: 'Stationnement Client', tvaRate: 20, tvaDeductible: true },
 ];
 
+export default function QuickSnapExpenseModal({ isOpen, onClose, onSave }: QuickSnapModalProps) {
   const { settings } = useApp();
   const [selectedPreset, setSelectedPreset] = useState(PRESETS[0]);
   const [amount, setAmount] = useState('');
