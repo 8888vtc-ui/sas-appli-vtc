@@ -23,6 +23,7 @@ import QRCodeHub from './pages/QRCodeHub';
 import FinancesHub from './pages/FinancesHub';
 import ToolsHub from './pages/ToolsHub';
 import WhatsAppRadar from './pages/WhatsAppRadar';
+import CreatorProfile from './pages/CreatorProfile';
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth();
@@ -63,6 +64,7 @@ function ProtectedLayout() {
                 <Route path="/comptabilite" element={<Accounting />} />
                 <Route path="/notes-de-frais" element={<ExpenseReports />} />
                 <Route path="/whatsapp-radar" element={<WhatsAppRadar />} />
+                <Route path="/creator" element={<CreatorProfile />} />
               </Routes>
               <TripModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
             </Layout>

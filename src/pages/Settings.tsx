@@ -11,8 +11,8 @@ import {
   Users,
   UserPlus,
   Trash2,
-  CheckCircle2,
   X,
+  Bot,
   CreditCard,
   Phone,
   Mail,
@@ -626,6 +626,25 @@ export default function Settings() {
             />
           </label>
         </div>
+      </div>
+
+      {/* Creator Profile Link */}
+      <div className="pt-8 pb-4 flex justify-center">
+        <button
+          type="button"
+          onClick={() => navigate('/creator')}
+          className="group flex flex-col items-center gap-2 cursor-pointer transition-all active:scale-95"
+        >
+          <div className="w-12 h-12 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-[0_0_15px_rgba(99,102,241,0.3)] group-hover:shadow-[0_0_25px_rgba(99,102,241,0.5)] border-2 border-[#1c1c1e]">
+            <Bot className="w-6 h-6 text-white" />
+          </div>
+          <div className="text-center">
+            <span className="text-xs text-slate-500 block">Conçu et développé par</span>
+            <span className="text-sm font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">
+              David Chemla - Expert IA
+            </span>
+          </div>
+        </button>
       </div>
 
       {/* Logout */}
