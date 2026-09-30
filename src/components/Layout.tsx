@@ -41,7 +41,7 @@ export default function Layout({ children, onNewTrip }: { children: React.ReactN
       {/* ═══════════════════════════════════════════
            DESKTOP SIDEBAR (Cachée sur mobile)
            ═══════════════════════════════════════════ */}
-      <nav className="hidden md:flex flex-col w-72 shrink-0 bg-[#111111] border-r border-white/5 h-screen sticky top-0 p-6 shadow-2xl">
+      <nav className="hidden md:flex flex-col w-72 shrink-0 glass border-r border-white/10 h-screen sticky top-0 p-6 z-50">
         <button onClick={() => navigate('/')} className="flex items-center gap-3 mb-12 text-left cursor-pointer hover:opacity-80 transition-opacity">
           <div className="overflow-hidden">
             <h1 className="text-xl font-extrabold text-white truncate tracking-tight">
@@ -80,10 +80,10 @@ export default function Layout({ children, onNewTrip }: { children: React.ReactN
       {/* ═══════════════════════════════════════════
            MAIN CONTENT AREA
            ═══════════════════════════════════════════ */}
-      <div className="flex-1 w-full bg-black min-h-screen flex flex-col relative pb-[calc(90px+env(safe-area-inset-bottom,0px))] md:pb-0 md:bg-[#0a0a0a]">
+      <div className="flex-1 w-full min-h-screen flex flex-col relative pb-[calc(90px+env(safe-area-inset-bottom,0px))] md:pb-0 bg-transparent">
         
         {/* HEADER */}
-        <header className="flex items-center justify-between px-5 py-4 border-b border-white/5 sticky top-0 z-40 bg-black/85 md:bg-[#0a0a0a]/85 backdrop-blur-xl md:px-10 md:py-6">
+        <header className="flex items-center justify-between px-5 py-4 border-b border-white/10 sticky top-0 z-40 glass md:px-10 md:py-6">
           <button onClick={() => navigate('/')} className="flex items-center gap-3 md:hidden text-left cursor-pointer hover:opacity-80 transition-opacity">
             <div className="overflow-hidden">
               <h1 className="text-xl font-bold text-white truncate tracking-tight">

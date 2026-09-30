@@ -3,29 +3,27 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
 /* ═══════════════════════════════════════════════════
-   DESIGN SYSTEM — APPLE iOS DARK MODE
+   PREMIUM SAAS DESIGN SYSTEM (Neo-Apple Dark Pro)
    ═══════════════════════════════════════════════════ */
 
 :root {
-  --bg: #000000;
-  --bg-elevated: #1c1c1e;
-  --bg-secondary: #2c2c2e;
-  --bg-tertiary: #3a3a3c;
-  --separator: rgba(84, 84, 88, 0.36);
+  --bg: #050505;
+  --bg-elevated: rgba(28, 28, 30, 0.65);
+  --bg-secondary: rgba(44, 44, 46, 0.7);
+  --bg-tertiary: rgba(58, 58, 60, 0.8);
+  --separator: rgba(255, 255, 255, 0.08);
+  --glass-border: rgba(255, 255, 255, 0.12);
+  --glass-highlight: rgba(255, 255, 255, 0.05);
   --label: #ffffff;
-  --label-secondary: #ebebf5cc;
-  --label-tertiary: #ebebf54d;
-  --label-quaternary: #ebebf52e;
-  --blue: #0a84ff;
-  --green: #30d158;
+  --label-secondary: #a1a1aa;
+  --label-tertiary: #71717a;
+  --blue: #007aff;
+  --blue-glow: rgba(0, 122, 255, 0.4);
+  --green: #34c759;
   --orange: #ff9f0a;
   --red: #ff453a;
   --purple: #bf5af2;
-  --cyan: #64d2ff;
-  --yellow: #ffd60a;
-  --pink: #ff375f;
-  --indigo: #5e5ce6;
-  --teal: #6ac4dc;
+  --cyan: #32ade6;
   --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
 }
 
@@ -36,7 +34,6 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-tap-highlight-color: transparent;
-  -webkit-overflow-scrolling: touch;
 }
 
 html {
@@ -44,19 +41,43 @@ html {
   color-scheme: dark;
 }
 
+/* ── Premium Background ── */
 body {
-  background: var(--bg);
+  background: radial-gradient(circle at 50% 0%, #1a1a24 0%, var(--bg) 60%);
+  background-attachment: fixed;
   color: var(--label);
   font-family: var(--font);
   overflow-x: hidden;
   min-height: 100vh;
   min-height: 100dvh;
-  line-height: 1.4;
-  letter-spacing: -0.01em;
+  line-height: 1.5;
+  letter-spacing: -0.015em;
 }
 
 /* ── Typography ── */
-h1, h2, h3 { letter-spacing: -0.025em; font-weight: 700; }
+h1, h2, h3, h4 { 
+  letter-spacing: -0.03em; 
+  font-weight: 800; 
+}
+
+/* ── Premium Glass Cards ── */
+.glass {
+  background: var(--bg-elevated);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid var(--glass-border);
+  box-shadow: 
+    0 4px 24px -1px rgba(0,0,0,0.4),
+    inset 0 1px 0 var(--glass-highlight);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.glass:hover {
+  border-color: rgba(255,255,255, 0.2);
+  box-shadow: 
+    0 8px 32px -1px rgba(0,0,0,0.5),
+    inset 0 1px 0 rgba(255,255,255, 0.1);
+}
 
 /* ── Buttons ── */
 button {
@@ -64,47 +85,60 @@ button {
   cursor: pointer;
   border: none;
   outline: none;
-  transition: transform 0.15s ease, opacity 0.15s ease;
+  transition: all 0.2s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 button:active {
-  transform: scale(0.97);
-  opacity: 0.8;
+  transform: scale(0.95);
+  filter: brightness(0.9);
 }
 
-/* ── Inputs ── */
+/* ── Inputs & Forms ── */
 input, select, textarea {
   font-family: inherit;
   font-size: 16px;
-  transition: border-color 0.2s ease;
+  background: rgba(0,0,0,0.2) !important;
+  border: 1px solid var(--separator) !important;
+  color: #fff !important;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
 }
 
 input:focus, select:focus, textarea:focus {
   border-color: var(--blue) !important;
+  background: rgba(0,0,0,0.4) !important;
+  box-shadow: 0 0 0 3px var(--blue-glow), inset 0 2px 4px rgba(0,0,0,0.2) !important;
   outline: none;
 }
 
-/* ── Glass cards ── */
-.glass {
-  background: var(--bg-elevated);
-  border: 0.5px solid var(--separator);
+/* ── Special Glow Text ── */
+.text-glow-blue {
+  text-shadow: 0 0 24px var(--blue-glow);
 }
 
 /* ── Animations ── */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(6px); }
-  to { opacity: 1; transform: translateY(0); }
+@keyframes fadeInScale {
+  from { opacity: 0; transform: scale(0.98) translateY(10px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
 }
-.animate-fade-in { animation: fadeIn 0.4s ease-out forwards; }
+.animate-fade-in { animation: fadeInScale 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
 
-@keyframes slideUp {
-  from { opacity: 0; transform: translateY(20px); }
+@keyframes slideUpFade {
+  from { opacity: 0; transform: translateY(30px); }
   to { opacity: 1; transform: translateY(0); }
 }
-.animate-slide-up { animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+.animate-slide-up { animation: slideUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
 
 /* ── Scrollbar ── */
-::-webkit-scrollbar { width: 0px; }
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { 
+  background: rgba(255,255,255,0.1); 
+  border-radius: 10px; 
+}
+::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
+
 .overflow-x-auto::-webkit-scrollbar { display: none; }
 .overflow-x-auto { -ms-overflow-style: none; scrollbar-width: none; }
 
@@ -113,22 +147,13 @@ input:focus, select:focus, textarea:focus {
   body { padding-bottom: env(safe-area-inset-bottom); }
 }
 
-/* ── Prevent iOS zoom on inputs ── */
 @media (max-width: 640px) {
   input, select, textarea { font-size: 16px !important; }
 }
 
-/* ── Suppress Netlify badge ── */
-#netlify-drawer,
-iframe#netlify-drawer,
-iframe[src*="netlify"],
-[data-netlify-drawer],
-[data-netlify-identity],
-.netlify-badge {
+/* ── Hide Netlify Badge ── */
+#netlify-drawer, iframe[src*="netlify"], .netlify-badge {
   display: none !important;
   visibility: hidden !important;
   opacity: 0 !important;
-  height: 0 !important;
-  width: 0 !important;
-  pointer-events: none !important;
 }
