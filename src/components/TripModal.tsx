@@ -293,7 +293,7 @@ export default function TripModal({ isOpen, onClose }: { isOpen: boolean; onClos
                   <div className="relative z-50">
                     <input required type="text" placeholder="Nom du client" value={formData.clientName} onChange={(e) => handleClientNameChange(e.target.value)}
                       onFocus={() => { if (knownClients.length > 0) { setClientSuggestions(knownClients.slice(0, 10)); setShowClientSuggestions(true); } }}
-                      className="w-full min-h-[56px] py-4 bg-slate-800 border-2 border-slate-700 focus:border-blue-500 rounded-xl px-4 text-lg font-bold text-white placeholder-slate-400 outline-none" />
+                      className="w-full h-12 py-3.5 bg-slate-900 border border-slate-700 focus:border-blue-500 rounded-xl px-4 text-base font-bold text-white placeholder-slate-400 outline-none" />
                     
                     <AnimatePresence>
                       {showClientSuggestions && clientSuggestions.length > 0 && (
@@ -312,7 +312,7 @@ export default function TripModal({ isOpen, onClose }: { isOpen: boolean; onClos
                   </div>
                   <div>
                     <input required type="tel" placeholder="Téléphone" value={formData.clientPhone} onChange={(e) => setFormData({ ...formData, clientPhone: e.target.value })}
-                      className="w-full min-h-[56px] py-4 bg-slate-800 border-2 border-slate-700 focus:border-blue-500 rounded-xl px-4 text-lg font-bold text-white placeholder-slate-400 outline-none" />
+                      className="w-full h-12 py-3.5 bg-slate-900 border border-slate-700 focus:border-blue-500 rounded-xl px-4 text-base font-bold text-white placeholder-slate-400 outline-none" />
                   </div>
                 </div>
               </div>
@@ -326,9 +326,9 @@ export default function TripModal({ isOpen, onClose }: { isOpen: boolean; onClos
                 <div className="space-y-3">
                   <div className="relative z-40">
                     <input required type="text" placeholder="Lieu de Départ" value={formData.pickUpLocation} onChange={(e) => handlePickupChange(e.target.value)}
-                      className="w-full min-h-[56px] py-4 bg-slate-800 border-2 border-slate-700 focus:border-emerald-500 rounded-xl px-4 text-lg font-bold text-white placeholder-slate-400 outline-none pr-14" />
-                    <button type="button" onClick={handleCurrentPosition} title="Ma position" className="absolute right-2 top-1/2 -translate-y-1/2 h-12 w-12 bg-slate-700/50 hover:bg-slate-700 rounded-lg flex items-center justify-center text-emerald-400 active:scale-95 transition-all">
-                      <LocateFixed className="w-6 h-6 stroke-[2.5]" />
+                      className="w-full h-12 py-3.5 bg-slate-900 border border-slate-700 focus:border-emerald-500 rounded-xl px-4 text-base font-bold text-white placeholder-slate-400 outline-none pr-14" />
+                    <button type="button" onClick={handleCurrentPosition} title="Ma position" className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 bg-slate-800 hover:bg-slate-700 rounded-lg flex items-center justify-center text-emerald-400 active:scale-95 transition-all">
+                      <LocateFixed className="w-5 h-5 stroke-[2.5]" />
                     </button>
                     
                     {pickupSuggestions.length > 0 && (
@@ -350,7 +350,7 @@ export default function TripModal({ isOpen, onClose }: { isOpen: boolean; onClos
                   {formData.tripType === 'transfer' ? (
                     <div className="relative z-30">
                       <input required type="text" placeholder="Destination" value={formData.dropOffLocation} onChange={(e) => handleDropoffChange(e.target.value)}
-                        className="w-full min-h-[56px] py-4 bg-slate-800 border-2 border-slate-700 focus:border-emerald-500 rounded-xl px-4 text-lg font-bold text-white placeholder-slate-400 outline-none" />
+                        className="w-full h-12 py-3.5 bg-slate-900 border border-slate-700 focus:border-emerald-500 rounded-xl px-4 text-base font-bold text-white placeholder-slate-400 outline-none" />
                       
                       {dropoffSuggestions.length > 0 && (
                         <div className="absolute left-0 right-0 top-full mt-2 z-50 bg-slate-800 border-2 border-emerald-500/50 rounded-xl overflow-hidden shadow-2xl">
@@ -379,7 +379,7 @@ export default function TripModal({ isOpen, onClose }: { isOpen: boolean; onClos
                       ))}
                       <input type="text" placeholder="Autre durée..." value={!['2h','4h','Demi-journée','Journée'].includes(formData.disposalZone) ? formData.disposalZone : ''}
                         onChange={(e) => setMadDuration(e.target.value)}
-                        className="col-span-2 sm:col-span-4 min-h-[56px] py-4 bg-slate-800 border-2 border-slate-700 focus:border-amber-500 rounded-xl px-4 text-base font-bold text-white placeholder-slate-400 outline-none" />
+                        className="col-span-2 sm:col-span-4 h-12 py-3.5 bg-slate-900 border border-slate-700 focus:border-amber-500 rounded-xl px-4 text-base font-bold text-white placeholder-slate-400 outline-none" />
                     </div>
                   )}
                 </div>
@@ -400,9 +400,9 @@ export default function TripModal({ isOpen, onClose }: { isOpen: boolean; onClos
 
                 <div className="grid grid-cols-2 gap-3">
                   <input required type="date" value={formData.date} onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-                    className="w-full min-h-[56px] py-4 bg-slate-800 border-2 border-slate-700 focus:border-amber-500 rounded-xl px-4 text-lg font-bold text-white outline-none" />
+                    className="w-full h-12 py-3.5 bg-slate-900 border border-slate-700 focus:border-amber-500 rounded-xl px-4 text-base font-bold text-white outline-none" />
                   <input required type="time" value={formData.time} onChange={(e) => setFormData({ ...formData, time: e.target.value })}
-                    className="w-full min-h-[56px] py-4 bg-slate-800 border-2 border-slate-700 focus:border-amber-500 rounded-xl px-4 text-lg font-bold text-white outline-none" />
+                    className="w-full h-12 py-3.5 bg-slate-900 border border-slate-700 focus:border-amber-500 rounded-xl px-4 text-base font-bold text-white outline-none" />
                 </div>
               </div>
 
@@ -420,10 +420,10 @@ export default function TripModal({ isOpen, onClose }: { isOpen: boolean; onClos
                   )}
                 </div>
                 
-                <div className="relative">
-                  <input required type="text" inputMode="decimal" pattern="[0-9]*" placeholder="0" value={formData.price || ''} onChange={(e) => setFormData({ ...formData, price: parseFloat(e.target.value) || 0 })}
-                    className={`w-full min-h-[72px] py-4 bg-slate-800 border-2 ${formData.tripType === 'transfer' ? 'border-blue-500 focus:border-blue-400 text-blue-400' : 'border-amber-500 focus:border-amber-400 text-amber-400'} rounded-2xl px-6 text-4xl font-black text-center outline-none`} />
-                  <span className="absolute right-6 top-1/2 -translate-y-1/2 text-2xl font-black text-slate-500">€</span>
+                <div className="flex justify-center items-center gap-2">
+                  <input required type="text" inputMode="decimal" placeholder="0" value={formData.price || ''} onChange={(e) => setFormData({ ...formData, price: parseFloat(e.target.value) || 0 })}
+                    className="w-32 bg-slate-900 border border-slate-600 focus:border-blue-500 rounded-xl text-3xl font-extrabold text-center text-white py-3 outline-none" />
+                  <span className="text-3xl font-extrabold text-slate-400">€</span>
                 </div>
               </div>
 
