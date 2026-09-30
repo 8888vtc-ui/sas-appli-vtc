@@ -3,11 +3,12 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   ShieldCheck, User, Car, XCircle, FileWarning, AlertTriangle,
   CheckCircle2, Eye, Upload, X, Download, Shield, FileText,
-  FileCheck, AlertOctagon, Info, ChevronRight, FileBadge
+  FileCheck, AlertOctagon, Info, ChevronRight, FileBadge, Cloud, Database
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 import { getDocExpiryStatus, getDocExpiryDays } from '../lib/utils';
+import { exportFullBackupJSON, importFullBackupJSON } from '../lib/exportUtils';
 
 export default function Vault({ controlMode = false }: { controlMode?: boolean }) {
   const {
@@ -405,6 +406,46 @@ export default function Vault({ controlMode = false }: { controlMode?: boolean }
               <strong>Cadre réglementaire Entreprise & Plateformes :</strong> Ce volet regroupe les pièces nécessaires pour votre gestion administrative, votre expert-comptable, les audits des plateformes (Uber/Bolt) pour la lutte contre le travail dissimulé, et le renouvellement quinquennal préfecture. <em>Ces pièces ne sont pas exigées au bord de la route.</em>
             </span>
           )}
+        </div>
+      </div>
+
+      {/* Cloud & Sauvegarde Section */}
+      <div className="bg-[#1c1c1e] rounded-[10px] p-4 sm:p-5 border border-white/5 mb-6">
+        <h3 className="text-[15px] font-bold text-white mb-3 flex items-center gap-2">
+          <Cloud className="w-5 h-5 text-blue-400" /> Sauvegarde Cloud & Récupération
+        </h3>
+        <p className="text-[13px] text-slate-400 mb-4 leading-relaxed">
+          Sauvegardez vos documents sur votre Cloud personnel (iCloud, Google Drive) ou restaurez-les sur un autre appareil pour ne jamais rien perdre.
+        </p>
+        <div className="flex flex-col sm:flex-row gap-3">
+          <button
+            type="button"
+            onClick={() => exportFullBackupJSON()}
+            className="flex-1 py-3 px-4 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-sm flex items-center justify-center gap-2 transition-all shadow-lg shadow-blue-600/20"
+          >
+            <Download className="w-4 h-4" /> Sauvegarder (Export JSON)
+          </button>
+
+          <label className="flex-1 py-3 px-4 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 text-white font-bold text-sm flex items-center justify-center gap-2 cursor-pointer transition-all">
+            <Upload className="w-4 h-4" /> Récupérer (Import JSON)
+            <input
+              type="file"
+              accept=".json"
+              className="hidden"
+              onChange={async e => {
+                const file = e.target.files?.[0];
+                if (file) {
+                  try {
+                    await importFullBackupJSON(file);
+                    alert('Documents récupérés avec succès ! La page va se recharger.');
+                    window.location.reload();
+                  } catch {
+                    alert("Erreur lors de la récupération des documents.");
+                  }
+                }
+              }}
+            />
+          </label>
         </div>
       </div>
 
