@@ -41,9 +41,13 @@ html {
   color-scheme: dark;
 }
 
-/* ── Premium Background ── */
+/* ── Premium Background (Linear/Vercel style) ── */
 body {
-  background: radial-gradient(circle at 50% 0%, #1a1a24 0%, var(--bg) 60%);
+  background-color: #000000;
+  background-image: 
+    radial-gradient(circle at 15% 0%, rgba(99, 102, 241, 0.15) 0%, transparent 40%),
+    radial-gradient(circle at 85% 30%, rgba(168, 85, 247, 0.12) 0%, transparent 50%),
+    radial-gradient(circle at 50% 100%, rgba(59, 130, 246, 0.1) 0%, transparent 50%);
   background-attachment: fixed;
   color: var(--label);
   font-family: var(--font);
@@ -62,21 +66,22 @@ h1, h2, h3, h4 {
 
 /* ── Premium Glass Cards ── */
 .glass {
-  background: var(--bg-elevated);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border: 1px solid var(--glass-border);
+  background: rgba(20, 20, 22, 0.6);
+  backdrop-filter: blur(40px);
+  -webkit-backdrop-filter: blur(40px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   box-shadow: 
-    0 4px 24px -1px rgba(0,0,0,0.4),
-    inset 0 1px 0 var(--glass-highlight);
-  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    0 4px 24px -1px rgba(0,0,0,0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease, border-color 0.3s ease;
 }
 
 .glass:hover {
-  border-color: rgba(255,255,255, 0.2);
+  border-color: rgba(255, 255, 255, 0.15);
   box-shadow: 
-    0 8px 32px -1px rgba(0,0,0,0.5),
-    inset 0 1px 0 rgba(255,255,255, 0.1);
+    0 12px 40px -4px rgba(0,0,0,0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
 }
 
 /* ── Buttons ── */
