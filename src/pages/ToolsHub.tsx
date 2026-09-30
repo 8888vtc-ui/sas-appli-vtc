@@ -38,7 +38,7 @@ export default function ToolsHub() {
           <button
             key={tool.to}
             onClick={() => navigate(tool.to)}
-            className="group relative overflow-hidden flex items-center gap-5 p-5 bg-[#1c1c1e]/60 backdrop-blur-xl border border-white/5 rounded-[24px] hover:border-white/20 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-black/50 text-left"
+            className="group relative overflow-hidden flex items-center gap-5 p-5 glass rounded-[24px] text-left"
           >
             {/* Background glow on hover */}
             <div 
