@@ -41,8 +41,8 @@ export default function Layout({ children, onNewTrip }: { children: React.ReactN
       {/* ═══════════════════════════════════════════
            DESKTOP SIDEBAR (Cachée sur mobile)
            ═══════════════════════════════════════════ */}
-      <nav className="hidden md:flex flex-col w-72 bg-[#111111] border-r border-white/5 h-screen sticky top-0 p-6 shadow-2xl">
-        <div className="flex items-center gap-3 mb-12">
+      <nav className="hidden md:flex flex-col w-72 shrink-0 bg-[#111111] border-r border-white/5 h-screen sticky top-0 p-6 shadow-2xl">
+        <button onClick={() => navigate('/')} className="flex items-center gap-3 mb-12 text-left cursor-pointer hover:opacity-80 transition-opacity">
           <div className="w-12 h-12 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center shadow-lg shadow-blue-500/20">
             <Car className="w-7 h-7 text-white" />
           </div>
@@ -55,7 +55,7 @@ export default function Layout({ children, onNewTrip }: { children: React.ReactN
               En service
             </div>
           </div>
-        </div>
+        </button>
         
         <div className="flex flex-col gap-2 flex-1">
           <button onClick={() => navigate('/')} className={`flex items-center gap-4 px-4 py-3.5 rounded-xl transition-all ${isActive('/') ? 'bg-blue-600/15 text-blue-500' : 'text-slate-400 hover:bg-white/5 hover:text-white'}`}>
@@ -87,7 +87,7 @@ export default function Layout({ children, onNewTrip }: { children: React.ReactN
         
         {/* HEADER */}
         <header className="flex items-center justify-between px-5 py-4 border-b border-white/5 sticky top-0 z-40 bg-black/85 md:bg-[#0a0a0a]/85 backdrop-blur-xl md:px-10 md:py-6">
-          <div className="flex items-center gap-3 md:hidden">
+          <button onClick={() => navigate('/')} className="flex items-center gap-3 md:hidden text-left cursor-pointer hover:opacity-80 transition-opacity">
             <div className="w-10 h-10 rounded-[12px] bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center shadow-lg shadow-blue-500/20">
               <Car className="w-6 h-6 text-white" />
             </div>
@@ -100,7 +100,7 @@ export default function Layout({ children, onNewTrip }: { children: React.ReactN
                 En service
               </div>
             </div>
-          </div>
+          </button>
           
           <div className="hidden md:flex flex-col">
              <h2 className="text-2xl font-black text-white tracking-tight">Tableau de bord VTC</h2>
