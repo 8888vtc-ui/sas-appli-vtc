@@ -1,7 +1,7 @@
 import { useState, useRef, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, MapPin, User, Clock, Plane, Sparkles, Check } from 'lucide-react';
-import { format, addMinutes, addDays, setHours, setMinutes } from 'date-fns';
+import { X, MapPin, User, Clock, Sparkles, Check } from 'lucide-react';
+import { format, addMinutes } from 'date-fns';
 import { useApp } from '../context/AppContext';
 import { searchFrenchAddresses } from '../lib/addressService';
 import type { AddressFeature } from '../lib/addressService';
@@ -61,11 +61,8 @@ export default function TripModal({ isOpen, onClose }: { isOpen: boolean; onClos
   // Autocomplete states
   const [pickupSuggestions, setPickupSuggestions] = useState<AddressFeature[]>([]);
   const [dropoffSuggestions, setDropoffSuggestions] = useState<AddressFeature[]>([]);
-  const [isSearchingPickup, setIsSearchingPickup] = useState(false);
-  const [isSearchingDropoff, setIsSearchingDropoff] = useState(false);
   const [clientSuggestions, setClientSuggestions] = useState<KnownClient[]>([]);
   const [showClientSuggestions, setShowClientSuggestions] = useState(false);
-  const [showAdvanced, setShowAdvanced] = useState(false);
 
   const pickupTimerRef = useRef<any>(null);
   const dropoffTimerRef = useRef<any>(null);
@@ -117,15 +114,12 @@ export default function TripModal({ isOpen, onClose }: { isOpen: boolean; onClos
     setFormData((prev) => ({ ...prev, pickUpLocation: value }));
     clearTimeout(pickupTimerRef.current);
     if (value.trim().length >= 3) {
-      setIsSearchingPickup(true);
       pickupTimerRef.current = setTimeout(async () => {
         const results = await searchFrenchAddresses(value);
         setPickupSuggestions(results);
-        setIsSearchingPickup(false);
       }, 250);
     } else {
       setPickupSuggestions([]);
-      setIsSearchingPickup(false);
     }
   };
 
@@ -134,15 +128,12 @@ export default function TripModal({ isOpen, onClose }: { isOpen: boolean; onClos
     setFormData((prev) => ({ ...prev, dropOffLocation: value }));
     clearTimeout(dropoffTimerRef.current);
     if (value.trim().length >= 3) {
-      setIsSearchingDropoff(true);
       dropoffTimerRef.current = setTimeout(async () => {
         const results = await searchFrenchAddresses(value);
         setDropoffSuggestions(results);
-        setIsSearchingDropoff(false);
       }, 250);
     } else {
       setDropoffSuggestions([]);
-      setIsSearchingDropoff(false);
     }
   };
 
@@ -173,22 +164,12 @@ export default function TripModal({ isOpen, onClose }: { isOpen: boolean; onClos
     setShowClientSuggestions(false);
   };
 
-  // Quick Time Presets
   const applyTimePreset = (minutesToAdd: number) => {
     const target = addMinutes(new Date(), minutesToAdd);
     setFormData((prev) => ({
       ...prev,
       date: format(target, 'yyyy-MM-dd'),
       time: format(target, 'HH:mm'),
-    }));
-  };
-
-  const applyTomorrowPreset = (hour: number) => {
-    const tomorrow = setMinutes(setHours(addDays(new Date(), 1), hour), 0);
-    setFormData((prev) => ({
-      ...prev,
-      date: format(tomorrow, 'yyyy-MM-dd'),
-      time: format(tomorrow, 'HH:mm'),
     }));
   };
 

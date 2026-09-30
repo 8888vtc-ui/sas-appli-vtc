@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   MapPin, Play, CheckCircle2,
   FileText, Trash2, PenTool, MessageCircle,
-  Plane, MoreHorizontal, Phone, Calendar, Search,
+  Plane, MoreHorizontal, Phone, Search, Plus,
   Navigation
 } from 'lucide-react';
 import SignatureModal from '../components/SignatureModal';

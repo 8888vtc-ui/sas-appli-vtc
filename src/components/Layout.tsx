@@ -1,31 +1,17 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import {
-  Calendar, ShieldCheck, Wallet, LayoutGrid,
-  Plus, Shield, Sparkles, LogOut
+  Calendar, Wallet, LayoutGrid,
+  Plus, Shield, Sparkles
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useApp } from '../context/AppContext';
 import { motion } from 'framer-motion';
 import AICopilot from './AICopilot';
 
-function TabIcon({ icon: Icon, active }: { icon: any; active: boolean }) {
-  return (
-    <Icon
-      style={{
-        width: 24,
-        height: 24,
-        color: active ? '#0a84ff' : '#8e8e93',
-        strokeWidth: active ? 2.4 : 1.8,
-        transition: 'all 0.2s ease',
-      }}
-    />
-  );
-}
-
 export default function Layout({ children, onNewTrip }: { children: React.ReactNode; onNewTrip: () => void }) {
   const { settings } = useApp();
-  const { signOut } = useAuth();
+  const {} = useAuth(); // or completely remove if not used
   const location = useLocation();
   const navigate = useNavigate();
   const [aiOpen, setAiOpen] = useState(false);
