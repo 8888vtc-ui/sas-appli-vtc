@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
-import { Receipt, CreditCard, Download, Search, ChevronDown, CheckCircle2, Clock, FileDown, MessageCircle } from 'lucide-react';
+import { Receipt, CreditCard, Download, Search, ChevronDown, CheckCircle2, Clock, FileDown, MessageCircle, ShieldCheck } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { formatEUR } from '../lib/utils';
 import { exportInvoicesCSV } from '../lib/exportUtils';
@@ -34,6 +34,19 @@ export default function Invoices() {
 
   return (
     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
+      {/* 🛡️ BANNIERE FACTUR-X */}
+      <div className="bg-blue-500/10 border border-blue-500/20 rounded-2xl p-4 flex gap-4 items-start">
+        <div className="w-10 h-10 rounded-xl bg-blue-500/20 flex items-center justify-center shrink-0">
+          <ShieldCheck className="w-5 h-5 text-blue-400" />
+        </div>
+        <div>
+          <h3 className="font-bold text-blue-400 text-sm">Conformité Fiscale 2026/2027 (Factur-X)</h3>
+          <p className="text-xs text-slate-300 mt-1 leading-relaxed">
+            Vos factures actuelles sont 100% légales et valides (Mentions obligatoires, TVA, SIRET). L'intégration de la norme <strong>Factur-X</strong> (XML intégré) sera déployée automatiquement ici avant l'échéance légale pour la transmission B2B.
+          </p>
+        </div>
+      </div>
+
       {/* Metric Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4">
         <div className="glass rounded-xl sm:rounded-2xl p-3.5 sm:p-5 border border-white/10">

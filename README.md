@@ -80,6 +80,7 @@ Le projet est entièrement découpé en composants pour un maintien et une scala
 - **TVA** : Prise en compte de l'Art. 293 B CGI ou assujettissement classique.
 - **Indemnités Kilométriques** : Barème URSSAF 2025 officiel intégré.
 - **Loi Thévenoud** : Obligations de réservation préalable respectées.
+- **Facturation Électronique (B2B)** : Génération PDF 100% conforme à la législation actuelle. Architecture prête pour l'intégration de la norme **Factur-X** (XML embarqué) en prévision des obligations légales 2026/2027.
 
 ---
 
