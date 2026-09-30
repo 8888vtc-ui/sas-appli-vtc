@@ -21,8 +21,8 @@ import { formatEUR } from '../lib/utils';
 const c = {
   blue: '#0a84ff', green: '#30d158', orange: '#ff9f0a',
   red: '#ff453a', purple: '#bf5af2', cyan: '#64d2ff',
-  gray: '#8e8e93', sep: 'rgba(84, 84, 88, 0.36)',
-  card: '#1c1c1e', card2: '#2c2c2e',
+  gray: '#8e8e93', sep: 'rgba(255, 255, 255, 0.1)',
+  card: 'rgba(20, 20, 22, 0.6)', card2: 'rgba(30, 30, 32, 0.5)',
 };
 
 const statusCfg: Record<string, { color: string; label: string }> = {

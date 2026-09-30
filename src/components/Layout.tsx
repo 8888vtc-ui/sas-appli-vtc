@@ -36,7 +36,7 @@ export default function Layout({ children, onNewTrip }: { children: React.ReactN
   };
 
   return (
-    <div className="min-h-screen w-full bg-black text-white flex flex-col md:flex-row font-sans">
+    <div className="min-h-screen w-full bg-transparent text-white flex flex-col md:flex-row font-sans">
       
       {/* ═══════════════════════════════════════════
            DESKTOP SIDEBAR (Cachée sur mobile)
@@ -148,7 +148,7 @@ export default function Layout({ children, onNewTrip }: { children: React.ReactN
              MOBILE BOTTOM TAB BAR (DOCK)
              ═══════════════════════════════════════════ */}
         <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 flex justify-center pointer-events-none">
-          <div className="w-full max-w-md pointer-events-auto bg-[#1c1c1e] border-t border-white/5 pb-[max(env(safe-area-inset-bottom,0px),16px)] pt-4 px-4 rounded-t-3xl shadow-[0_-10px_40px_rgba(0,0,0,0.8)] flex items-center justify-between">
+          <div className="w-full max-w-md pointer-events-auto glass border-t border-white/10 pb-[max(env(safe-area-inset-bottom,0px),16px)] pt-4 px-4 rounded-t-3xl shadow-[0_-10px_40px_rgba(0,0,0,0.8)] flex items-center justify-between">
             
             <button onClick={() => navigate('/')} className="flex flex-col items-center justify-center gap-1.5 min-w-[64px] active:scale-90 transition-all">
               <TabIcon icon={Calendar} active={isActive('/')} />
