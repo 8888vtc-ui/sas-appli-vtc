@@ -44,6 +44,8 @@ export interface AppSettings {
   tvaNumber: string;
   aiProvider?: 'openai' | 'anthropic' | 'gemini';
   aiApiKey?: string;
+  vehicleOwnership: 'personal' | 'company';
+  fiscalPower?: FiscalPower;
 }
 
 // ─── LEGAL DOCUMENT (VAULT & CONTRÔLE ROUTIER) ───
@@ -99,7 +101,9 @@ export const DEFAULT_SETTINGS: AppSettings = {
   tvaRate: 10,
   tvaNumber: '',
   aiProvider: 'gemini',
-  aiApiKey: ''
+  aiApiKey: '',
+  vehicleOwnership: 'company',
+  fiscalPower: '5cv'
 };
 
 export const LEGAL_DOC_TEMPLATES: Omit<LegalDocument, 'id'>[] = [

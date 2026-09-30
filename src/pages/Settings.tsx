@@ -437,6 +437,39 @@ export default function Settings() {
               />
             </div>
           ))}
+          
+          <div className="space-y-2 sm:col-span-2 mt-2">
+            <h3 className="text-sm font-bold text-white mb-2">Comptabilité & Régime du Véhicule</h3>
+            <div className="flex flex-col sm:flex-row gap-3">
+              <label className={`flex-1 p-4 rounded-xl border-2 cursor-pointer transition-all ${localSettings.vehicleOwnership === 'company' ? 'border-blue-500 bg-blue-500/10' : 'border-white/10 bg-white/5'}`}>
+                <input type="radio" name="vehicleOwnership" value="company" checked={localSettings.vehicleOwnership === 'company'} onChange={() => setLocalSettings({ ...localSettings, vehicleOwnership: 'company' })} className="hidden" />
+                <div className="font-bold text-white text-sm mb-1">Société / LLD / LOA</div>
+                <div className="text-xs text-slate-400">Déduction aux frais réels (Carburant, Péage, Entretien...).</div>
+              </label>
+              <label className={`flex-1 p-4 rounded-xl border-2 cursor-pointer transition-all ${localSettings.vehicleOwnership === 'personal' ? 'border-blue-500 bg-blue-500/10' : 'border-white/10 bg-white/5'}`}>
+                <input type="radio" name="vehicleOwnership" value="personal" checked={localSettings.vehicleOwnership === 'personal'} onChange={() => setLocalSettings({ ...localSettings, vehicleOwnership: 'personal' })} className="hidden" />
+                <div className="font-bold text-white text-sm mb-1">Véhicule Personnel</div>
+                <div className="text-xs text-slate-400">Barème Kilométrique URSSAF.</div>
+              </label>
+            </div>
+          </div>
+          
+          {localSettings.vehicleOwnership === 'personal' && (
+            <div className="space-y-2">
+              <label className="block text-sm font-medium" style={{ color: '#94A3B8' }}>Puissance Fiscale (Barème URSSAF)</label>
+              <select
+                value={localSettings.fiscalPower || '5cv'}
+                onChange={e => setLocalSettings({ ...localSettings, fiscalPower: e.target.value as any })}
+                className="w-full bg-[#1e293b] border border-white/10 rounded-xl p-3 outline-none text-white text-sm"
+              >
+                <option value="3cv">3 CV Fiscaux</option>
+                <option value="4cv">4 CV Fiscaux</option>
+                <option value="5cv">5 CV Fiscaux</option>
+                <option value="6cv">6 CV Fiscaux</option>
+                <option value="7cv+">7 CV Fiscaux ou plus</option>
+              </select>
+            </div>
+          )}
         </div>
       </div>
 

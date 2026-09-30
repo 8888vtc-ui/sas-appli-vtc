@@ -38,15 +38,16 @@ function exportExpensesFullCSV(expenses: Expense[]) {
 type Tab = 'expenses' | 'mileage' | 'report';
 
 export default function ExpenseReports() {
-  const { expenses, addExpense, deleteExpense, mileageLogs, addMileageLog, deleteMileageLog } = useApp();
-  const [activeTab, setActiveTab] = useState<Tab>('expenses');
+  const { expenses, addExpense, deleteExpense, mileageLogs, addMileageLog, deleteMileageLog, settings } = useApp();
+  const isPersonal = settings?.vehicleOwnership === 'personal';
+  const [activeTab, setActiveTab] = useState<Tab>(isPersonal ? 'mileage' : 'expenses');
   const [searchQuery, setSearchQuery] = useState('');
   const [categoryFilter, setCategoryFilter] = useState<string>('all');
   const [showAddExpense, setShowAddExpense] = useState(false);
   const [showQuickSnap, setShowQuickSnap] = useState(false);
   const [showAddMileage, setShowAddMileage] = useState(false);
   const [previewReceipt, setPreviewReceipt] = useState<{ name: string; data: string } | null>(null);
-  const [fiscalPower, setFiscalPower] = useState<FiscalPower>('5cv');
+  const fiscalPower = settings?.fiscalPower || '5cv';
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
 
   // ── Expense form
@@ -152,16 +153,22 @@ export default function ExpenseReports() {
       <div className="flex flex-col gap-2 sm:gap-3">
         <div className="flex gap-2 sm:gap-3 overflow-x-auto" style={{ scrollbarWidth: 'none' }}>
           <div className="flex gap-1 bg-white/5 rounded-xl p-1 shrink-0">
-            {([
-              { key: 'expenses', label: '📝 Dépenses' },
-              { key: 'mileage', label: '🚗 Kilométrage' },
-              { key: 'report', label: '📊 Rapport' },
-            ] as const).map(tab => (
-              <button key={tab.key} onClick={() => setActiveTab(tab.key)}
-                className={`px-3 sm:px-4 py-2 rounded-lg text-xs font-bold transition-all whitespace-nowrap ${activeTab === tab.key ? 'bg-blue-600 text-white' : 'text-slate-500 hover:text-white'}`}>
-                {tab.label}
+            {!isPersonal && (
+              <button onClick={() => setActiveTab('expenses')}
+                className={`px-3 sm:px-4 py-2 rounded-lg text-xs font-bold transition-all whitespace-nowrap ${activeTab === 'expenses' ? 'bg-blue-600 text-white' : 'text-slate-500 hover:text-white'}`}>
+                📝 Frais Réels
               </button>
-            ))}
+            )}
+            {isPersonal && (
+              <button onClick={() => setActiveTab('mileage')}
+                className={`px-3 sm:px-4 py-2 rounded-lg text-xs font-bold transition-all whitespace-nowrap ${activeTab === 'mileage' ? 'bg-blue-600 text-white' : 'text-slate-500 hover:text-white'}`}>
+                🚗 Indemnités (IK)
+              </button>
+            )}
+            <button onClick={() => setActiveTab('report')}
+              className={`px-3 sm:px-4 py-2 rounded-lg text-xs font-bold transition-all whitespace-nowrap ${activeTab === 'report' ? 'bg-blue-600 text-white' : 'text-slate-500 hover:text-white'}`}>
+              📊 Bilan
+            </button>
           </div>
 
           <div className="flex gap-2 ml-auto shrink-0">
@@ -295,13 +302,9 @@ export default function ExpenseReports() {
                 <p className="text-xs text-slate-400 mt-1">Pour véhicule personnel utilisé à titre professionnel</p>
               </div>
               <div className="relative shrink-0">
-                <select value={fiscalPower} onChange={e => setFiscalPower(e.target.value as FiscalPower)}
-                  className="appearance-none bg-white/10 border border-white/20 rounded-xl py-2 pl-3 pr-8 text-sm text-white cursor-pointer outline-none">
-                  {Object.keys(URSSAF_MILEAGE_SCALE_2025).map(k => (
-                    <option key={k} value={k}>{k.toUpperCase()} fiscaux</option>
-                  ))}
-                </select>
-                <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none text-slate-400" />
+                <span className="bg-white/10 border border-white/20 rounded-xl py-2 px-4 text-sm text-white font-bold inline-block">
+                  {fiscalPower.toUpperCase()} Fiscaux
+                </span>
               </div>
             </div>
             <div className="grid grid-cols-3 gap-3">
@@ -364,69 +367,74 @@ export default function ExpenseReports() {
       {activeTab === 'report' && (
         <div className="space-y-4">
           {/* Summary Card */}
-          <div className="glass rounded-xl sm:rounded-2xl p-4 sm:p-6">
-            <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
-              <FileText className="w-5 h-5 text-blue-400" /> Rapport de Frais — {format(new Date(), 'MMMM yyyy', { locale: fr })}
-            </h3>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
-              <div className="bg-white/5 rounded-xl p-3 text-center">
-                <p className="text-[10px] text-slate-400 mb-1">Nb Dépenses</p>
-                <p className="text-xl font-bold text-white">{expenses.length}</p>
+          {/* Summary Card (only if company) */}
+          {!isPersonal && (
+            <div className="glass rounded-xl sm:rounded-2xl p-4 sm:p-6">
+              <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                <FileText className="w-5 h-5 text-blue-400" /> Rapport de Frais Réels — {format(new Date(), 'MMMM yyyy', { locale: fr })}
+              </h3>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
+                <div className="bg-white/5 rounded-xl p-3 text-center">
+                  <p className="text-[10px] text-slate-400 mb-1">Nb Dépenses</p>
+                  <p className="text-xl font-bold text-white">{expenses.length}</p>
+                </div>
+                <div className="bg-white/5 rounded-xl p-3 text-center">
+                  <p className="text-[10px] text-slate-400 mb-1">Total Dépenses</p>
+                  <p className="text-xl font-bold text-red-400">{formatEUR(stats.totalExpenses)}</p>
+                </div>
+                <div className="bg-white/5 rounded-xl p-3 text-center">
+                  <p className="text-[10px] text-slate-400 mb-1">TVA Récup.</p>
+                  <p className="text-xl font-bold text-emerald-400">{formatEUR(stats.totalTVA)}</p>
+                </div>
+                <div className="bg-white/5 rounded-xl p-3 text-center">
+                  <p className="text-[10px] text-slate-400 mb-1">Justificatifs</p>
+                  <p className="text-xl font-bold text-blue-400">{stats.withReceipt}/{expenses.length}</p>
+                </div>
               </div>
-              <div className="bg-white/5 rounded-xl p-3 text-center">
-                <p className="text-[10px] text-slate-400 mb-1">Total Dépenses</p>
-                <p className="text-xl font-bold text-red-400">{formatEUR(stats.totalExpenses)}</p>
-              </div>
-              <div className="bg-white/5 rounded-xl p-3 text-center">
-                <p className="text-[10px] text-slate-400 mb-1">TVA Récup.</p>
-                <p className="text-xl font-bold text-emerald-400">{formatEUR(stats.totalTVA)}</p>
-              </div>
-              <div className="bg-white/5 rounded-xl p-3 text-center">
-                <p className="text-[10px] text-slate-400 mb-1">Justificatifs</p>
-                <p className="text-xl font-bold text-blue-400">{stats.withReceipt}/{expenses.length}</p>
-              </div>
-            </div>
 
-            {/* Category breakdown */}
-            <h4 className="text-sm font-bold text-white mb-3">Répartition par catégorie</h4>
-            <div className="space-y-2">
-              {categoryBreakdown.map(([catKey, total]) => {
-                const cat = EXPENSE_CATEGORIES[catKey as ExpenseCategory] || EXPENSE_CATEGORIES.other;
-                const pct = stats.totalExpenses > 0 ? (total / stats.totalExpenses) * 100 : 0;
-                return (
-                  <div key={catKey} className="flex items-center gap-3">
-                    <span className="text-sm w-6">{cat.icon}</span>
-                    <span className="text-xs font-medium text-white w-32 sm:w-40 truncate">{cat.label}</span>
-                    <div className="flex-1 bg-white/5 rounded-full h-2.5 overflow-hidden">
-                      <motion.div initial={{ width: 0 }} animate={{ width: `${pct}%` }} transition={{ duration: 0.8, ease: 'easeOut' }}
-                        className="h-full rounded-full" style={{ background: cat.color }} />
+              {/* Category breakdown */}
+              <h4 className="text-sm font-bold text-white mb-3">Répartition par catégorie</h4>
+              <div className="space-y-2">
+                {categoryBreakdown.map(([catKey, total]) => {
+                  const cat = EXPENSE_CATEGORIES[catKey as ExpenseCategory] || EXPENSE_CATEGORIES.other;
+                  const pct = stats.totalExpenses > 0 ? (total / stats.totalExpenses) * 100 : 0;
+                  return (
+                    <div key={catKey} className="flex items-center gap-3">
+                      <span className="text-sm w-6">{cat.icon}</span>
+                      <span className="text-xs font-medium text-white w-32 sm:w-40 truncate">{cat.label}</span>
+                      <div className="flex-1 bg-white/5 rounded-full h-2.5 overflow-hidden">
+                        <motion.div initial={{ width: 0 }} animate={{ width: `${pct}%` }} transition={{ duration: 0.8, ease: 'easeOut' }}
+                          className="h-full rounded-full" style={{ background: cat.color }} />
+                      </div>
+                      <span className="text-xs font-bold text-white w-20 text-right">{formatEUR(total)}</span>
+                      <span className="text-[10px] text-slate-500 w-10 text-right">{pct.toFixed(0)}%</span>
                     </div>
-                    <span className="text-xs font-bold text-white w-20 text-right">{formatEUR(total)}</span>
-                    <span className="text-[10px] text-slate-500 w-10 text-right">{pct.toFixed(0)}%</span>
-                  </div>
-                );
-              })}
+                  );
+                })}
+              </div>
             </div>
-          </div>
+          )}
 
-          {/* IK Summary */}
-          <div className="glass rounded-xl sm:rounded-2xl p-4 sm:p-6">
-            <h4 className="text-base font-bold text-white mb-3 flex items-center gap-2">
-              <Car className="w-4 h-4 text-blue-400" /> Indemnités Kilométriques (Véhicule Personnel)
-            </h4>
-            <div className="grid grid-cols-2 gap-3">
-              <div className="bg-blue-500/10 rounded-xl p-3 border border-blue-500/20">
-                <p className="text-[10px] text-blue-400 mb-1 font-semibold">Km Pro Annuels</p>
-                <p className="text-xl font-bold text-white">{stats.proKm.toLocaleString()} km</p>
-                <p className="text-[10px] text-slate-400 mt-1">Barème {fiscalPower.toUpperCase()} fiscaux</p>
-              </div>
-              <div className="bg-emerald-500/10 rounded-xl p-3 border border-emerald-500/20">
-                <p className="text-[10px] text-emerald-400 mb-1 font-semibold">Indemnité Calculée</p>
-                <p className="text-xl font-bold text-emerald-400">{formatEUR(stats.mileageAllowance)}</p>
-                <p className="text-[10px] text-slate-400 mt-1">Déductible fiscalement</p>
+          {/* IK Summary (only if personal) */}
+          {isPersonal && (
+            <div className="glass rounded-xl sm:rounded-2xl p-4 sm:p-6">
+              <h4 className="text-base font-bold text-white mb-3 flex items-center gap-2">
+                <Car className="w-4 h-4 text-blue-400" /> Bilan Indemnités Kilométriques (Véhicule Personnel)
+              </h4>
+              <div className="grid grid-cols-2 gap-3">
+                <div className="bg-blue-500/10 rounded-xl p-3 border border-blue-500/20">
+                  <p className="text-[10px] text-blue-400 mb-1 font-semibold">Km Pro Annuels</p>
+                  <p className="text-xl font-bold text-white">{stats.proKm.toLocaleString()} km</p>
+                  <p className="text-[10px] text-slate-400 mt-1">Barème {fiscalPower.toUpperCase()} fiscaux</p>
+                </div>
+                <div className="bg-emerald-500/10 rounded-xl p-3 border border-emerald-500/20">
+                  <p className="text-[10px] text-emerald-400 mb-1 font-semibold">Indemnité Calculée</p>
+                  <p className="text-xl font-bold text-emerald-400">{formatEUR(stats.mileageAllowance)}</p>
+                  <p className="text-[10px] text-slate-400 mt-1">Déductible fiscalement</p>
+                </div>
               </div>
             </div>
-          </div>
+          )}
 
           {/* Export buttons */}
           <div className="flex flex-col sm:flex-row gap-3">
