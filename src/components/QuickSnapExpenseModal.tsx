@@ -58,22 +58,24 @@ export default function QuickSnapExpenseModal({ isOpen, onClose, onSave }: Quick
       setPhoto(base64);
       setPhotoName(file.name);
       
-      // Auto-scan avec l'IA
-      try {
-        setIsScanning(true);
-        const result = await scanReceiptWithAI(settings, base64);
-        
-        // Mettre à jour le formulaire avec les données de l'IA
-        if (result.amount) setAmount(result.amount.toString());
-        if (result.category) {
-          const match = PRESETS.find(p => p.category === result.category);
-          if (match) setSelectedPreset(match);
+      // Auto-scan avec l'IA si activé
+      if (settings.appMode === 'ai') {
+        try {
+          setIsScanning(true);
+          const result = await scanReceiptWithAI(settings, base64);
+          
+          // Mettre à jour le formulaire avec les données de l'IA
+          if (result.amount) setAmount(result.amount.toString());
+          if (result.category) {
+            const match = PRESETS.find(p => p.category === result.category);
+            if (match) setSelectedPreset(match);
+          }
+          showToast('Bim ! Ticket analysé par l\'IA avec succès.', 'success');
+        } catch (error: any) {
+          showToast(error.message, 'error');
+        } finally {
+          setIsScanning(false);
         }
-        showToast('Bim ! Ticket analysé par l\'IA avec succès.', 'success');
-      } catch (error: any) {
-        showToast(error.message, 'error');
-      } finally {
-        setIsScanning(false);
       }
     };
     reader.readAsDataURL(file);
@@ -226,17 +228,26 @@ export default function QuickSnapExpenseModal({ isOpen, onClose, onSave }: Quick
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
                   disabled={isScanning}
-                  className="w-full py-4 px-4 rounded-xl border border-dashed border-purple-500/50 hover:border-purple-400 bg-purple-500/10 flex flex-col items-center justify-center gap-2 text-sm text-purple-300 hover:text-white transition-colors"
+                  className={`w-full py-4 px-4 rounded-xl border border-dashed flex flex-col items-center justify-center gap-2 text-sm transition-colors ${
+                    settings.appMode === 'ai'
+                      ? 'border-purple-500/50 hover:border-purple-400 bg-purple-500/10 text-purple-300 hover:text-white'
+                      : 'border-white/20 hover:border-white/40 bg-white/5 text-slate-400 hover:text-white'
+                  }`}
                 >
                   {isScanning ? (
                     <>
-                      <Loader2 className="w-6 h-6 text-purple-400 animate-spin" />
-                      <span className="font-bold">Analyse de l'image par l'IA en cours...</span>
+                      <Loader2 className={`w-6 h-6 animate-spin ${settings.appMode === 'ai' ? 'text-purple-400' : 'text-slate-400'}`} />
+                      <span className="font-bold">Analyse en cours...</span>
                     </>
-                  ) : (
+                  ) : settings.appMode === 'ai' ? (
                     <>
                       <Sparkles className="w-6 h-6 text-purple-400" />
                       <span className="font-bold">Scanner avec l'IA (Remplissage Auto)</span>
+                    </>
+                  ) : (
+                    <>
+                      <div className="w-6 h-6 border-2 border-slate-400 rounded-md flex items-center justify-center mb-1">+</div>
+                      <span className="font-bold">Joindre une photo du reçu</span>
                     </>
                   )}
                 </button>

@@ -44,6 +44,7 @@ export interface AppSettings {
   tvaNumber: string;
   aiProvider?: 'openai' | 'anthropic' | 'gemini';
   geminiApiKey?: string;
+  appMode: 'basic' | 'ai';
   vehicleOwnership: 'personal' | 'company';
   fiscalPower?: FiscalPower;
 }
@@ -102,6 +103,7 @@ export const DEFAULT_SETTINGS: AppSettings = {
   tvaNumber: '',
   aiProvider: 'gemini',
   geminiApiKey: '',
+  appMode: 'ai',
   vehicleOwnership: 'company',
   fiscalPower: '5cv'
 };

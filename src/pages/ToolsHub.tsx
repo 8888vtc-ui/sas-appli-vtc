@@ -4,12 +4,15 @@ import {
   QrCode, Plane, Wrench, ChevronRight, MessageCircle 
 } from 'lucide-react';
 
+import { useApp } from '../context/AppContext';
+
 export default function ToolsHub() {
   const navigate = useNavigate();
+  const { settings } = useApp();
 
   const tools = [
     { to: '/crm', label: 'Base Clients (CRM)', icon: Users, color: '#64d2ff', description: 'Gérez vos clients et historiques' },
-    { to: '/whatsapp-radar', label: 'Radar WhatsApp IA', icon: MessageCircle, color: '#34c759', description: 'Bourse aux courses & Groupes' },
+    ...(settings.appMode === 'ai' ? [{ to: '/whatsapp-radar', label: 'Radar WhatsApp IA', icon: MessageCircle, color: '#34c759', description: 'Bourse aux courses & Groupes' }] : []),
     { to: '/qrcode', label: 'Générateur QR Code', icon: QrCode, color: '#ffd60a', description: 'Créer des QR pour réservations rapides' },
     { to: '/sign', label: 'Pancarte Aéroport', icon: Plane, color: '#ff9f0a', description: 'Mode plein écran pour accueil' },
     { to: '/coffre-fort', label: 'Dossier Entreprise', icon: Shield, color: '#5e5ce6', description: 'Kbis, URSSAF, Attestations' },

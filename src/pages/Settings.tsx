@@ -504,6 +504,57 @@ export default function Settings() {
         </div>
       </div>
 
+      {/* Plan & Modes (Basic vs AI) */}
+      <div className="glass rounded-3xl p-8 relative overflow-hidden">
+        {localSettings.appMode === 'ai' && (
+          <div className="absolute right-0 top-0 w-64 h-64 bg-purple-500/10 rounded-full blur-3xl pointer-events-none" />
+        )}
+        <h2 className="text-xl font-bold mb-6 text-white flex items-center gap-2">
+          <Sparkles className="w-5 h-5 text-purple-400" /> Plan & Expérience de l'Application
+        </h2>
+        
+        <div className="grid sm:grid-cols-2 gap-4">
+          <button
+            type="button"
+            onClick={() => setLocalSettings({ ...localSettings, appMode: 'basic' })}
+            className={`p-5 rounded-2xl border-2 text-left transition-all ${
+              localSettings.appMode === 'basic'
+                ? 'border-blue-500 bg-blue-500/10'
+                : 'border-white/10 bg-white/5 hover:border-white/20'
+            }`}
+          >
+            <h3 className={`font-bold text-lg mb-2 ${localSettings.appMode === 'basic' ? 'text-blue-400' : 'text-white'}`}>
+              Mode Standard (Basique)
+            </h3>
+            <p className="text-xs text-slate-400 leading-relaxed">
+              La gestion VTC classique : facturation, coffre-fort, comptabilité manuelle. Idéal pour démarrer sans IA.
+            </p>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setLocalSettings({ ...localSettings, appMode: 'ai' })}
+            className={`p-5 rounded-2xl border-2 text-left transition-all ${
+              localSettings.appMode === 'ai'
+                ? 'border-purple-500 bg-purple-500/10 shadow-[0_0_20px_rgba(168,85,247,0.2)]'
+                : 'border-white/10 bg-white/5 hover:border-white/20'
+            }`}
+          >
+            <div className="flex justify-between items-start mb-2">
+              <h3 className={`font-bold text-lg ${localSettings.appMode === 'ai' ? 'text-purple-400' : 'text-white'}`}>
+                Mode IA Premium
+              </h3>
+              <span className="px-2 py-0.5 rounded bg-purple-500/20 text-purple-300 text-[10px] font-black uppercase tracking-wider">
+                Recommandé
+              </span>
+            </div>
+            <p className="text-xs text-slate-400 leading-relaxed">
+              Débloque le Copilote IA, le scanner de reçus magique et le Radar WhatsApp Bourse aux courses.
+            </p>
+          </button>
+        </div>
+      </div>
+
       {/* AI Settings */}
       <div className="glass rounded-3xl p-8">
         <h2 className="text-xl font-bold mb-6 text-white flex items-center gap-2">
