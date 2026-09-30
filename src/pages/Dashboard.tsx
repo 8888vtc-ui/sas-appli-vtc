@@ -133,6 +133,16 @@ export default function Dashboard() {
     window.open(phone ? `https://wa.me/${phone}?text=${encodeURIComponent(text)}` : `https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
   };
 
+  const sendArrivalSMS = (trip: any) => {
+    const text = `Bonjour ${trip.clientName}, votre chauffeur VTC est arrivé au point de rendez-vous (${trip.pickUpLocation}). À tout de suite !`;
+    const phone = (trip.clientPhone || '').replace(/[^0-9+]/g, '');
+    window.open(phone ? `sms:${phone}?body=${encodeURIComponent(text)}` : `sms:?body=${encodeURIComponent(text)}`, '_self');
+  };
+
+  const trackFlight = (flightNumber: string) => {
+    window.open(`https://www.google.com/search?q=vol+${flightNumber}`, '_blank');
+  };
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 14, width: '100%' }}>
 
@@ -170,17 +180,30 @@ export default function Dashboard() {
             </div>
 
             {nextTrip.flightNumber && (
-              <button
-                onClick={() => navigate(`/sign/${nextTrip.id}`)}
-                style={{
-                  display: 'flex', alignItems: 'center', gap: 5,
-                  padding: '5px 10px', borderRadius: 20, background: 'rgba(255, 159, 10, 0.15)',
-                  border: '1px solid rgba(255, 159, 10, 0.3)', color: '#ff9f0a',
-                  fontSize: 12, fontWeight: 700, cursor: 'pointer'
-                }}
-              >
-                <Plane style={{ width: 13, height: 13 }} /> Pancarte
-              </button>
+              <div style={{ display: 'flex', gap: 6 }}>
+                <button
+                  onClick={() => trackFlight(nextTrip.flightNumber!)}
+                  style={{
+                    display: 'flex', alignItems: 'center', gap: 5,
+                    padding: '5px 10px', borderRadius: 20, background: 'rgba(52, 199, 89, 0.15)',
+                    border: '1px solid rgba(52, 199, 89, 0.3)', color: '#34c759',
+                    fontSize: 12, fontWeight: 700, cursor: 'pointer'
+                  }}
+                >
+                  <Plane style={{ width: 13, height: 13 }} /> Suivre Vol
+                </button>
+                <button
+                  onClick={() => navigate(`/sign/${nextTrip.id}`)}
+                  style={{
+                    display: 'flex', alignItems: 'center', gap: 5,
+                    padding: '5px 10px', borderRadius: 20, background: 'rgba(255, 159, 10, 0.15)',
+                    border: '1px solid rgba(255, 159, 10, 0.3)', color: '#ff9f0a',
+                    fontSize: 12, fontWeight: 700, cursor: 'pointer'
+                  }}
+                >
+                  <Plane style={{ width: 13, height: 13 }} /> Pancarte
+                </button>
+              </div>
             )}
           </div>
 
@@ -255,14 +278,27 @@ export default function Dashboard() {
               <button onClick={() => window.open(`tel:${nextTrip.clientPhone}`)} style={{
                 width: 50, borderRadius: 14, background: `${c.green}18`, border: 'none',
                 display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
-              }}>
+              }} title="Appeler le client">
                 <Phone style={{ width: 20, height: 20, color: c.green }} />
               </button>
             )}
+            
+            {/* SMS Je suis là */}
+            {nextTrip.clientPhone && (
+              <button onClick={() => sendArrivalSMS(nextTrip)} style={{
+                flex: 1, borderRadius: 14, background: `${c.cyan}18`, border: 'none',
+                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+                color: c.cyan, fontSize: 13, fontWeight: 700
+              }} title="SMS : Je suis arrivé">
+                <MessageCircle style={{ width: 16, height: 16 }} /> Arrivé
+              </button>
+            )}
+
+            {/* Partager Confirmation WhatsApp */}
             <button onClick={() => shareWhatsApp(nextTrip)} style={{
               width: 50, borderRadius: 14, background: `${c.green}18`, border: 'none',
               display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
-            }}>
+            }} title="Confirmation WhatsApp">
               <MessageCircle style={{ width: 20, height: 20, color: c.green }} />
             </button>
           </div>
