@@ -109,6 +109,7 @@ interface AppContextType {
   removeDocumentFile: (docId: string) => Promise<void>;
   fileInputRef: React.RefObject<HTMLInputElement | null>;
   togglePayment: (invoiceId: string) => Promise<void>;
+  deleteInvoice: (invoiceId: string) => Promise<void>;
   addSignature: (tripId: string, signature: string) => Promise<void>;
   expenses: Expense[];
   addExpense: (data: any) => Promise<void>;
@@ -472,6 +473,16 @@ export function AppProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const deleteInvoice = async (invoiceId: string) => {
+    const updated = invoices.filter(inv => inv.id !== invoiceId);
+    setInvoices(updated);
+    syncLocal('vtc_local_invoices', updated);
+    
+    if (!isLocalMode && profile?.company_id) {
+      await supabase.from('invoices').delete().eq('id', invoiceId);
+    }
+  };
+
   const addExpense = async (data: any) => {
     if (isLocalMode) {
       const newExp: Expense = {
@@ -630,6 +641,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
       addTrip, deleteTrip, changeStatus, invoiceTrip, updateSettings, updateDocExpiry,
       triggerUpload, handleFileChange, removeDocumentFile, fileInputRef,
       togglePayment,
+      deleteInvoice,
       addSignature,
       generateBon: (t) => generateBonDeCommande(t, settings),
       generateMAD: (t) => generateMiseADisposition(t, settings),

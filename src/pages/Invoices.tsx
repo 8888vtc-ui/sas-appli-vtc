@@ -1,13 +1,13 @@
 import { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
-import { Receipt, CreditCard, Download, Search, ChevronDown, CheckCircle2, Clock, FileDown, MessageCircle, ShieldCheck } from 'lucide-react';
+import { Receipt, CreditCard, Download, Search, ChevronDown, CheckCircle2, Clock, FileDown, MessageCircle, ShieldCheck, Trash2 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { formatEUR } from '../lib/utils';
 import { exportInvoicesCSV } from '../lib/exportUtils';
 import { showToast } from '../components/Toast';
 
 export default function Invoices() {
-  const { invoices, trips, togglePayment, downloadInvoice, settings } = useApp();
+  const { invoices, trips, togglePayment, deleteInvoice, downloadInvoice, settings } = useApp();
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<'all' | 'paid' | 'pending'>('all');
 
@@ -185,6 +185,17 @@ export default function Invoices() {
                       }`}>
                       <CreditCard className="w-4 h-4" />
                       <span className="hidden sm:inline">{isPaid ? 'Encaissé' : 'Régler'}</span>
+                    </button>
+                    
+                    <button onClick={() => {
+                      if (window.confirm('Voulez-vous vraiment supprimer cette facture ?')) {
+                        deleteInvoice(inv.id);
+                        showToast('Facture supprimée', 'info');
+                      }
+                    }}
+                      title="Supprimer la facture"
+                      className="p-2.5 rounded-xl bg-red-500/10 border border-red-500/20 hover:bg-red-500/20 text-red-400 text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer">
+                      <Trash2 className="w-4 h-4" />
                     </button>
                   </div>
                 </div>
