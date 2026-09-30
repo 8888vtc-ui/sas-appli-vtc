@@ -44,7 +44,7 @@ export default function Layout({ children, onNewTrip }: { children: React.ReactN
       {/* ═══════════════════════════════════════════
            MAIN MOBILE CONTAINER (OS STYLE APP)
            ═══════════════════════════════════════════ */}
-      <div className="w-full max-w-md bg-black min-h-screen flex flex-col relative pb-[calc(90px+env(safe-area-inset-bottom,0px))] shadow-[0_0_50px_rgba(255,255,255,0.05)] border-x border-white/5 sm:border-x-white/10">
+      <div className="w-full max-w-md sm:max-w-xl md:max-w-2xl bg-black min-h-screen flex flex-col relative pb-[calc(90px+env(safe-area-inset-bottom,0px))] shadow-[0_0_50px_rgba(255,255,255,0.05)] border-x border-white/5 sm:border-x-white/10">
         
         {/* TOP HEADER */}
         <header className="flex items-center justify-between px-5 py-4 border-b border-white/5 sticky top-0 z-40 bg-black/85 backdrop-blur-xl">

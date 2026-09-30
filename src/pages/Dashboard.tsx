@@ -301,6 +301,26 @@ export default function Dashboard() {
               <MessageCircle style={{ width: 20, height: 20, color: c.green }} />
             </button>
           </div>
+
+          {/* Documents VTC (Bon de commande) */}
+          <div style={{ display: 'flex', gap: 8, marginTop: 8 }}>
+            <button onClick={() => generateBon(nextTrip)} style={{
+              flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+              padding: '10px', borderRadius: 12, background: 'rgba(255,255,255,0.05)', color: c.gray,
+              fontSize: 13, fontWeight: 600, border: '1px solid rgba(255,255,255,0.1)'
+            }}>
+              <FileText style={{ width: 14, height: 14 }} /> Bon de commande PDF
+            </button>
+            {nextTrip.status === 'completed' && (
+              <button onClick={() => handleInvoice(nextTrip)} style={{
+                flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+                padding: '10px', borderRadius: 12, background: `${c.blue}18`, color: c.blue,
+                fontSize: 13, fontWeight: 600, border: '1px solid rgba(10,132,255,0.2)'
+              }}>
+                <FileText style={{ width: 14, height: 14 }} /> Facturer
+              </button>
+            )}
+          </div>
         </motion.div>
       )}
 
