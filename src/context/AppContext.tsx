@@ -393,14 +393,22 @@ export function AppProvider({ children }: { children: ReactNode }) {
   };
 
   const deleteTrip = async (id: string) => {
+    // Optimistic UI updates
+    const updatedTrips = trips.filter(t => t.id !== id);
+    const updatedInvoices = invoices.filter(inv => inv.tripId !== id);
+    
+    setTrips(updatedTrips);
+    setInvoices(updatedInvoices);
+    
     if (isLocalMode) {
-      const updated = trips.filter(t => t.id !== id);
-      setTrips(updated);
-      syncLocal('vtc_local_trips', updated);
+      syncLocal('vtc_local_trips', updatedTrips);
+      syncLocal('vtc_local_invoices', updatedInvoices);
       return;
     }
-    const { error } = await supabase.from('trips').delete().eq('id', id);
-    if (!error) fetchData();
+    
+    // Remote deletes: Delete invoices first to satisfy Postgres Foreign Key constraints!
+    await supabase.from('invoices').delete().eq('trip_id', id);
+    await supabase.from('trips').delete().eq('id', id);
   };
 
   const changeStatus = async (tripId: string, status: Trip['status']) => {
