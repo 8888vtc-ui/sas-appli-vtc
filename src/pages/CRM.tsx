@@ -64,6 +64,8 @@ export default function CRM() {
   const [activeTab, setActiveTab] = useState<'all' | 'clients' | 'prospects'>('all');
   const [categoryFilter, setCategoryFilter] = useState<string>('all');
   const [showAddContact, setShowAddContact] = useState(false);
+  const [showAIModal, setShowAIModal] = useState(false);
+  const [aiQuery, setAiQuery] = useState('');
   const [isGeneratingProspects, setIsGeneratingProspects] = useState(false);
   const [showSMSPanel, setShowSMSPanel] = useState(false);
   const [selectedContacts, setSelectedContacts] = useState<string[]>([]);
@@ -178,10 +180,13 @@ export default function CRM() {
     setTimeout(() => { setSMSSent(false); setShowSMSPanel(false); setSelectedContacts([]); }, 2000);
   };
 
-  const handleGenerateProspects = async () => {
+  const handleGenerateProspects = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!aiQuery.trim()) return;
+
     try {
       setIsGeneratingProspects(true);
-      const aiProspects = await generateProspects(settings);
+      const aiProspects = await generateProspects(settings, aiQuery);
       
       const newContacts: Contact[] = aiProspects.map(p => ({
         id: crypto.randomUUID(),
@@ -203,6 +208,8 @@ export default function CRM() {
       saveContacts([...newContacts, ...contacts]);
       showToast('5 nouveaux prospects trouvés par l\'IA !', 'success');
       setActiveTab('prospects');
+      setShowAIModal(false);
+      setAiQuery('');
     } catch (error: any) {
       showToast(error.message, 'error');
     } finally {
@@ -272,12 +279,10 @@ export default function CRM() {
             </button>
           )}
           <button 
-            onClick={handleGenerateProspects} 
-            disabled={isGeneratingProspects}
-            className={`px-4 py-2 rounded-xl text-white text-sm font-bold flex items-center gap-2 transition-all ${isGeneratingProspects ? 'bg-purple-600/50 cursor-not-allowed' : 'bg-purple-600 hover:bg-purple-500 shadow-lg shadow-purple-600/30'}`}
+            onClick={() => setShowAIModal(true)} 
+            className="px-4 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white text-sm font-bold flex items-center gap-2 transition-all shadow-lg shadow-purple-600/30"
           >
-            {isGeneratingProspects ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
-            {isGeneratingProspects ? 'Recherche...' : 'Prospects IA'}
+            <Sparkles className="w-4 h-4" /> Prospects IA
           </button>
           <button onClick={() => setShowAddContact(true)} className="btn-primary">
             <Plus className="w-4 h-4" /> Ajouter
@@ -458,6 +463,50 @@ export default function CRM() {
                 <div className="flex gap-3 pt-2">
                   <button type="button" onClick={() => setShowAddContact(false)} className="flex-1 py-3 rounded-xl bg-white/5 text-white hover:bg-white/10 font-medium">Annuler</button>
                   <button type="submit" className="flex-1 py-3 rounded-xl bg-blue-600 text-white hover:bg-blue-500 font-bold">Enregistrer</button>
+                </div>
+              </form>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {showAIModal && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[110] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+            <motion.div initial={{ scale: 0.9 }} animate={{ scale: 1 }}
+              className="glass w-full max-w-lg rounded-3xl p-8 border border-purple-500/30 shadow-2xl shadow-purple-500/10">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-xl font-bold text-white flex items-center gap-2">
+                  <Sparkles className="w-5 h-5 text-purple-400" /> Générateur de Prospects IA
+                </h3>
+                <button onClick={() => setShowAIModal(false)} className="p-2 hover:bg-white/10 rounded-full text-white"><X className="w-5 h-5" /></button>
+              </div>
+
+              <form onSubmit={handleGenerateProspects} className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-slate-300 mb-2">
+                    Que recherchez-vous ?
+                  </label>
+                  <textarea 
+                    required
+                    rows={3}
+                    placeholder="Ex: Hôtels de luxe 5 étoiles à Cannes, Monaco et Nice"
+                    value={aiQuery}
+                    onChange={e => setAiQuery(e.target.value)}
+                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white outline-none text-sm resize-none focus:border-purple-500/50"
+                  />
+                  <p className="text-xs text-slate-400 mt-2">
+                    L'IA va chercher sur internet et générer 5 prospects pertinents pour cette demande, avec leur numéro de téléphone et un conseil d'approche.
+                  </p>
+                </div>
+
+                <div className="flex gap-3 pt-2">
+                  <button type="button" onClick={() => setShowAIModal(false)} className="flex-1 py-3 rounded-xl bg-white/5 text-white hover:bg-white/10 font-medium">Annuler</button>
+                  <button type="submit" disabled={isGeneratingProspects} className="flex-1 py-3 rounded-xl bg-purple-600 text-white hover:bg-purple-500 font-bold flex justify-center items-center gap-2">
+                    {isGeneratingProspects ? <Loader2 className="w-5 h-5 animate-spin" /> : <Sparkles className="w-5 h-5" />}
+                    {isGeneratingProspects ? 'Recherche en cours...' : 'Générer (5 cibles)'}
+                  </button>
                 </div>
               </form>
             </motion.div>

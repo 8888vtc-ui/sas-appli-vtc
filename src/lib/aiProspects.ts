@@ -26,7 +26,7 @@ Tu dois répondre UNIQUEMENT avec un objet JSON valide ayant cette structure exa
 }
 Assure-toi que le JSON soit parfaitement valide et sans balises markdown (pas de \`\`\`json).`;
 
-export async function generateProspects(settings: AppSettings): Promise<AIProspect[]> {
+export async function generateProspects(settings: AppSettings, customQuery: string): Promise<AIProspect[]> {
   const provider = settings.aiProvider || 'gemini';
   const apiKey = settings.aiApiKey || settings.geminiApiKey;
   
@@ -34,7 +34,8 @@ export async function generateProspects(settings: AppSettings): Promise<AIProspe
     throw new Error('Clé API manquante. Veuillez configurer votre IA dans les réglages.');
   }
 
-  const userPrompt = `Trouve 5 prospects de luxe autour de cette adresse/ville : ${settings.companyAddress || 'Paris'}.`;
+  const userPrompt = `Recherche demandée par l'utilisateur : "${customQuery}".
+Génère 5 cibles correspondant exactement à cette demande, de préférence autour de l'adresse de la société si elle est pertinente (${settings.companyAddress || 'Non spécifiée'}).`;
 
   try {
     let responseText = '';
