@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   ShieldCheck, User, Car, XCircle, FileWarning, AlertTriangle,
   CheckCircle2, Eye, Upload, X, Download, Shield, FileText,
-  FileCheck, AlertOctagon, Info, ChevronRight, FileBadge, Cloud, Database
+  FileCheck, AlertOctagon, Info, ChevronRight, FileBadge, Cloud
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '../context/AppContext';

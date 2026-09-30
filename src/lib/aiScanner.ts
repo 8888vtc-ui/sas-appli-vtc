@@ -20,7 +20,7 @@ Réponds UNIQUEMENT avec un objet JSON valide, sans markdown, avec la structure 
 
 export async function scanReceiptWithAI(settings: AppSettings, base64Image: string): Promise<ScanResult> {
   const provider = settings.aiProvider || 'gemini';
-  const apiKey = settings.aiApiKey || settings.geminiApiKey;
+  const apiKey = settings.geminiApiKey || settings.geminiApiKey;
   
   if (!apiKey) {
     throw new Error('Clé API IA manquante. Veuillez configurer votre IA dans les réglages.');

@@ -527,8 +527,8 @@ export default function Settings() {
             <input
               type="password"
               placeholder="sk-..."
-              value={localSettings.aiApiKey || localSettings.geminiApiKey || ''}
-              onChange={e => setLocalSettings({ ...localSettings, aiApiKey: e.target.value })}
+              value={localSettings.geminiApiKey || localSettings.geminiApiKey || ''}
+              onChange={e => setLocalSettings({ ...localSettings, geminiApiKey: e.target.value })}
               className="w-full bg-white/5 border border-white/10 rounded-xl p-3 outline-none text-white text-sm"
             />
           </div>

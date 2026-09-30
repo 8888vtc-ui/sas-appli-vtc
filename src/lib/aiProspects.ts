@@ -28,7 +28,7 @@ Assure-toi que le JSON soit parfaitement valide et sans balises markdown (pas de
 
 export async function generateProspects(settings: AppSettings, customQuery: string): Promise<AIProspect[]> {
   const provider = settings.aiProvider || 'gemini';
-  const apiKey = settings.aiApiKey || settings.geminiApiKey;
+  const apiKey = settings.geminiApiKey || settings.geminiApiKey;
   
   if (!apiKey) {
     throw new Error('Clé API manquante. Veuillez configurer votre IA dans les réglages.');
