@@ -11,10 +11,9 @@ import { fr } from 'date-fns/locale';
 import QuickSnapExpenseModal from '../components/QuickSnapExpenseModal';
 import {
   EXPENSE_CATEGORIES,
-  URSSAF_MILEAGE_SCALE_2025,
   calculateMileageAllowance,
 } from '../types';
-import type { ExpenseCategory, FiscalPower, Expense } from '../types';
+import type { ExpenseCategory, Expense } from '../types';
 
 // ─── Helper: export CSV enrichi
 function exportExpensesFullCSV(expenses: Expense[]) {

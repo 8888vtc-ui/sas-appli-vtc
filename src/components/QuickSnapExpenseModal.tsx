@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Camera, X, Check, Zap, Sparkles, Loader2 } from 'lucide-react';
+import { X, Check, Zap, Sparkles, Loader2 } from 'lucide-react';
 import { format } from 'date-fns';
 import type { ExpenseCategory } from '../types';
 import { useApp } from '../context/AppContext';

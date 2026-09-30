@@ -258,24 +258,23 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const fetchData = async () => {
     if (!profile?.company_id) return;
     const { data: comp } = await supabase.from('companies').select('*').eq('id', profile.company_id).single();
-    if (comp) setSettings({
-      companyName: comp.name || DEFAULT_SETTINGS.companyName,
-      companyAddress: comp.address || DEFAULT_SETTINGS.companyAddress,
-      companyPhone: comp.phone || DEFAULT_SETTINGS.companyPhone,
-      companyEmail: comp.email || DEFAULT_SETTINGS.companyEmail,
-      siret: comp.siret || DEFAULT_SETTINGS.siret,
-      siren: comp.siren || DEFAULT_SETTINGS.siren,
-      registreVTC: comp.registre_vtc || DEFAULT_SETTINGS.registreVTC,
-      driverName: profile.full_name || DEFAULT_SETTINGS.driverName,
-      driverCardNumber: profile.driver_card_number || DEFAULT_SETTINGS.driverCardNumber,
-      driverPhone: profile.phone || DEFAULT_SETTINGS.driverPhone,
-      vehiclePlate: DEFAULT_SETTINGS.vehiclePlate,
-      vehicleModel: DEFAULT_SETTINGS.vehicleModel,
-      welcomeMessage: comp.welcome_message || DEFAULT_SETTINGS.welcomeMessage,
-      logoColor: comp.logo_color || DEFAULT_SETTINGS.logoColor,
-      tvaRegime: comp.tva_regime || DEFAULT_SETTINGS.tvaRegime,
-      tvaNumber: comp.tva_number || DEFAULT_SETTINGS.tvaNumber
-    });
+    if (comp) setSettings(prev => ({
+      ...prev,
+      companyName: comp.name || prev.companyName,
+      companyAddress: comp.address || prev.companyAddress,
+      companyPhone: comp.phone || prev.companyPhone,
+      companyEmail: comp.email || prev.companyEmail,
+      siret: comp.siret || prev.siret,
+      siren: comp.siren || prev.siren,
+      registreVTC: comp.registre_vtc || prev.registreVTC,
+      driverName: profile.full_name || prev.driverName,
+      driverCardNumber: profile.driver_card_number || prev.driverCardNumber,
+      driverPhone: profile.phone || prev.driverPhone,
+      welcomeMessage: comp.welcome_message || prev.welcomeMessage,
+      logoColor: comp.logo_color || prev.logoColor,
+      tvaRegime: comp.tva_regime || prev.tvaRegime,
+      tvaNumber: comp.tva_number || prev.tvaNumber
+    }));
 
     const { data: tData } = await supabase.from('trips').select('*').eq('company_id', profile.company_id).order('date', { ascending: false });
     if (tData) setTrips(tData as any);

@@ -1,11 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   MessageCircle, Radar, MapPin, Car, DollarSign, Filter,
   CheckCircle2, Clock, Smartphone, Search, RefreshCw, Zap
 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
-import { formatEUR } from '../lib/utils';
 import { showToast } from '../components/Toast';
 
 // Fake Data for simulation
@@ -65,7 +64,6 @@ const MOCK_TRIPS = [
 ];
 
 export default function WhatsAppRadar() {
-  const { settings } = useApp();
   const [isScanning, setIsScanning] = useState(false);
   const [trips, setTrips] = useState(MOCK_TRIPS);
   const [activeTab, setActiveTab] = useState<'feed' | 'settings'>('feed');

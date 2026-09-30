@@ -43,7 +43,7 @@ export interface AppSettings {
   tvaRate?: number; // Taux de TVA (10% par défaut pour VTC)
   tvaNumber: string;
   aiProvider?: 'openai' | 'anthropic' | 'gemini';
-  aiApiKey?: string;
+  geminiApiKey?: string;
   vehicleOwnership: 'personal' | 'company';
   fiscalPower?: FiscalPower;
 }
@@ -101,7 +101,7 @@ export const DEFAULT_SETTINGS: AppSettings = {
   tvaRate: 10,
   tvaNumber: '',
   aiProvider: 'gemini',
-  aiApiKey: '',
+  geminiApiKey: '',
   vehicleOwnership: 'company',
   fiscalPower: '5cv'
 };
