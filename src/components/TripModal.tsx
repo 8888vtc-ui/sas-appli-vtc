@@ -243,131 +243,97 @@ export default function TripModal({ isOpen, onClose }: { isOpen: boolean; onClos
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-50 flex items-end sm:items-center justify-center sm:p-4 bg-black/75 backdrop-blur-md"
+          className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center sm:p-4 bg-black/80 backdrop-blur-sm"
         >
           <motion.div
-            initial={{ scale: 0.95, y: 30 }}
+            initial={{ scale: 0.95, y: 100 }}
             animate={{ scale: 1, y: 0 }}
-            exit={{ scale: 0.95, y: 30 }}
-            className="w-full sm:max-w-2xl bg-[#1c1c1e] border border-white/10 p-5 sm:p-7 rounded-t-3xl sm:rounded-3xl overflow-y-auto max-h-[95vh] sm:max-h-[90vh] text-white shadow-2xl"
+            exit={{ scale: 0.95, y: 100 }}
+            className="w-full sm:max-w-2xl bg-slate-900 border border-slate-700 p-5 sm:p-7 rounded-t-2xl sm:rounded-3xl overflow-y-auto h-[92dvh] sm:h-auto sm:max-h-[90vh] text-white shadow-2xl pb-[calc(env(safe-area-inset-bottom,0px)+96px)]"
           >
             {/* Header */}
-            <div className="flex items-center justify-between pb-4 border-b border-white/10 mb-5">
+            <div className="flex items-center justify-between pb-4 border-b border-slate-700 mb-5 sticky top-0 bg-slate-900 z-50">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-xl bg-blue-500/20 text-blue-400 flex items-center justify-center">
                   <Sparkles className="w-5 h-5" />
                 </div>
                 <div>
-                  <h2 className="text-xl font-bold text-white">Smart Réservation VTC</h2>
-                  <p className="text-xs text-slate-400">Saisie prédictive rapide & liaison CRM</p>
+                  <h2 className="text-xl font-bold text-white">Créer une Course</h2>
+                  <p className="text-xs text-slate-400">Saisie simplifiée</p>
                 </div>
               </div>
               <button
                 onClick={handleClose}
-                className="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-all"
+                className="w-10 h-10 rounded-full bg-slate-800 hover:bg-slate-700 border border-slate-700 flex items-center justify-center text-white transition-all active:scale-90"
               >
-                <X className="w-5 h-5" />
+                <X className="w-6 h-6" />
               </button>
-            </div>
-
-            {/* Type de course */}
-            <div className="flex gap-2 mb-6 p-1 bg-black/40 rounded-2xl border border-white/10">
-              {(['transfer', 'disposal'] as const).map((t) => (
-                <button
-                  key={t}
-                  type="button"
-                  onClick={() => setFormData({ ...formData, tripType: t })}
-                  className={`flex-1 py-2.5 rounded-xl text-sm font-semibold transition-all ${
-                    formData.tripType === t
-                      ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/30'
-                      : 'text-slate-400 hover:text-white'
-                  }`}
-                >
-                  {t === 'transfer' ? '🚗 Transfert Direct (A → B)' : '⏱️ Mise à Disposition (MAD)'}
-                </button>
-              ))}
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-4">
               
-              {/* SECTION 1: HEURE & DATE (EXPRESS) */}
-              <div className="p-4 rounded-2xl bg-[#252528] border border-white/10">
-                <div className="flex items-center justify-between mb-4">
-                  <span className="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
-                    <Clock className="w-4 h-4 text-amber-400" /> 1. Date & Heure
-                  </span>
-                  <div className="flex gap-2">
-                    <button type="button" onClick={() => applyTimePreset(15)} className="px-3 py-1.5 rounded-xl bg-amber-500/20 text-amber-400 font-black text-sm active:scale-95 transition-all">
-                      +15m
-                    </button>
-                    <button type="button" onClick={() => applyTimePreset(30)} className="px-3 py-1.5 rounded-xl bg-amber-500/20 text-amber-400 font-black text-sm active:scale-95 transition-all">
-                      +30m
-                    </button>
+              {/* SECTION 1: CLIENT */}
+              <div className="p-4 rounded-2xl bg-slate-800 border border-slate-700">
+                <span className="text-sm font-bold text-blue-400 uppercase tracking-wider flex items-center gap-2 mb-4">
+                  <User className="w-4 h-4" /> 1. Client
+                </span>
+                
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="relative z-50">
+                    <input required type="text" placeholder="Nom du client *" value={formData.clientName} onChange={(e) => handleClientNameChange(e.target.value)}
+                      onFocus={() => { if (knownClients.length > 0) { setClientSuggestions(knownClients.slice(0, 10)); setShowClientSuggestions(true); } }}
+                      className="w-full bg-slate-900 border border-slate-600 focus:border-blue-500 rounded-xl p-4 text-base font-bold text-white placeholder-slate-400 outline-none" />
+                    
+                    <AnimatePresence>
+                      {showClientSuggestions && clientSuggestions.length > 0 && (
+                        <motion.div initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -5 }}
+                          className="absolute left-0 right-0 top-full mt-2 z-50 bg-slate-800 border border-blue-500/40 rounded-xl overflow-hidden shadow-2xl">
+                          {clientSuggestions.map((c) => (
+                            <button key={c.id} type="button" onClick={() => selectClient(c)}
+                              className="w-full text-left p-4 hover:bg-blue-600/30 border-b border-slate-700 last:border-none flex justify-between items-center active:bg-blue-600/50">
+                              <div className="font-bold text-white text-base">{c.name}</div>
+                              <div className="text-emerald-400 font-mono text-sm">{c.phone}</div>
+                            </button>
+                          ))}
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
                   </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <input required type="date" value={formData.date} onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-                      className="w-full bg-[#1c1c1e] border-2 border-white/10 focus:border-amber-500 rounded-xl p-4 text-lg font-black text-white outline-none" />
-                  </div>
-                  <div>
-                    <input required type="time" value={formData.time} onChange={(e) => setFormData({ ...formData, time: e.target.value })}
-                      className="w-full bg-[#1c1c1e] border-2 border-white/10 focus:border-amber-500 rounded-xl p-4 text-lg font-black text-white outline-none" />
+                    <input required type="tel" placeholder="Téléphone *" value={formData.clientPhone} onChange={(e) => setFormData({ ...formData, clientPhone: e.target.value })}
+                      className="w-full bg-slate-900 border border-slate-600 focus:border-blue-500 rounded-xl p-4 text-base font-bold text-white placeholder-slate-400 outline-none" />
                   </div>
                 </div>
               </div>
 
-              {/* SECTION 2: ADRESSES (EXPRESS) */}
-              <div className="p-4 rounded-2xl bg-[#252528] border border-white/10 space-y-4">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
-                    <MapPin className="w-4 h-4 text-emerald-400" /> 2. Lieux
-                  </span>
-                </div>
+              {/* SECTION 2: LIEUX */}
+              <div className="p-4 rounded-2xl bg-slate-800 border border-slate-700">
+                <span className="text-sm font-bold text-emerald-400 uppercase tracking-wider flex items-center gap-2 mb-3">
+                  <MapPin className="w-4 h-4" /> 2. Itinéraire
+                </span>
 
-                <div className="flex gap-2 overflow-x-auto pb-1 no-scrollbar">
+                <div className="flex gap-2 overflow-x-auto pb-3 no-scrollbar">
                   {quickAddresses.slice(0,4).map((addr) => (
                     <button key={addr} type="button" onClick={() => setFormData({ ...formData, pickUpLocation: addr })}
-                      className="text-xs py-2 px-3 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold shrink-0 transition-all active:scale-95">
+                      className="text-sm py-2 px-3 rounded-xl bg-slate-700 hover:bg-slate-600 text-white font-bold shrink-0 transition-all active:scale-95 border border-slate-600">
                       📍 {addr}
                     </button>
                   ))}
                 </div>
 
-                <div className="relative z-40">
-                  <input required type="text" placeholder="Départ (Adresse, Aéroport...)" value={formData.pickUpLocation} onChange={(e) => handlePickupChange(e.target.value)}
-                    className="w-full bg-[#1c1c1e] border-2 border-white/10 focus:border-emerald-500 rounded-xl p-4 text-base font-bold text-white placeholder-slate-500 outline-none" />
-                  
-                  {pickupSuggestions.length > 0 && (
-                    <div className="absolute left-0 right-0 top-full mt-2 z-50 bg-[#252528] border-2 border-emerald-500/50 rounded-xl overflow-hidden shadow-2xl">
-                      {pickupSuggestions.map((s, idx) => (
-                        <button key={idx} type="button" onClick={() => { setFormData({ ...formData, pickUpLocation: s.label }); setPickupSuggestions([]); }}
-                          className="w-full text-left p-4 hover:bg-emerald-600/30 border-b border-white/10 last:border-none flex items-center gap-3 transition-colors">
-                          <MapPin className="w-5 h-5 text-emerald-400 shrink-0" />
-                          <div className="overflow-hidden">
-                            <div className="text-base font-black text-white truncate">{s.name}</div>
-                            <div className="text-sm text-slate-400 truncate">{s.postcode} {s.city}</div>
-                          </div>
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                </div>
-
-                {formData.tripType === 'transfer' && (
-                  <div className="relative z-30 mt-2">
-                    <input type="text" placeholder="Destination (Optionnel)" value={formData.dropOffLocation} onChange={(e) => handleDropoffChange(e.target.value)}
-                      className="w-full bg-[#1c1c1e] border-2 border-white/10 focus:border-emerald-500 rounded-xl p-4 text-base font-bold text-white placeholder-slate-500 outline-none" />
+                <div className="space-y-4">
+                  <div className="relative z-40">
+                    <input required type="text" placeholder="Lieu de Départ *" value={formData.pickUpLocation} onChange={(e) => handlePickupChange(e.target.value)}
+                      className="w-full bg-slate-900 border border-slate-600 focus:border-emerald-500 rounded-xl p-4 text-base font-bold text-white placeholder-slate-400 outline-none" />
                     
-                    {dropoffSuggestions.length > 0 && (
-                      <div className="absolute left-0 right-0 top-full mt-2 z-50 bg-[#252528] border-2 border-emerald-500/50 rounded-xl overflow-hidden shadow-2xl">
-                        {dropoffSuggestions.map((s, idx) => (
-                          <button key={idx} type="button" onClick={() => { setFormData({ ...formData, dropOffLocation: s.label }); setDropoffSuggestions([]); }}
-                            className="w-full text-left p-4 hover:bg-emerald-600/30 border-b border-white/10 last:border-none flex items-center gap-3 transition-colors">
+                    {pickupSuggestions.length > 0 && (
+                      <div className="absolute left-0 right-0 top-full mt-2 z-50 bg-slate-800 border-2 border-emerald-500/50 rounded-xl overflow-hidden shadow-2xl">
+                        {pickupSuggestions.map((s, idx) => (
+                          <button key={idx} type="button" onClick={() => { setFormData({ ...formData, pickUpLocation: s.label }); setPickupSuggestions([]); }}
+                            className="w-full text-left p-4 hover:bg-emerald-600/30 border-b border-slate-700 last:border-none flex items-center gap-3 transition-colors active:bg-emerald-600/50">
                             <MapPin className="w-5 h-5 text-emerald-400 shrink-0" />
                             <div className="overflow-hidden">
-                              <div className="text-base font-black text-white truncate">{s.name}</div>
+                              <div className="text-base font-bold text-white truncate">{s.name}</div>
                               <div className="text-sm text-slate-400 truncate">{s.postcode} {s.city}</div>
                             </div>
                           </button>
@@ -375,85 +341,69 @@ export default function TripModal({ isOpen, onClose }: { isOpen: boolean; onClos
                       </div>
                     )}
                   </div>
-                )}
+
+                  <div className="relative z-30">
+                    <input required type="text" placeholder="Destination *" value={formData.dropOffLocation} onChange={(e) => handleDropoffChange(e.target.value)}
+                      className="w-full bg-slate-900 border border-slate-600 focus:border-emerald-500 rounded-xl p-4 text-base font-bold text-white placeholder-slate-400 outline-none" />
+                    
+                    {dropoffSuggestions.length > 0 && (
+                      <div className="absolute left-0 right-0 top-full mt-2 z-50 bg-slate-800 border-2 border-emerald-500/50 rounded-xl overflow-hidden shadow-2xl">
+                        {dropoffSuggestions.map((s, idx) => (
+                          <button key={idx} type="button" onClick={() => { setFormData({ ...formData, dropOffLocation: s.label }); setDropoffSuggestions([]); }}
+                            className="w-full text-left p-4 hover:bg-emerald-600/30 border-b border-slate-700 last:border-none flex items-center gap-3 transition-colors active:bg-emerald-600/50">
+                            <MapPin className="w-5 h-5 text-emerald-400 shrink-0" />
+                            <div className="overflow-hidden">
+                              <div className="text-base font-bold text-white truncate">{s.name}</div>
+                              <div className="text-sm text-slate-400 truncate">{s.postcode} {s.city}</div>
+                            </div>
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
               </div>
 
-              {/* SECTION 3: PRIX (CALCULATRICE) */}
-              <div className="p-4 rounded-2xl bg-[#252528] border border-white/10 text-center">
-                <span className="text-sm font-bold text-white uppercase tracking-wider block mb-3">
-                  3. Prix Convenu (€)
+              {/* SECTION 3: DATE & HEURE */}
+              <div className="p-4 rounded-2xl bg-slate-800 border border-slate-700">
+                <div className="flex items-center justify-between mb-4">
+                  <span className="text-sm font-bold text-amber-400 uppercase tracking-wider flex items-center gap-2">
+                    <Clock className="w-4 h-4" /> 3. Horaires
+                  </span>
+                  <div className="flex gap-2">
+                    <button type="button" onClick={() => applyTimePreset(15)} className="px-4 py-2 rounded-xl bg-amber-500/20 text-amber-400 font-bold text-sm active:scale-95 transition-all border border-amber-500/30">
+                      +15 min
+                    </button>
+                    <button type="button" onClick={() => applyTimePreset(30)} className="px-4 py-2 rounded-xl bg-amber-500/20 text-amber-400 font-bold text-sm active:scale-95 transition-all border border-amber-500/30">
+                      +30 min
+                    </button>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <input required type="date" value={formData.date} onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+                    className="w-full bg-slate-900 border border-slate-600 focus:border-amber-500 rounded-xl p-4 text-base font-bold text-white outline-none" />
+                  <input required type="time" value={formData.time} onChange={(e) => setFormData({ ...formData, time: e.target.value })}
+                    className="w-full bg-slate-900 border border-slate-600 focus:border-amber-500 rounded-xl p-4 text-base font-bold text-white outline-none" />
+                </div>
+              </div>
+
+              {/* SECTION 4: PRIX */}
+              <div className="p-4 rounded-2xl bg-slate-800 border border-slate-700">
+                <span className="text-sm font-bold text-blue-400 uppercase tracking-wider flex items-center gap-2 mb-3">
+                  4. Tarif TTC (€)
                 </span>
                 <input required type="number" min={0} step={1} placeholder="0" value={formData.price || ''} onChange={(e) => setFormData({ ...formData, price: parseFloat(e.target.value) || 0 })}
-                  className="w-full bg-[#1c1c1e] border-2 border-blue-500 focus:border-blue-400 rounded-2xl p-6 text-5xl font-black text-blue-400 text-center outline-none" />
+                  className="w-full bg-slate-900 border border-blue-500 focus:border-blue-400 rounded-2xl p-6 text-4xl font-black text-blue-400 text-center outline-none" />
               </div>
 
-              {/* SECTION 4: DÉTAILS OPTIONNELS (Nom, N° Vol, MAD) */}
-              <div className="pt-2">
-                <button type="button" onClick={() => setShowAdvanced(!showAdvanced)} className="w-full py-4 rounded-2xl bg-white/5 border border-white/10 text-white font-bold hover:bg-white/10 transition-all text-base">
-                  {showAdvanced ? 'Masquer les détails optionnels' : 'Détails Optionnels (Client, N° Vol...)'}
-                </button>
-
-                <AnimatePresence>
-                  {showAdvanced && (
-                    <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden mt-3 space-y-3">
-                      
-                      {/* Client Name Auto Complete */}
-                      <div className="relative z-50">
-                        <input type="text" placeholder="Nom du client (Optionnel)" value={formData.clientName} onChange={(e) => handleClientNameChange(e.target.value)}
-                          onFocus={() => { if (knownClients.length > 0) { setClientSuggestions(knownClients.slice(0, 10)); setShowClientSuggestions(true); } }}
-                          className="w-full bg-[#252528] border border-white/10 focus:border-blue-500 rounded-xl p-4 text-base text-white placeholder-slate-500 outline-none" />
-                        
-                        <AnimatePresence>
-                          {showClientSuggestions && clientSuggestions.length > 0 && (
-                            <motion.div initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -5 }}
-                              className="absolute left-0 right-0 top-full mt-2 z-50 bg-[#1c1c1e] border border-blue-500/40 rounded-xl overflow-hidden shadow-2xl">
-                              {clientSuggestions.map((c) => (
-                                <button key={c.id} type="button" onClick={() => selectClient(c)}
-                                  className="w-full text-left p-4 hover:bg-blue-600/30 border-b border-white/10 last:border-none flex justify-between items-center">
-                                  <div className="font-bold text-white text-base">{c.name}</div>
-                                  <div className="text-emerald-400 font-mono text-sm">{c.phone}</div>
-                                </button>
-                              ))}
-                            </motion.div>
-                          )}
-                        </AnimatePresence>
-                      </div>
-
-                      <div className="grid grid-cols-2 gap-3">
-                        <input type="tel" placeholder="Téléphone" value={formData.clientPhone} onChange={(e) => setFormData({ ...formData, clientPhone: e.target.value })}
-                          className="w-full bg-[#252528] border border-white/10 focus:border-blue-500 rounded-xl p-4 text-base text-white placeholder-slate-500 outline-none" />
-                        <div className="relative">
-                          <Plane className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-amber-400" />
-                          <input type="text" placeholder="N° Vol" value={formData.flightNumber} onChange={(e) => setFormData({ ...formData, flightNumber: e.target.value.toUpperCase() })}
-                            className="w-full bg-[#252528] border border-white/10 focus:border-blue-500 rounded-xl py-4 pl-12 pr-4 text-base text-white placeholder-slate-500 outline-none font-mono font-bold" />
-                        </div>
-                      </div>
-
-                      <textarea placeholder="Notes (Optionnel)" value={formData.notes} onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
-                        className="w-full bg-[#252528] border border-white/10 focus:border-blue-500 rounded-xl p-4 text-base text-white placeholder-slate-500 outline-none h-24 resize-none" />
-
-                      {formData.tripType === 'disposal' && (
-                        <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/20 grid grid-cols-2 gap-3">
-                          <input type="time" placeholder="Fin Heure" value={formData.disposalEndTime} onChange={(e) => setFormData({ ...formData, disposalEndTime: e.target.value })}
-                            className="w-full bg-[#1c1c1e] border border-white/10 rounded-xl p-4 text-base text-white outline-none" />
-                          <input type="text" placeholder="Zone" value={formData.disposalZone} onChange={(e) => setFormData({ ...formData, disposalZone: e.target.value })}
-                            className="w-full bg-[#1c1c1e] border border-white/10 rounded-xl p-4 text-base text-white outline-none" />
-                        </div>
-                      )}
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-
-              {/* Boutons d'action géants */}
-              <div className="pt-4 flex gap-3">
-                <button type="button" onClick={handleClose} className="w-1/3 py-5 rounded-2xl bg-[#252528] hover:bg-[#303030] text-white font-black text-lg transition-all active:scale-95">
-                  Annuler
-                </button>
-                <button type="submit" className="w-2/3 py-5 rounded-2xl bg-blue-600 hover:bg-blue-500 text-white font-black text-lg shadow-[0_0_30px_rgba(37,99,235,0.4)] transition-all flex items-center justify-center gap-3 active:scale-95">
-                  <Check className="w-6 h-6 stroke-[3]" /> VALIDER
+              {/* FIXED BOTTOM ACTION */}
+              <div className="sticky bottom-0 left-0 right-0 p-4 -mx-4 -mb-4 bg-slate-900/95 backdrop-blur-md border-t border-slate-700 sm:relative sm:bg-transparent sm:border-t-0 sm:p-0 sm:m-0 sm:pt-4 sm:flex sm:gap-3 z-50 pb-[calc(env(safe-area-inset-bottom,0px)+16px)]">
+                <button type="submit" className="w-full sm:w-auto sm:flex-1 h-[60px] rounded-2xl bg-blue-600 hover:bg-blue-500 text-white font-black text-lg shadow-[0_0_30px_rgba(37,99,235,0.4)] transition-all flex items-center justify-center gap-3 active:scale-95">
+                  <Check className="w-7 h-7 stroke-[3]" /> VALIDER LA COURSE
                 </button>
               </div>
+
             </form>
           </motion.div>
         </motion.div>
