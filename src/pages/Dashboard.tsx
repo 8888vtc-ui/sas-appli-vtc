@@ -340,17 +340,20 @@ export default function Dashboard() {
       )}
 
       {/* ═══════════════════════════════════════════
-           RÉSUMÉ + RECHERCHE (ligne compacte)
+           RÉSUMÉ IMMÉDIAT (Ultra-Minimaliste)
            ═══════════════════════════════════════════ */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 4px', marginBottom: 6 }}>
-        <span style={{ fontSize: 15, color: c.gray, fontWeight: 500 }}>
-          Aujourd'hui : {todayCount.n} course{todayCount.n !== 1 ? 's' : ''} • <strong style={{color:'#fff'}}>{formatEUR(todayCount.rev)}</strong>
-        </span>
+      <div style={{ padding: '10px 4px', marginBottom: 12, display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between' }}>
+        <div>
+          <div style={{ fontSize: 14, color: c.gray, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Aujourd'hui</div>
+          <div style={{ fontSize: 32, fontWeight: 900, color: '#fff', lineHeight: 1.1, marginTop: 4 }}>
+            {todayCount.n} trajet{todayCount.n !== 1 ? 's' : ''} • {formatEUR(todayCount.rev)}
+          </div>
+        </div>
         {trips.length > 4 && (
           <button onClick={() => { setShowSearch(!showSearch); if (showSearch) setSearchQuery(''); }}
-            style={{ width: 36, height: 36, borderRadius: 12, background: showSearch ? c.blue : c.card2, border: 'none',
-              display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <Search style={{ width: 18, height: 18, color: showSearch ? '#fff' : c.gray }} />
+            style={{ width: 44, height: 44, borderRadius: 14, background: showSearch ? c.blue : c.card2, border: 'none',
+              display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+            <Search style={{ width: 22, height: 22, color: showSearch ? '#fff' : c.gray }} />
           </button>
         )}
       </div>
@@ -371,8 +374,8 @@ export default function Dashboard() {
            ═══════════════════════════════════════════ */}
       <div style={{ display: 'flex', background: c.card2, borderRadius: 10, padding: 3 }}>
         {([
-          { key: 'active' as const, label: 'À faire' },
-          { key: 'history' as const, label: 'Historique' },
+          { key: 'active' as const, label: 'À VENIR' },
+          { key: 'history' as const, label: 'PASSÉS' },
         ]).map(t => (
           <button key={t.key}
             onClick={() => { setTab(t.key); setExpandedId(null); setMoreId(null); }}
@@ -391,15 +394,30 @@ export default function Dashboard() {
            LISTE DES COURSES
            ═══════════════════════════════════════════ */}
       {listTrips.length === 0 ? (
-        <div style={{ textAlign: 'center', padding: '40px 20px', background: c.card, borderRadius: 16, border: `0.5px solid ${c.sep}` }}>
-          <Calendar style={{ width: 34, height: 34, color: '#48484a', margin: '0 auto 10px' }} />
-          <p style={{ fontSize: 16, fontWeight: 600, color: '#fff', marginBottom: 4 }}>
-            {tab === 'active' ? 'Aucune course à venir' : 'Aucune course terminée'}
+        <button 
+          onClick={() => document.querySelector<HTMLButtonElement>('button[title="NOUVELLE COURSE"]')?.click() || 
+            // Fallback for mobile FAB or top level trigger (We'll assume the modal can be opened by event or context, but usually they click the Plus button in the layout. Since we can't easily trigger the Layout state from here without context, let's dispatch a custom event)
+            window.dispatchEvent(new Event('open-new-trip'))
+          }
+          style={{ 
+            width: '100%', textAlign: 'center', padding: '60px 20px', 
+            background: 'rgba(10, 132, 255, 0.1)', borderRadius: 24, border: `2px dashed rgba(10, 132, 255, 0.4)`,
+            display: 'flex', flexDirection: 'column', alignItems: 'center', cursor: 'pointer',
+            transition: 'all 0.2s'
+          }}
+          onMouseOver={(e) => e.currentTarget.style.background = 'rgba(10, 132, 255, 0.15)'}
+          onMouseOut={(e) => e.currentTarget.style.background = 'rgba(10, 132, 255, 0.1)'}
+        >
+          <div style={{ width: 64, height: 64, borderRadius: 32, background: c.blue, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 16 }}>
+            <Plus style={{ width: 32, height: 32, color: '#fff' }} />
+          </div>
+          <p style={{ fontSize: 20, fontWeight: 800, color: c.blue, marginBottom: 8, letterSpacing: '-0.02em' }}>
+            {tab === 'active' ? '+ AJOUTER UN TRAJET' : 'Aucun trajet passé'}
           </p>
-          <p style={{ fontSize: 13, color: c.gray }}>
-            {tab === 'active' ? 'Appuyez sur + pour créer une course' : ''}
+          <p style={{ fontSize: 15, color: c.gray, fontWeight: 500 }}>
+            {tab === 'active' ? 'Commencez à planifier votre journée.' : 'Votre historique est vide.'}
           </p>
-        </div>
+        </button>
       ) : (
         <div style={{ background: c.card, borderRadius: 16, overflow: 'hidden', border: `0.5px solid ${c.sep}` }}>
           {listTrips.map((trip, i) => {
