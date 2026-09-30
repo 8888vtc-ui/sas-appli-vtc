@@ -474,21 +474,33 @@ export default function Settings() {
       {/* AI Settings */}
       <div className="glass rounded-3xl p-8">
         <h2 className="text-xl font-bold mb-6 text-white flex items-center gap-2">
-          <Sparkles className="w-5 h-5 text-purple-400" /> Intelligence Artificielle (Gemini)
+          <Sparkles className="w-5 h-5 text-purple-400" /> Intelligence Artificielle (Choix Libre)
         </h2>
-        <div className="grid sm:grid-cols-1 gap-4 sm:gap-5">
+        <div className="grid sm:grid-cols-2 gap-4 sm:gap-5">
           <div className="space-y-2">
-            <label className="block text-sm font-medium" style={{ color: '#94A3B8' }}>Clé API Google Gemini</label>
+            <label className="block text-sm font-medium" style={{ color: '#94A3B8' }}>Fournisseur IA</label>
+            <select
+              value={localSettings.aiProvider || 'gemini'}
+              onChange={e => setLocalSettings({ ...localSettings, aiProvider: e.target.value as any })}
+              className="w-full bg-[#1e293b] border border-white/10 rounded-xl p-3 outline-none text-white text-sm"
+            >
+              <option value="gemini">Google Gemini</option>
+              <option value="openai">OpenAI (ChatGPT)</option>
+              <option value="anthropic">Anthropic (Claude)</option>
+            </select>
+          </div>
+          <div className="space-y-2">
+            <label className="block text-sm font-medium" style={{ color: '#94A3B8' }}>Clé API ({localSettings.aiProvider || 'gemini'})</label>
             <input
               type="password"
-              placeholder="AIzaSy..."
-              value={localSettings.geminiApiKey || ''}
-              onChange={e => setLocalSettings({ ...localSettings, geminiApiKey: e.target.value })}
+              placeholder="sk-..."
+              value={localSettings.aiApiKey || localSettings.geminiApiKey || ''}
+              onChange={e => setLocalSettings({ ...localSettings, aiApiKey: e.target.value })}
               className="w-full bg-white/5 border border-white/10 rounded-xl p-3 outline-none text-white text-sm"
             />
-            <p className="text-xs text-slate-400 mt-1">Nécessaire pour le Copilote IA et la génération de PDF par intelligence artificielle.</p>
           </div>
         </div>
+        <p className="text-xs text-slate-400 mt-3">Nécessaire pour le Générateur de Prospects IA et les analyses intelligentes.</p>
       </div>
 
       {/* Backup & Restore */}

@@ -42,7 +42,8 @@ export interface AppSettings {
   tvaRegime: 'franchise' | 'assujetti';
   tvaRate?: number; // Taux de TVA (10% par défaut pour VTC)
   tvaNumber: string;
-  geminiApiKey?: string;
+  aiProvider?: 'openai' | 'anthropic' | 'gemini';
+  aiApiKey?: string;
 }
 
 // ─── LEGAL DOCUMENT (VAULT & CONTRÔLE ROUTIER) ───
@@ -97,7 +98,8 @@ export const DEFAULT_SETTINGS: AppSettings = {
   tvaRegime: 'franchise',
   tvaRate: 10,
   tvaNumber: '',
-  geminiApiKey: ''
+  aiProvider: 'gemini',
+  aiApiKey: ''
 };
 
 export const LEGAL_DOC_TEMPLATES: Omit<LegalDocument, 'id'>[] = [

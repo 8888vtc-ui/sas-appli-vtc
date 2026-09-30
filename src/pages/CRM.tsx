@@ -4,10 +4,12 @@ import {
   Users, Search, Plus, Phone, Mail, MessageSquare, Star, Tag,
   Building2, Hotel, Briefcase, User, MapPin, Send,
   ChevronDown, UserPlus,
-  X, CheckCircle2, AlertCircle, MessageCircle, Trash2
+  X, CheckCircle2, AlertCircle, MessageCircle, Trash2, Sparkles, Loader2
 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { format, differenceInDays } from 'date-fns';
+import { generateProspects } from '../lib/aiProspects';
+import { showToast } from '../components/Toast';
 
 // ─── TYPES ───
 interface Contact {
@@ -57,11 +59,12 @@ const CATEGORIES = {
 };
 
 export default function CRM() {
-  const { trips } = useApp();
+  const { trips, settings } = useApp();
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTab, setActiveTab] = useState<'all' | 'clients' | 'prospects'>('all');
   const [categoryFilter, setCategoryFilter] = useState<string>('all');
   const [showAddContact, setShowAddContact] = useState(false);
+  const [isGeneratingProspects, setIsGeneratingProspects] = useState(false);
   const [showSMSPanel, setShowSMSPanel] = useState(false);
   const [selectedContacts, setSelectedContacts] = useState<string[]>([]);
   const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null);
@@ -175,6 +178,38 @@ export default function CRM() {
     setTimeout(() => { setSMSSent(false); setShowSMSPanel(false); setSelectedContacts([]); }, 2000);
   };
 
+  const handleGenerateProspects = async () => {
+    try {
+      setIsGeneratingProspects(true);
+      const aiProspects = await generateProspects(settings);
+      
+      const newContacts: Contact[] = aiProspects.map(p => ({
+        id: crypto.randomUUID(),
+        name: p.name,
+        phone: p.phone,
+        email: p.email || '',
+        type: 'prospect',
+        category: p.category,
+        source: 'Recherche IA',
+        notes: p.notes,
+        lastContact: '',
+        totalTrips: 0,
+        totalRevenue: 0,
+        rating: 0,
+        tags: ['IA', 'A prospecter'],
+        createdAt: format(new Date(), 'yyyy-MM-dd')
+      }));
+
+      saveContacts([...newContacts, ...contacts]);
+      showToast('5 nouveaux prospects trouvés par l\'IA !', 'success');
+      setActiveTab('prospects');
+    } catch (error: any) {
+      showToast(error.message, 'error');
+    } finally {
+      setIsGeneratingProspects(false);
+    }
+  };
+
   const getDaysColor = (days: number) => days > 60 ? '#ef4444' : days > 30 ? '#f59e0b' : '#22c55e';
 
   return (
@@ -236,6 +271,14 @@ export default function CRM() {
               <Send className="w-4 h-4" /> SMS ({selectedContacts.length})
             </button>
           )}
+          <button 
+            onClick={handleGenerateProspects} 
+            disabled={isGeneratingProspects}
+            className={`px-4 py-2 rounded-xl text-white text-sm font-bold flex items-center gap-2 transition-all ${isGeneratingProspects ? 'bg-purple-600/50 cursor-not-allowed' : 'bg-purple-600 hover:bg-purple-500 shadow-lg shadow-purple-600/30'}`}
+          >
+            {isGeneratingProspects ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
+            {isGeneratingProspects ? 'Recherche...' : 'Prospects IA'}
+          </button>
           <button onClick={() => setShowAddContact(true)} className="btn-primary">
             <Plus className="w-4 h-4" /> Ajouter
           </button>
