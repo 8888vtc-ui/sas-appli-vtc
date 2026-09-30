@@ -481,10 +481,10 @@ export default function Vault({ controlMode = false }: { controlMode?: boolean }
                   >
                     <IconComp className="w-[18px] h-[18px] text-white" />
                   </div>
-                  <div className="truncate flex items-center gap-2">
-                     <span className="text-[17px] text-white tracking-tight">{doc.name}</span>
+                  <div className="flex-1 min-w-0 flex items-center gap-2">
+                     <span className="text-[17px] text-white tracking-tight truncate">{doc.name}</span>
                      {doc.isRequired && (
-                       <span className="text-[10px] font-bold text-red-500 uppercase tracking-wider bg-red-500/10 px-1.5 py-0.5 rounded">Obligatoire</span>
+                       <span className="text-[10px] font-bold text-red-500 uppercase tracking-wider bg-red-500/10 px-1.5 py-0.5 rounded shrink-0 hidden sm:inline-block">Obligatoire</span>
                      )}
                   </div>
                 </div>

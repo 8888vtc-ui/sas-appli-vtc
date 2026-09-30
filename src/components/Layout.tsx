@@ -39,7 +39,7 @@ export default function Layout({ children, onNewTrip }: { children: React.ReactN
   };
 
   return (
-    <div className="min-h-screen bg-black text-white flex justify-center">
+    <div className="min-h-screen w-full bg-black text-white flex justify-center">
       
       {/* ═══════════════════════════════════════════
            MAIN MOBILE CONTAINER (OS STYLE APP)

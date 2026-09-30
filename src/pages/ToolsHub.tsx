@@ -54,8 +54,7 @@ export default function ToolsHub() {
             </div>
             
             <div className="flex-1 relative z-10">
-              <div className="font-extrabold text-white text-[15px] group-hover:text-transparent group-hover:bg-clip-text transition-all duration-300"
-                   style={{ backgroundImage: `linear-gradient(to right, #fff, ${tool.color})` }}>
+              <div className="font-extrabold text-white text-[15px] transition-colors duration-300">
                 {tool.label}
               </div>
               <div className="text-[13px] text-slate-400 mt-1 font-medium">{tool.description}</div>
