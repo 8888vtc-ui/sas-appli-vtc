@@ -268,11 +268,16 @@ export function generateFacture(trip: Trip, s: AppSettings, invoiceNum: string) 
     ? `Mise à disposition VTC - ${trip.date} à ${trip.disposalEndDate || trip.date}`
     : `Transport VTC: ${trip.pickUpLocation} → ${trip.dropOffLocation}`;
 
+  const tvaRate = s.tvaRate ?? 10;
+  const isFranchise = s.tvaRegime === 'franchise';
+  const priceHT = isFranchise ? trip.price : trip.price / (1 + tvaRate / 100);
+  const tvaAmount = isFranchise ? 0 : trip.price - priceHT;
+
   doc.setFont('helvetica', 'normal');
   doc.text(desc, 22, y);
   doc.text('1', 122, y);
-  doc.text(`${trip.price.toFixed(2)} €`, 137, y);
-  doc.text(`${trip.price.toFixed(2)} €`, 170, y);
+  doc.text(`${priceHT.toFixed(2)} €`, 137, y);
+  doc.text(`${priceHT.toFixed(2)} €`, 170, y);
   y += 6;
   doc.text(`Date: ${trip.date} | Heure: ${trip.time}`, 22, y);
   if (trip.flightNumber) { y += 5; doc.text(`Vol/Train: ${trip.flightNumber}`, 22, y); }
@@ -282,22 +287,22 @@ export function generateFacture(trip: Trip, s: AppSettings, invoiceNum: string) 
   doc.line(120, y, 190, y); y += 7;
   doc.setFont('helvetica', 'bold'); doc.setFontSize(10);
   doc.text('Total HT:', 130, y);
-  doc.text(`${trip.price.toFixed(2)} €`, 170, y); y += 7;
-  const tvaRate = s.tvaRate ?? 10;
-  if (s.tvaRegime === 'franchise') {
+  doc.text(`${priceHT.toFixed(2)} €`, 170, y); y += 7;
+  
+  if (isFranchise) {
     doc.setFontSize(8); doc.setFont('helvetica', 'normal');
     doc.text('TVA non applicable (art. 293 B du CGI)', 130, y); y += 7;
   } else {
     doc.text(`TVA ${tvaRate}%:`, 130, y);
-    doc.text(`${(trip.price * (tvaRate / 100)).toFixed(2)} €`, 170, y); y += 7;
+    doc.text(`${tvaAmount.toFixed(2)} €`, 170, y); y += 7;
   }
   doc.setFillColor(30, 41, 59);
   doc.setTextColor(255);
   doc.rect(120, y - 2, 70, 10, 'F');
   doc.setFontSize(12); doc.setFont('helvetica', 'bold');
-  const total = s.tvaRegime === 'franchise' ? trip.price : trip.price * (1 + tvaRate / 100);
+  
   doc.text('TOTAL TTC:', 125, y + 5);
-  doc.text(`${total.toFixed(2)} €`, 170, y + 5);
+  doc.text(`${trip.price.toFixed(2)} €`, 170, y + 5);
   doc.setTextColor(0);
 
   y += 20;
@@ -307,7 +312,7 @@ export function generateFacture(trip: Trip, s: AppSettings, invoiceNum: string) 
   footer(doc, s);
   doc.save(`facture_${invoiceNum}_${trip.clientName.replace(/\s/g, '_')}.pdf`);
 
-  return { total, tvaAmount: s.tvaRegime === 'franchise' ? 0 : trip.price * (tvaRate / 100) };
+  return { total: trip.price, tvaAmount: tvaAmount };
 }
 
 export function downloadInvoicePDF(inv: InvoiceRecord, s: AppSettings, trip?: Trip) {
