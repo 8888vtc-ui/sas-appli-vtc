@@ -277,7 +277,27 @@ export function AppProvider({ children }: { children: ReactNode }) {
     }));
 
     const { data: tData } = await supabase.from('trips').select('*').eq('company_id', profile.company_id).order('date', { ascending: false });
-    if (tData) setTrips(tData as any);
+    if (tData) {
+      const mappedTrips = tData.map((t: any) => ({
+        id: t.id,
+        clientName: t.client_name,
+        clientPhone: t.client_phone,
+        clientEmail: t.client_email,
+        pickUpLocation: t.pickup_location,
+        dropOffLocation: t.dropoff_location,
+        date: t.date,
+        time: t.time,
+        flightNumber: t.flight_number,
+        passengerCount: t.passenger_count,
+        price: t.price,
+        tripType: t.trip_type,
+        status: t.status,
+        bookingDateTime: t.booking_datetime,
+        notes: t.notes,
+        invoiceNumber: t.invoice_number
+      }));
+      setTrips(mappedTrips as any);
+    }
 
     const { data: dData } = await supabase.from('documents').select('*').eq('company_id', profile.company_id);
     if (dData && dData.length > 0) {
@@ -342,12 +362,31 @@ export function AppProvider({ children }: { children: ReactNode }) {
       return;
     }
     if (!profile?.company_id) return;
-    await supabase.from('trips').insert([{
-      ...formData,
+    
+    // Map camelCase formData to snake_case schema for Supabase
+    const dbPayload = {
       company_id: profile.company_id,
+      client_name: formData.clientName,
+      client_phone: formData.clientPhone,
+      client_email: formData.clientEmail,
+      pickup_location: formData.pickUpLocation,
+      dropoff_location: formData.dropOffLocation,
+      date: formData.date,
+      time: formData.time,
       booking_datetime: format(new Date(), 'dd/MM/yyyy HH:mm'),
-      status: 'scheduled'
-    }]);
+      flight_number: formData.flightNumber,
+      passenger_count: formData.passengerCount,
+      price: formData.price,
+      trip_type: formData.tripType,
+      status: 'scheduled',
+      notes: formData.notes
+    };
+
+    const { error } = await supabase.from('trips').insert([dbPayload]);
+    if (error) {
+      console.error("Error creating trip:", error);
+      alert("Erreur lors de la création de la course : " + error.message);
+    }
   };
 
   const deleteTrip = async (id: string) => {
