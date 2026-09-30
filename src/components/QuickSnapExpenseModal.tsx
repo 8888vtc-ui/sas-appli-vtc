@@ -1,8 +1,11 @@
 import { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Camera, X, Check, Zap } from 'lucide-react';
+import { Camera, X, Check, Zap, Sparkles, Loader2 } from 'lucide-react';
 import { format } from 'date-fns';
 import type { ExpenseCategory } from '../types';
+import { useApp } from '../context/AppContext';
+import { scanReceiptWithAI } from '../lib/aiScanner';
+import { showToast } from './Toast';
 
 interface QuickSnapModalProps {
   isOpen: boolean;
@@ -37,20 +40,40 @@ const PRESETS: Array<{
   { id: 'parking', label: 'Parking', icon: '🅿️', category: 'parking', description: 'Stationnement Client', tvaRate: 20, tvaDeductible: true },
 ];
 
-export default function QuickSnapExpenseModal({ isOpen, onClose, onSave }: QuickSnapModalProps) {
+  const { settings } = useApp();
   const [selectedPreset, setSelectedPreset] = useState(PRESETS[0]);
   const [amount, setAmount] = useState('');
   const [photo, setPhoto] = useState<string>('');
   const [photoName, setPhotoName] = useState<string>('');
+  const [isScanning, setIsScanning] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleCapture = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
     const reader = new FileReader();
-    reader.onload = (ev) => {
-      setPhoto(ev.target?.result as string);
+    reader.onload = async (ev) => {
+      const base64 = ev.target?.result as string;
+      setPhoto(base64);
       setPhotoName(file.name);
+      
+      // Auto-scan avec l'IA
+      try {
+        setIsScanning(true);
+        const result = await scanReceiptWithAI(settings, base64);
+        
+        // Mettre à jour le formulaire avec les données de l'IA
+        if (result.amount) setAmount(result.amount.toString());
+        if (result.category) {
+          const match = PRESETS.find(p => p.category === result.category);
+          if (match) setSelectedPreset(match);
+        }
+        showToast('Bim ! Ticket analysé par l\'IA avec succès.', 'success');
+      } catch (error: any) {
+        showToast(error.message, 'error');
+      } finally {
+        setIsScanning(false);
+      }
     };
     reader.readAsDataURL(file);
     e.target.value = '';
@@ -201,10 +224,20 @@ export default function QuickSnapExpenseModal({ isOpen, onClose, onSave }: Quick
                 <button
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
-                  className="w-full py-3 px-4 rounded-xl border border-dashed border-white/20 hover:border-blue-400 bg-white/5 flex items-center justify-center gap-2 text-sm text-slate-300 hover:text-white transition-colors"
+                  disabled={isScanning}
+                  className="w-full py-4 px-4 rounded-xl border border-dashed border-purple-500/50 hover:border-purple-400 bg-purple-500/10 flex flex-col items-center justify-center gap-2 text-sm text-purple-300 hover:text-white transition-colors"
                 >
-                  <Camera className="w-5 h-5 text-amber-400" />
-                  <span>Prendre en photo le ticket</span>
+                  {isScanning ? (
+                    <>
+                      <Loader2 className="w-6 h-6 text-purple-400 animate-spin" />
+                      <span className="font-bold">Analyse de l'image par l'IA en cours...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles className="w-6 h-6 text-purple-400" />
+                      <span className="font-bold">Scanner avec l'IA (Remplissage Auto)</span>
+                    </>
+                  )}
                 </button>
               )}
             </div>
