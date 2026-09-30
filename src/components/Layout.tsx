@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import {
   Calendar, ShieldCheck, Wallet, LayoutGrid,
-  Car, Plus, Shield, Sparkles, LogOut
+  Plus, Shield, Sparkles, LogOut
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useApp } from '../context/AppContext';
