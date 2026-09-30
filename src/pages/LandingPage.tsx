@@ -2,7 +2,7 @@ import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { 
   Car, Sparkles, CheckCircle2, Zap, ArrowRight, ShieldCheck, 
-  MessageCircle, BarChart3, Receipt, Smartphone
+  MessageCircle, Receipt, Smartphone
 } from 'lucide-react';
 
 export default function LandingPage() {
