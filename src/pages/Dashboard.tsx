@@ -207,17 +207,32 @@ export default function Dashboard() {
           </div>
 
           {/* Client + Prix */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 4 }}>
-            <span style={{ fontSize: 22, fontWeight: 700, color: '#fff' }}>{nextTrip.clientName}</span>
-            <span style={{ fontSize: 24, fontWeight: 800, color: '#fff', flexShrink: 0, marginLeft: 8 }}>
-              {formatEUR(nextTrip.price)}
-            </span>
-          </div>
-
-          {/* Quand */}
-          <div style={{ fontSize: 14, color: '#ebebf5cc', marginBottom: 10 }}>
-            {fmtDate(nextTrip.date)} à {nextTrip.time}
-            {nextTrip.flightNumber && <span style={{ color: c.cyan, fontWeight: 600 }}> • ✈ {nextTrip.flightNumber}</span>}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 4 }}>
+            <div style={{ flex: 1 }}>
+              <span style={{ fontSize: 22, fontWeight: 700, color: '#fff' }}>{nextTrip.clientName}</span>
+              <div style={{ fontSize: 14, color: '#ebebf5cc', marginTop: 2 }}>
+                {fmtDate(nextTrip.date)} à {nextTrip.time}
+                {nextTrip.flightNumber && <span style={{ color: c.cyan, fontWeight: 600 }}> • ✈ {nextTrip.flightNumber}</span>}
+              </div>
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 6 }}>
+              <span style={{ fontSize: 24, fontWeight: 800, color: '#fff' }}>
+                {formatEUR(nextTrip.price)}
+              </span>
+              <button 
+                onClick={() => {
+                  if (confirm('Voulez-vous vraiment supprimer cette course ?')) {
+                    handleDelete(nextTrip.id);
+                  }
+                }}
+                style={{ 
+                  background: 'transparent', border: 'none', color: c.red, 
+                  display: 'flex', alignItems: 'center', gap: 4, fontSize: 12, fontWeight: 600 
+                }}
+              >
+                <Trash2 style={{ width: 14, height: 14 }} /> Supprimer
+              </button>
+            </div>
           </div>
 
           {/* Trajet */}
