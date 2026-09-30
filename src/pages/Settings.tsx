@@ -11,6 +11,7 @@ import {
   Users,
   UserPlus,
   Trash2,
+  CheckCircle2,
   X,
   Bot,
   CreditCard,
@@ -21,6 +22,7 @@ import {
   Loader2,
 } from 'lucide-react';
 import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 import type { AppSettings, CompanyDriver } from '../types';
 import { exportFullBackupJSON, importFullBackupJSON } from '../lib/exportUtils';
@@ -36,6 +38,7 @@ import { useAuth } from '../context/AuthContext';
 export default function Settings() {
   const { settings, updateSettings } = useApp();
   const { signOut } = useAuth();
+  const navigate = useNavigate();
   
   const [localSettings, setLocalSettings] = useState<AppSettings>(settings);
   const [isSaving, setIsSaving] = useState(false);
