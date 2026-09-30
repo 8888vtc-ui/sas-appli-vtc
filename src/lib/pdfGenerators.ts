@@ -123,8 +123,9 @@ export function generateBonDeCommande(trip: Trip, s: AppSettings) {
     doc.setFontSize(10); doc.setFont('helvetica', 'bold');
     doc.text(label, 20, y);
     doc.setFont('helvetica', 'normal');
-    doc.text(value, 80, y);
-    y += 8;
+    const splitValue = doc.splitTextToSize(value, 115);
+    doc.text(splitValue, 80, y);
+    y += (splitValue.length * 5) + 3;
   };
 
   line('Exploitant:', s.companyName);
@@ -274,11 +275,14 @@ export function generateFacture(trip: Trip, s: AppSettings, invoiceNum: string) 
   const tvaAmount = isFranchise ? 0 : trip.price - priceHT;
 
   doc.setFont('helvetica', 'normal');
-  doc.text(desc, 22, y);
+  const splitDesc = doc.splitTextToSize(desc, 95);
+  doc.text(splitDesc, 22, y);
+  
   doc.text('1', 122, y);
   doc.text(`${priceHT.toFixed(2)} €`, 137, y);
   doc.text(`${priceHT.toFixed(2)} €`, 170, y);
-  y += 6;
+  
+  y += (splitDesc.length * 5) + 1;
   doc.text(`Date: ${trip.date} | Heure: ${trip.time}`, 22, y);
   if (trip.flightNumber) { y += 5; doc.text(`Vol/Train: ${trip.flightNumber}`, 22, y); }
   y += 5; doc.text(`Passagers: ${trip.passengerCount}`, 22, y);
