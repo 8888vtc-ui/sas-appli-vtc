@@ -51,7 +51,7 @@ const emptyForm: TripFormData = {
 };
 
 export default function TripModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
-  const { addTrip, trips } = useApp();
+  const { addTrip, trips, settings } = useApp();
   const [formData, setFormData] = useState<TripFormData>({
     ...emptyForm,
     date: format(new Date(), 'yyyy-MM-dd'),
@@ -207,7 +207,34 @@ export default function TripModal({ isOpen, onClose }: { isOpen: boolean; onClos
     onClose();
   };
 
-  const quickAddresses = ['Aéroport CDG', 'Aéroport Orly', 'Aéroport Nice T2', 'Gare de Lyon', 'Gare Montparnasse'];
+  const quickAddresses = useMemo(() => {
+    const addr = (settings?.companyAddress || '').toLowerCase();
+    
+    if (addr.includes('paris') || addr.includes('750') || addr.includes('751') || addr.includes('92') || addr.includes('93') || addr.includes('94')) {
+      return ['Aéroport CDG', 'Aéroport Orly', 'Gare de Lyon', 'Gare du Nord', 'Gare Montparnasse'];
+    }
+    if (addr.includes('nice') || addr.includes('cannes') || addr.includes('antibes') || addr.includes('monaco') || addr.includes('06')) {
+      return ['Aéroport Nice T2', 'Aéroport Nice T1', 'Gare de Cannes', 'Gare de Nice', 'Monaco'];
+    }
+    if (addr.includes('lyon') || addr.includes('69')) {
+      return ['Aéroport St-Exupéry', 'Gare Part-Dieu', 'Gare Perrache'];
+    }
+    if (addr.includes('marseille') || addr.includes('13')) {
+      return ['Aéroport Marignane', 'Gare St-Charles', 'Aix TGV'];
+    }
+    if (addr.includes('toulouse') || addr.includes('31')) {
+      return ['Aéroport Blagnac', 'Gare Matabiau'];
+    }
+    if (addr.includes('bordeaux') || addr.includes('33')) {
+      return ['Aéroport Mérignac', 'Gare Saint-Jean'];
+    }
+    if (addr.includes('lille') || addr.includes('59')) {
+      return ['Aéroport Lesquin', 'Gare Lille Flandres', 'Gare Lille Europe'];
+    }
+    
+    // Par défaut si la région n'est pas détectée ou adresse vide
+    return ['Aéroport Principal', 'Gare TGV (Centre)', 'Palais des Congrès'];
+  }, [settings?.companyAddress]);
 
   return (
     <AnimatePresence>
