@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { AppProvider } from './context/AppContext';
 import Layout from './components/Layout';
@@ -24,12 +24,18 @@ import FinancesHub from './pages/FinancesHub';
 import ToolsHub from './pages/ToolsHub';
 import WhatsAppRadar from './pages/WhatsAppRadar';
 import CreatorProfile from './pages/CreatorProfile';
+import LandingPage from './pages/LandingPage';
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth();
+  const location = useLocation();
 
   if (loading) return <div className="min-h-screen bg-[#0F172A] flex items-center justify-center text-white">Chargement...</div>;
-  if (!user) return <Navigate to="/login" />;
+  
+  if (!user) {
+    if (location.pathname === '/') return <Navigate to="/landing" />;
+    return <Navigate to="/login" />;
+  }
 
   return <>{children}</>;
 }
@@ -79,6 +85,7 @@ function AppRoutes() {
   return (
     <Routes>
       {/* Public Routes */}
+      <Route path="/landing" element={<LandingPage />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
