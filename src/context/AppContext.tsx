@@ -386,6 +386,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
     if (error) {
       console.error("Error creating trip:", error);
       alert("Erreur lors de la création de la course : " + error.message);
+    } else {
+      fetchData(); // Force refresh to show the new trip
     }
   };
 
@@ -396,7 +398,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
       syncLocal('vtc_local_trips', updated);
       return;
     }
-    await supabase.from('trips').delete().eq('id', id);
+    const { error } = await supabase.from('trips').delete().eq('id', id);
+    if (!error) fetchData();
   };
 
   const changeStatus = async (tripId: string, status: Trip['status']) => {
@@ -406,7 +409,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
       syncLocal('vtc_local_trips', updated);
       return;
     }
-    await supabase.from('trips').update({ status }).eq('id', tripId);
+    const { error } = await supabase.from('trips').update({ status }).eq('id', tripId);
+    if (!error) fetchData();
   };
 
   const invoiceTrip = async (trip: Trip) => {

@@ -75,13 +75,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   useEffect(() => {
-    // 1. Vérifier si une session locale existe
-    const saved = getActiveSession();
-    if (saved) {
-      setUser(saved.user);
-      setProfile(saved.profile);
-      setLoading(false);
-      return;
+    // 1. Vérifier si une session locale existe UNIQUEMENT si on est en mode local
+    if (isLocalMode) {
+      const saved = getActiveSession();
+      if (saved) {
+        setUser(saved.user);
+        setProfile(saved.profile);
+        setLoading(false);
+        return;
+      }
+    } else {
+      // Si Supabase est actif, on nettoie les vieilles sessions locales (fantômes)
+      clearActiveSession();
     }
 
     // 2. Si pas de session locale et Supabase activé, vérifier la session Supabase

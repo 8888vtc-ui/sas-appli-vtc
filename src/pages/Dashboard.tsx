@@ -122,8 +122,7 @@ export default function Dashboard() {
       const dA = new Date(a.date + 'T' + a.time).getTime(), dB = new Date(b.date + 'T' + b.time).getTime();
       return tab === 'active' ? dA - dB : dB - dA;
     });
-    // En mode "À faire", on retire la prochaine course déjà affichée en carte
-    if (tab === 'active' && nextTrip && !searchQuery) list = list.filter(t => t.id !== nextTrip.id);
+    // (On garde la course dans la liste même si elle est affichée en haut pour éviter la confusion d'une liste vide)
     return list;
   }, [trips, tab, searchQuery, nextTrip]);
 
