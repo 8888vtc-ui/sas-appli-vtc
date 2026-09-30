@@ -1,6 +1,6 @@
 import { useState, useRef, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, MapPin, User, Clock, Sparkles, Check, LocateFixed } from 'lucide-react';
+import { X, MapPin, User, Clock, Check, LocateFixed } from 'lucide-react';
 import { format, addMinutes } from 'date-fns';
 import { useApp } from '../context/AppContext';
 import { searchFrenchAddresses } from '../lib/addressService';
@@ -407,11 +407,11 @@ export default function TripModal({ isOpen, onClose }: { isOpen: boolean; onClos
               </div>
 
               {/* SECTION 4: PRIX */}
-              <div className="space-y-3 pt-2">
+              <div className="space-y-1 pt-2">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm font-bold text-slate-300 uppercase tracking-wider flex items-center gap-2">
-                    <Sparkles className="w-5 h-5 text-blue-400" /> Tarif Convenu
-                  </span>
+                  <label className="text-xs font-semibold text-blue-400 uppercase tracking-wide">
+                    Tarif convenu
+                  </label>
                   {formData.tripType === 'disposal' && (
                     <div className="flex gap-2 text-xs font-bold">
                       <label className="flex items-center gap-1"><input type="radio" name="madPrice" defaultChecked className="accent-amber-500" /> Forfait global</label>
@@ -419,11 +419,17 @@ export default function TripModal({ isOpen, onClose }: { isOpen: boolean; onClos
                     </div>
                   )}
                 </div>
-                
-                <div className="flex justify-center items-center gap-2">
-                  <input required type="text" inputMode="decimal" placeholder="0" value={formData.price || ''} onChange={(e) => setFormData({ ...formData, price: parseFloat(e.target.value) || 0 })}
-                    className="w-32 bg-slate-900 border border-slate-600 focus:border-blue-500 rounded-xl text-3xl font-extrabold text-center text-white py-3 outline-none" />
-                  <span className="text-3xl font-extrabold text-slate-400">€</span>
+                <div className="relative flex items-center">
+                  <input
+                    required
+                    type="text"
+                    inputMode="decimal"
+                    placeholder="0"
+                    value={formData.price || ''}
+                    onChange={(e) => setFormData({ ...formData, price: parseFloat(e.target.value) || 0 })}
+                    className="w-full h-14 bg-slate-900 border border-slate-700 rounded-xl text-center text-3xl font-bold text-white pr-10 focus:border-blue-500 focus:outline-none"
+                  />
+                  <span className="absolute right-4 text-2xl font-bold text-slate-400">€</span>
                 </div>
               </div>
 
