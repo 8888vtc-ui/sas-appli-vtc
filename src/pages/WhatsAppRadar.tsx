@@ -4,7 +4,7 @@ import {
   MessageCircle, Radar, MapPin, Car, DollarSign, Filter,
   CheckCircle2, Clock, Smartphone, Search, RefreshCw, Zap
 } from 'lucide-react';
-import { showToast } from '../components/Toast';
+import { showToast } from '../lib/toast';
 
 // Fake Data for simulation
 const MOCK_GROUPS = [

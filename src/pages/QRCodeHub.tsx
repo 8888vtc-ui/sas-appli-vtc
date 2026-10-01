@@ -108,6 +108,7 @@ export default function QRCodeHub() {
       .catch(err => {
         console.error('Erreur génération QR Code', err);
       });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [qrType, selectedTheme, vcardData, whatsappMsg, googleReviewUrl, paymentUrl, customUrl, settings]);
 
   // Télécharger l'image PNG haute résolution

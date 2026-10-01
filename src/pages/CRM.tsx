@@ -9,7 +9,7 @@ import {
 import { useApp } from '../context/AppContext';
 import { format, differenceInDays } from 'date-fns';
 import { generateProspects } from '../lib/aiProspects';
-import { showToast } from '../components/Toast';
+import { showToast } from '../lib/toast';
 
 // ─── TYPES ───
 interface Contact {

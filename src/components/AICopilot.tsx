@@ -91,7 +91,7 @@ Demande de l'utilisateur : ${userMsg}
             
             setMessages(prev => [...prev, { role: 'assistant', text: `✅ Le PDF pour ${data.clientName} a été généré et téléchargé avec succès !` }]);
           }
-        } catch (e) {
+        } catch {
           setMessages(prev => [...prev, { role: 'assistant', text: "J'ai essayé de générer le PDF mais il y a eu une erreur de formatage." }]);
         }
       } else {

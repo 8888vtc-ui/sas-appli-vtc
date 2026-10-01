@@ -148,7 +148,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
         return () => { supabase.removeChannel(channel); };
       }
     }
-  }, [user, profile]);
+  }, [user, profile]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const loadDataLocal = () => {
     // Trips

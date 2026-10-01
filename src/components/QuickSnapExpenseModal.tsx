@@ -5,7 +5,7 @@ import { format } from 'date-fns';
 import type { ExpenseCategory } from '../types';
 import { useApp } from '../context/AppContext';
 import { scanReceiptWithAI } from '../lib/aiScanner';
-import { showToast } from './Toast';
+import { showToast } from '../lib/toast';
 
 interface QuickSnapModalProps {
   isOpen: boolean;
