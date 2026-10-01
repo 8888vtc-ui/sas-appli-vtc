@@ -107,7 +107,7 @@ export default function LandingPage() {
                 <h3 className="text-2xl font-black text-white mb-4">Comptabilité instantanée & Facturation</h3>
                 <h4 className="text-lg font-semibold text-purple-300 mb-2">Logiciel VTC automatisation devis et facturation Factur-X</h4>
                 <p className="text-slate-400 leading-relaxed text-sm">
-                  Ne perdez plus vos week-ends à trier vos notes de frais. Avec la fonction de scan intelligent, prenez en photo vos tickets de carburant, de péage ou de lavage : l'application extrait les montants et calcule votre TVA récupérable en 3 secondes chrono. AppVTC génère vos documents comptables conformes aux normes européennes d'un simple glissement de doigt, prêts à être transmis à votre expert-comptable.
+                  Ne perdez plus vos week-ends à trier vos notes de frais. Avec la fonction de scan intelligent, prenez en photo vos tickets de carburant, de péage ou de lavage : l'application extrait les montants et calcule votre TVA récupérable en 3 secondes chrono. AppVTC génère automatiquement vos <strong>bons de commande (y compris pour les MAD)</strong> et vos <strong>factures compatibles avec la nouvelle norme électronique</strong> d'un simple glissement de doigt, prêts à être transmis à votre expert-comptable.
                 </p>
               </article>
             </div>
