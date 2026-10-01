@@ -25,6 +25,7 @@ import ToolsHub from './pages/ToolsHub';
 import WhatsAppRadar from './pages/WhatsAppRadar';
 import CreatorProfile from './pages/CreatorProfile';
 import LandingPage from './pages/LandingPage';
+import Legal from './pages/Legal';
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth();
@@ -90,6 +91,7 @@ function AppRoutes() {
       <Route path="/register" element={<Register />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/reset-password" element={<ResetPassword />} />
+      <Route path="/legal" element={<Legal />} />
 
       {/* Private Routes wrapped in ProtectedRoute & AppProvider */}
       <Route

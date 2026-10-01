@@ -154,6 +154,11 @@ export default function LandingPage() {
           <Car className="w-5 h-5 text-slate-400" /> <span className="font-bold text-slate-300 text-lg">AppVTC</span>
         </div>
         <p className="mb-2">Conforme Réglementation Française & Factur-X Ready.</p>
+        <p className="mb-2">
+          <a href="/legal" className="text-slate-400 hover:text-white transition-colors underline decoration-slate-600 underline-offset-4">
+            Mentions Légales, RGPD & CGU
+          </a>
+        </p>
         <p>© 2026 AppVTC. Tous droits réservés.</p>
       </footer>
     </div>
