@@ -2,8 +2,9 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import {
   Calendar, Wallet, LayoutGrid,
-  Plus, Shield, Sparkles
+  Plus, Shield, Sparkles, LogOut
 } from 'lucide-react';
+import { supabase } from '../lib/supabase';
 import { useAuth } from '../context/AuthContext';
 import { useApp } from '../context/AppContext';
 import { motion } from 'framer-motion';
@@ -49,6 +50,16 @@ export default function Layout({ children, onNewTrip }: { children: React.ReactN
           </button>
           <button onClick={() => navigate('/outils')} className={`flex items-center gap-4 px-4 py-4 rounded-xl transition-all ${isActive('/outils') ? 'bg-white/10 text-white' : 'text-slate-400 hover:bg-white/5'}`}>
             <LayoutGrid className="w-6 h-6" /> <span className="font-bold text-[17px]">Réglages</span>
+          </button>
+
+          <button 
+            onClick={async () => {
+              await supabase.auth.signOut();
+              navigate('/login');
+            }}
+            className="w-full flex items-center gap-3 px-4 py-3 mt-8 text-sm font-medium text-red-400 hover:bg-red-900/20 hover:text-red-300 rounded-lg transition-colors"
+          >
+            <LogOut className="w-5 h-5" /> Se déconnecter
           </button>
         </div>
 
