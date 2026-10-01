@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import {
-  QrCode, Download, Share2, Phone, MessageCircle, Star,
-  Globe, CreditCard, Sparkles, Check, Copy, Printer, Car, ShieldCheck
+  QrCode, Download, Share2, Printer, Check, Copy, Car, Sparkles
 } from 'lucide-react';
 import QRCode from 'qrcode';
 import { jsPDF } from 'jspdf';
@@ -31,7 +30,7 @@ export default function QRCodeHub() {
   const { settings } = useApp();
 
   const [qrType, setQrType] = useState<QRType>('vcard');
-  const [selectedTheme, setSelectedTheme] = useState<ColorTheme>(COLOR_THEMES[0]);
+  const [selectedTheme] = useState<ColorTheme>(COLOR_THEMES[0]);
   const [qrDataUrl, setQrDataUrl] = useState<string>('');
   const [copied, setCopied] = useState(false);
 
@@ -44,9 +43,6 @@ export default function QRCodeHub() {
     title: 'Chauffeur Privé VTC',
   });
 
-  const [whatsappMsg, setWhatsappMsg] = useState(
-    `Bonjour ${settings.companyName || 'VTC'}, je souhaite réserver une course. Quels sont vos tarifs ?`
-  );
   const [googleReviewUrl, setGoogleReviewUrl] = useState('https://g.page/r/');
   const [paymentUrl, setPaymentUrl] = useState('https://revolut.me/');
   const [customUrl, setCustomUrl] = useState('https://');
@@ -72,11 +68,11 @@ export default function QRCodeHub() {
         ].join('\n');
       }
       case 'whatsapp': {
-        const cleanPhone = (settings.driverPhone || settings.companyPhone || '').replace(/[^0-9]/g, '');
-        return `https://wa.me/${cleanPhone}?text=${encodeURIComponent(whatsappMsg)}`;
+        const cleanPhone = (vcardData.phone).replace(/[^0-9]/g, '');
+        return `https://wa.me/${cleanPhone}`;
       }
       case 'call': {
-        const cleanPhone = (settings.driverPhone || settings.companyPhone || '').replace(/[^0-9+]/g, '');
+        const cleanPhone = (vcardData.phone).replace(/[^0-9+]/g, '');
         return `tel:${cleanPhone}`;
       }
       case 'google_review':
@@ -108,7 +104,7 @@ export default function QRCodeHub() {
       .catch(err => {
         console.error('Erreur génération QR Code', err);
       });
-  }, [qrType, selectedTheme, vcardData, whatsappMsg, googleReviewUrl, paymentUrl, customUrl, settings]);
+  }, [qrType, selectedTheme, vcardData, googleReviewUrl, paymentUrl, customUrl, settings]);
 
   // Télécharger l'image PNG haute résolution
   const downloadPNG = () => {
@@ -204,9 +200,8 @@ export default function QRCodeHub() {
     doc.setTextColor(203, 213, 225);
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(7.5);
-    doc.text('📶 WiFi gratuit   •   🔋 Chargeurs multimarques   •   🥤 Boissons fraîches', w / 2, bandY + 12, { align: 'center' });
-    doc.text('💳 CB & Paiements sans contact acceptés   •   ⭐ Véhicule climatisé', w / 2, bandY + 17, { align: 'center' });
-
+    doc.text(subHeadline.split('\n')[0] || '📶 WiFi gratuit   •   🔋 Chargeurs multimarques', w / 2, bandY + 12, { align: 'center' });
+    
     // Pied de page légal
     doc.setTextColor(100, 116, 139);
     doc.setFontSize(6.5);
@@ -227,300 +222,163 @@ export default function QRCodeHub() {
   };
 
   return (
-    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
-      {/* ══════════ HEADER ══════════ */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-yellow-400 to-amber-600 flex items-center justify-center text-black font-bold shadow-lg shadow-amber-500/20">
-              <QrCode className="w-5 h-5" />
-            </div>
-            <div>
-              <h1 className="text-xl sm:text-2xl font-bold text-white">Générateur QR Code Pro & Chevalet de Bord</h1>
-              <p className="text-xs sm:text-sm text-slate-400">
-                Fidélisez vos clients, facilitez les réservations directes et imprimez vos fiches pour appuie-tête.
-              </p>
-            </div>
-          </div>
+    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="pb-40 space-y-6 max-w-lg mx-auto">
+      
+      {/* HEADER BANNER */}
+      <div className="flex items-center justify-between bg-gray-900 rounded-xl p-4 border border-gray-800 shadow-md">
+        <span className="font-bold text-white text-lg tracking-tight">Sasu David chemla</span>
+        <div className="flex items-center gap-2 px-3 py-1.5 bg-green-500/20 text-green-400 rounded-full text-xs font-black tracking-wider">
+          <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
+          EN SERVICE
         </div>
+      </div>
 
-        {/* Actions rapides */}
-        <div className="flex items-center gap-2">
-          <button
-            onClick={downloadPNG}
-            className="px-3.5 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-bold flex items-center gap-2 transition-all border border-white/10"
-          >
-            <Download className="w-4 h-4 text-amber-400" />
-            <span>Image PNG</span>
+      {/* TITRE ET BOUTONS */}
+      <div className="text-center space-y-4 pt-2">
+        <div className="inline-flex w-16 h-16 rounded-2xl bg-gradient-to-br from-yellow-400 to-amber-600 items-center justify-center text-black font-bold shadow-lg shadow-amber-500/20 mb-2">
+          <QrCode className="w-8 h-8" />
+        </div>
+        <h1 className="text-2xl sm:text-3xl font-black text-white leading-tight">Générateur QR Code Pro <br/><span className="text-amber-500">& Chevalet de Bord</span></h1>
+        <p className="text-sm text-gray-400">
+          Générez votre QR code personnalisé pour faciliter les réservations et paiements de vos clients.
+        </p>
+
+        <div className="flex flex-col sm:flex-row justify-center gap-3 pt-4">
+          <button onClick={downloadPNG} className="flex-1 py-4 rounded-xl bg-gray-800 border border-gray-700 hover:border-amber-500/50 text-amber-500 font-bold flex items-center justify-center gap-2 active:scale-95 transition-all shadow-md">
+            <Download className="w-5 h-5" /> Image PNG
           </button>
-          <button
-            onClick={downloadBoardPosterPDF}
-            className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-black text-xs font-bold flex items-center gap-2 transition-all shadow-lg shadow-amber-500/20"
-          >
-            <Printer className="w-4 h-4" />
-            <span>Imprimer Chevalet A5</span>
+          <button onClick={downloadBoardPosterPDF} className="flex-1 py-4 rounded-xl bg-gray-800 border border-gray-700 hover:border-amber-500/50 text-amber-500 font-bold flex items-center justify-center gap-2 active:scale-95 transition-all shadow-md">
+            <Printer className="w-5 h-5" /> Imprimer Chevalet A5
           </button>
         </div>
       </div>
 
-      {/* ══════════ GRILLE PRINCIPALE ══════════ */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {/* ─── Colonne Gauche : Configuration (7 cols) ─── */}
-        <div className="lg:col-span-7 space-y-5">
-          {/* Choix du type de QR Code */}
-          <div className="glass rounded-2xl p-5 border border-white/10 space-y-4">
-            <label className="text-xs uppercase font-bold text-slate-400 tracking-wider flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-amber-400" />
-              1. Type d'action au scan
-            </label>
-
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
-              {[
-                { id: 'vcard', label: 'Contact vCard', icon: Phone, desc: 'Ajoute votre contact au répertoire' },
-                { id: 'whatsapp', label: 'WhatsApp Direct', icon: MessageCircle, desc: 'Ouvre un chat de réservation' },
-                { id: 'call', label: 'Appel Téléphone', icon: Phone, desc: 'Compose votre numéro direct' },
-                { id: 'google_review', label: 'Avis Google 5⭐', icon: Star, desc: 'Collecte des avis clients' },
-                { id: 'payment', label: 'Paiement CB', icon: CreditCard, desc: 'Lien Stripe / Revolut / Wero' },
-                { id: 'custom', label: 'Lien Libre', icon: Globe, desc: 'Site web ou lien personnalisé' },
-              ].map(type => (
-                <button
-                  key={type.id}
-                  onClick={() => setQrType(type.id as QRType)}
-                  className={`p-3 rounded-xl text-left border transition-all flex flex-col justify-between ${
-                    qrType === type.id
-                      ? 'bg-amber-500/15 border-amber-500/50 text-white shadow-md'
-                      : 'bg-white/5 border-white/5 text-slate-400 hover:bg-white/10 hover:text-white'
-                  }`}
-                >
-                  <div className="flex items-center justify-between mb-2">
-                    <type.icon className={`w-4 h-4 ${qrType === type.id ? 'text-amber-400' : 'text-slate-400'}`} />
-                    {qrType === type.id && <span className="w-2 h-2 rounded-full bg-amber-400" />}
-                  </div>
-                  <div>
-                    <p className="text-xs font-bold text-white">{type.label}</p>
-                    <p className="text-[10px] text-slate-400 leading-tight mt-0.5">{type.desc}</p>
-                  </div>
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Formulaire spécifique au type */}
-          <div className="glass rounded-2xl p-5 border border-white/10 space-y-4">
-            <label className="text-xs uppercase font-bold text-slate-400 tracking-wider flex items-center gap-2">
-              <Share2 className="w-4 h-4 text-blue-400" />
-              2. Informations encodées
-            </label>
-
-            {qrType === 'vcard' && (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-                <div>
-                  <label className="text-slate-400 mb-1 block">Nom du Chauffeur</label>
-                  <input
-                    type="text"
-                    value={vcardData.name}
-                    onChange={e => setVcardData({ ...vcardData, name: e.target.value })}
-                    className="w-full bg-white/5 border border-white/10 rounded-xl p-2.5 text-white outline-none focus:border-amber-500"
-                  />
-                </div>
-                <div>
-                  <label className="text-slate-400 mb-1 block">Société VTC</label>
-                  <input
-                    type="text"
-                    value={vcardData.company}
-                    onChange={e => setVcardData({ ...vcardData, company: e.target.value })}
-                    className="w-full bg-white/5 border border-white/10 rounded-xl p-2.5 text-white outline-none focus:border-amber-500"
-                  />
-                </div>
-                <div>
-                  <label className="text-slate-400 mb-1 block">Numéro de Téléphone</label>
-                  <input
-                    type="tel"
-                    value={vcardData.phone}
-                    onChange={e => setVcardData({ ...vcardData, phone: e.target.value })}
-                    className="w-full bg-white/5 border border-white/10 rounded-xl p-2.5 text-white outline-none focus:border-amber-500"
-                  />
-                </div>
-                <div>
-                  <label className="text-slate-400 mb-1 block">Email</label>
-                  <input
-                    type="email"
-                    value={vcardData.email}
-                    onChange={e => setVcardData({ ...vcardData, email: e.target.value })}
-                    className="w-full bg-white/5 border border-white/10 rounded-xl p-2.5 text-white outline-none focus:border-amber-500"
-                  />
-                </div>
-              </div>
-            )}
-
-            {qrType === 'whatsapp' && (
-              <div className="space-y-2 text-xs">
-                <label className="text-slate-400 block">Message pré-rempli envoyé par le client</label>
-                <textarea
-                  rows={3}
-                  value={whatsappMsg}
-                  onChange={e => setWhatsappMsg(e.target.value)}
-                  className="w-full bg-white/5 border border-white/10 rounded-xl p-2.5 text-white outline-none focus:border-amber-500"
-                />
-              </div>
-            )}
-
-            {qrType === 'google_review' && (
-              <div className="space-y-2 text-xs">
-                <label className="text-slate-400 block">Lien direct de votre fiche d'avis Google Maps</label>
-                <input
-                  type="url"
-                  placeholder="https://g.page/r/..."
-                  value={googleReviewUrl}
-                  onChange={e => setGoogleReviewUrl(e.target.value)}
-                  className="w-full bg-white/5 border border-white/10 rounded-xl p-2.5 text-white outline-none focus:border-amber-500"
-                />
-              </div>
-            )}
-
-            {qrType === 'payment' && (
-              <div className="space-y-2 text-xs">
-                <label className="text-slate-400 block">Lien de paiement (Revolut, Stripe, Lydia, Wero)</label>
-                <input
-                  type="url"
-                  placeholder="https://revolut.me/..."
-                  value={paymentUrl}
-                  onChange={e => setPaymentUrl(e.target.value)}
-                  className="w-full bg-white/5 border border-white/10 rounded-xl p-2.5 text-white outline-none focus:border-amber-500"
-                />
-              </div>
-            )}
-
-            {qrType === 'custom' && (
-              <div className="space-y-2 text-xs">
-                <label className="text-slate-400 block">URL / Lien personnalisé</label>
-                <input
-                  type="url"
-                  placeholder="https://mon-site-vtc.fr"
-                  value={customUrl}
-                  onChange={e => setCustomUrl(e.target.value)}
-                  className="w-full bg-white/5 border border-white/10 rounded-xl p-2.5 text-white outline-none focus:border-amber-500"
-                />
-              </div>
-            )}
-
-            {qrType === 'call' && (
-              <div className="space-y-2 text-xs text-slate-300">
-                <p>Le scan déclenchera immédiatement l'appel vers votre numéro : <span className="font-bold text-amber-400">{settings.driverPhone || settings.companyPhone || 'Non renseigné'}</span></p>
-              </div>
-            )}
-          </div>
-
-          {/* Personnalisation Affiche / Chevalet */}
-          <div className="glass rounded-2xl p-5 border border-white/10 space-y-4">
-            <label className="text-xs uppercase font-bold text-slate-400 tracking-wider flex items-center gap-2">
-              <Car className="w-4 h-4 text-emerald-400" />
-              3. Textes de l'affiche de bord (Appuie-tête)
-            </label>
-
-            <div className="space-y-3 text-xs">
-              <div>
-                <label className="text-slate-400 mb-1 block">Titre principal</label>
-                <input
-                  type="text"
-                  value={headline}
-                  onChange={e => setHeadline(e.target.value)}
-                  className="w-full bg-white/5 border border-white/10 rounded-xl p-2.5 text-white outline-none focus:border-amber-500"
-                />
-              </div>
-              <div>
-                <label className="text-slate-400 mb-1 block">Services & Équipements à bord</label>
-                <input
-                  type="text"
-                  value={subHeadline}
-                  onChange={e => setSubHeadline(e.target.value)}
-                  className="w-full bg-white/5 border border-white/10 rounded-xl p-2.5 text-white outline-none focus:border-amber-500"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* ─── Colonne Droite : Aperçu Visuel & Export (5 cols) ─── */}
-        <div className="lg:col-span-5 space-y-5">
-          {/* Palette de thèmes */}
-          <div className="glass rounded-2xl p-4 border border-white/10">
-            <p className="text-xs text-slate-400 mb-3 font-semibold">Style du QR Code :</p>
-            <div className="flex items-center gap-2 flex-wrap">
-              {COLOR_THEMES.map(theme => (
-                <button
-                  key={theme.id}
-                  onClick={() => setSelectedTheme(theme)}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 border ${
-                    selectedTheme.id === theme.id
-                      ? `${theme.border} bg-white/15 text-white`
-                      : 'border-white/5 bg-white/5 text-slate-400 hover:text-white'
-                  }`}
-                >
-                  <span className="w-2.5 h-2.5 rounded-full" style={{ background: theme.accent }} />
-                  {theme.name}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Aperçu Chevalet de Bord / Carte */}
-          <div className="glass rounded-3xl p-6 border border-white/10 relative overflow-hidden text-center shadow-2xl">
-            {/* Badge haut */}
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 text-[10px] font-bold uppercase tracking-wider mb-4 border border-amber-500/30">
-              <ShieldCheck className="w-3 h-3" />
-              {settings.companyName || 'VTC EXCELLENCE'}
-            </div>
-
-            <h3 className="text-base font-bold text-white mb-1 px-4 leading-snug">{headline}</h3>
-            <p className="text-[11px] text-slate-400 mb-5">{subHeadline}</p>
-
-            {/* QR Code Container */}
-            <div className="inline-block p-4 rounded-2xl bg-white shadow-xl mb-4">
-              {qrDataUrl ? (
-                <img src={qrDataUrl} alt="QR Code VTC" className="w-48 h-48 sm:w-56 sm:h-56 mx-auto rounded-lg" />
-              ) : (
-                <div className="w-48 h-48 flex items-center justify-center text-slate-400 text-xs">
-                  Génération...
-                </div>
-              )}
-            </div>
-
-            {/* Chauffeur info badge */}
-            <div className="bg-white/5 rounded-xl p-3 border border-white/5 text-left mb-4 flex items-center justify-between">
-              <div>
-                <p className="text-xs font-bold text-white">{settings.driverName || 'Votre Chauffeur Privé'}</p>
-                <p className="text-[10px] text-amber-400">{settings.driverPhone || settings.companyPhone || '+33 6 00 00 00 00'}</p>
-              </div>
-              <button
-                onClick={copyContent}
-                title="Copier le lien"
-                className="p-2 rounded-lg bg-white/10 hover:bg-white/20 text-slate-300 transition-all"
-              >
-                {copied ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
-              </button>
-            </div>
-
-            {/* Boutons d'export */}
-            <div className="grid grid-cols-2 gap-2">
-              <button
-                onClick={downloadPNG}
-                className="w-full py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-bold transition-all flex items-center justify-center gap-1.5"
-              >
-                <Download className="w-4 h-4 text-amber-400" />
-                PNG HD
-              </button>
-              <button
-                onClick={downloadBoardPosterPDF}
-                className="w-full py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-black text-xs font-bold transition-all flex items-center justify-center gap-1.5 shadow-lg shadow-amber-500/20"
-              >
-                <Printer className="w-4 h-4" />
-                Chevalet PDF A5
-              </button>
-            </div>
+      {/* SECTION 1: TYPE D'ACTION */}
+      <div className="bg-gray-800 rounded-2xl p-5 border border-gray-700 space-y-4 mt-8 shadow-lg">
+        <label className="text-xs uppercase font-bold text-gray-400 tracking-wider flex items-center gap-2">
+          <Sparkles className="w-4 h-4 text-amber-400" />
+          1. Type d'action au scan
+        </label>
+        
+        <div className="relative">
+          <select
+            value={qrType}
+            onChange={(e) => setQrType(e.target.value as QRType)}
+            className="w-full h-14 bg-gray-900 border border-gray-700 rounded-xl px-4 text-white font-medium appearance-none outline-none focus:ring-2 focus:ring-amber-500 cursor-pointer"
+          >
+            <option value="vcard">Contact vCard</option>
+            <option value="whatsapp">WhatsApp Direct</option>
+            <option value="call">Appel Téléphone</option>
+            <option value="google_review">Avis Google 5★</option>
+            <option value="payment">Paiement CB</option>
+            <option value="custom">Lien Libre</option>
+          </select>
+          <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500">
+            ▼
           </div>
         </div>
       </div>
+
+      {/* SECTION 2: INFORMATIONS ENCODEES */}
+      <div className="bg-gray-800 rounded-2xl p-5 border border-gray-700 space-y-4 shadow-lg">
+        <label className="text-xs uppercase font-bold text-gray-400 tracking-wider flex items-center gap-2">
+          <Share2 className="w-4 h-4 text-blue-400" />
+          2. Informations encodées
+        </label>
+
+        <div className="space-y-4">
+          {qrType === 'vcard' && (
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-4">
+              <div>
+                <label className="text-gray-400 text-xs font-medium ml-1 block mb-1">Nom du Chauffeur</label>
+                <input type="text" value={vcardData.name} onChange={e => setVcardData({...vcardData, name: e.target.value})} className="w-full h-14 bg-gray-900 border border-gray-700 rounded-xl px-4 text-white outline-none focus:ring-2 focus:ring-amber-500" />
+              </div>
+              <div>
+                <label className="text-gray-400 text-xs font-medium ml-1 block mb-1">Société VTC</label>
+                <input type="text" value={vcardData.company} onChange={e => setVcardData({...vcardData, company: e.target.value})} className="w-full h-14 bg-gray-900 border border-gray-700 rounded-xl px-4 text-white outline-none focus:ring-2 focus:ring-amber-500" />
+              </div>
+              <div>
+                <label className="text-gray-400 text-xs font-medium ml-1 block mb-1">Numéro de Téléphone</label>
+                <input type="tel" value={vcardData.phone} onChange={e => setVcardData({...vcardData, phone: e.target.value})} className="w-full h-14 bg-gray-900 border border-gray-700 rounded-xl px-4 text-white outline-none focus:ring-2 focus:ring-amber-500" />
+              </div>
+              <div>
+                <label className="text-gray-400 text-xs font-medium ml-1 block mb-1">Email</label>
+                <input type="email" value={vcardData.email} onChange={e => setVcardData({...vcardData, email: e.target.value})} className="w-full h-14 bg-gray-900 border border-gray-700 rounded-xl px-4 text-white outline-none focus:ring-2 focus:ring-amber-500" />
+              </div>
+            </motion.div>
+          )}
+
+          {(qrType === 'whatsapp' || qrType === 'call') && (
+             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                <label className="text-gray-400 text-xs font-medium ml-1 block mb-1">Numéro de Téléphone</label>
+                <input type="tel" value={vcardData.phone} onChange={e => setVcardData({...vcardData, phone: e.target.value})} className="w-full h-14 bg-gray-900 border border-gray-700 rounded-xl px-4 text-white outline-none focus:ring-2 focus:ring-amber-500" />
+             </motion.div>
+          )}
+
+          {(qrType === 'google_review' || qrType === 'payment' || qrType === 'custom') && (
+             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                <label className="text-gray-400 text-xs font-medium ml-1 block mb-1">URL du lien</label>
+                <input type="url" 
+                  value={qrType === 'google_review' ? googleReviewUrl : qrType === 'payment' ? paymentUrl : customUrl} 
+                  onChange={e => {
+                    if(qrType === 'google_review') setGoogleReviewUrl(e.target.value);
+                    if(qrType === 'payment') setPaymentUrl(e.target.value);
+                    if(qrType === 'custom') setCustomUrl(e.target.value);
+                  }}
+                  className="w-full h-14 bg-gray-900 border border-gray-700 rounded-xl px-4 text-white outline-none focus:ring-2 focus:ring-amber-500" />
+             </motion.div>
+          )}
+        </div>
+      </div>
+
+      {/* SECTION 3: TEXTES AFFICHE DE BORD */}
+      <div className="bg-gray-800 rounded-2xl p-5 border border-gray-700 space-y-4 shadow-lg">
+        <label className="text-xs uppercase font-bold text-gray-400 tracking-wider flex items-center gap-2">
+          <Car className="w-4 h-4 text-emerald-400" />
+          3. Textes de l'affiche de bord (Appuie-tête)
+        </label>
+
+        <div className="space-y-4">
+          <div>
+            <label className="text-gray-400 text-xs font-medium ml-1 block mb-1">Titre principal</label>
+            <input 
+              type="text" 
+              placeholder="Scannez pour réserver votre prochain trajet"
+              value={headline}
+              onChange={e => setHeadline(e.target.value)}
+              className="w-full h-14 bg-gray-900 border border-gray-700 rounded-xl px-4 text-white outline-none focus:ring-2 focus:ring-amber-500" 
+            />
+          </div>
+          <div>
+            <label className="text-gray-400 text-xs font-medium ml-1 block mb-1">Services & Équipements à bord</label>
+            <textarea 
+              rows={3}
+              placeholder="Ex: WiFi · Chargeurs smartphone..."
+              value={subHeadline}
+              onChange={e => setSubHeadline(e.target.value)}
+              className="w-full bg-gray-900 border border-gray-700 rounded-xl p-4 text-white outline-none focus:ring-2 focus:ring-amber-500 resize-none leading-relaxed" 
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* QR CODE CONTAINER (BOTTOM) */}
+      <div className="bg-gray-800 rounded-3xl p-8 border border-gray-700 text-center shadow-2xl mt-8">
+        <h3 className="text-white font-bold mb-6">Aperçu de votre QR Code</h3>
+        <div className="inline-block p-4 rounded-2xl bg-white shadow-xl mx-auto border border-gray-200">
+          {qrDataUrl ? (
+            <img src={qrDataUrl} alt="QR Code" className="w-56 h-56 mx-auto rounded-lg" />
+          ) : (
+            <div className="w-56 h-56 flex items-center justify-center text-gray-400">Génération...</div>
+          )}
+        </div>
+        
+        <button onClick={copyContent} className="mt-8 mx-auto w-full max-w-[250px] h-14 bg-gray-900 border border-gray-700 hover:border-amber-500/50 rounded-xl flex items-center justify-center gap-2 text-gray-300 font-bold active:scale-95 transition-all shadow-md">
+          {copied ? <Check className="w-5 h-5 text-green-400" /> : <Copy className="w-5 h-5" />}
+          {copied ? 'Lien copié' : 'Copier le lien'}
+        </button>
+      </div>
+
     </motion.div>
   );
 }
