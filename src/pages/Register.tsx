@@ -184,7 +184,7 @@ export default function Register() {
             </div>
 
             <div className="space-y-3">
-              <div className="flex items-center gap-4 bg-white/5 border border-white/10 rounded-2xl px-5 focus-within:border-blue-500/50 transition-all group">
+              <div className="flex items-center gap-4 bg-slate-800 border border-slate-600 rounded-xl px-4 h-14 focus-within:ring-2 focus-within:ring-blue-500 focus-within:outline-none transition-all group">
                 <Building2 className="w-5 h-5 text-[#64748b] group-focus-within:text-blue-400 transition-colors" />
                 <input
                   required
@@ -192,12 +192,12 @@ export default function Register() {
                   placeholder="Nom de la Société (ex: SAS AZUR TRANSPORTS)"
                   value={formData.companyName}
                   onChange={e => setFormData({ ...formData, companyName: e.target.value })}
-                  className="flex-1 bg-transparent py-3.5 text-white text-sm outline-none placeholder:text-white/20"
+                  className="flex-1 bg-transparent h-full text-white text-base outline-none placeholder:text-slate-400"
                 />
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                <div className="flex items-center gap-4 bg-white/5 border border-white/10 rounded-2xl px-5 focus-within:border-blue-500/50 transition-all group">
+                <div className="flex items-center gap-4 bg-slate-800 border border-slate-600 rounded-xl px-4 h-14 focus-within:ring-2 focus-within:ring-blue-500 focus-within:outline-none transition-all group">
                   <ShieldCheck className="w-5 h-5 text-[#64748b] group-focus-within:text-blue-400 transition-colors" />
                   <input
                     required
@@ -205,10 +205,10 @@ export default function Register() {
                     placeholder="N° Registre EVTC (ex: EVTC060...)"
                     value={formData.registreVTC}
                     onChange={e => setFormData({ ...formData, registreVTC: e.target.value })}
-                    className="flex-1 bg-transparent py-3.5 text-white text-sm outline-none placeholder:text-white/20"
+                    className="flex-1 bg-transparent h-full text-white text-base outline-none placeholder:text-slate-400"
                   />
                 </div>
-                <div className="flex items-center gap-4 bg-white/5 border border-white/10 rounded-2xl px-5 focus-within:border-blue-500/50 transition-all group">
+                <div className="flex items-center gap-4 bg-slate-800 border border-slate-600 rounded-xl px-4 h-14 focus-within:ring-2 focus-within:ring-blue-500 focus-within:outline-none transition-all group">
                   <Hash className="w-5 h-5 text-[#64748b] group-focus-within:text-blue-400 transition-colors" />
                   <input
                     required
@@ -216,12 +216,12 @@ export default function Register() {
                     placeholder="SIRET (14 chiffres)"
                     value={formData.siret}
                     onChange={e => setFormData({ ...formData, siret: e.target.value })}
-                    className="flex-1 bg-transparent py-3.5 text-white text-sm outline-none placeholder:text-white/20"
+                    className="flex-1 bg-transparent h-full text-white text-base outline-none placeholder:text-slate-400"
                   />
                 </div>
               </div>
 
-              <div className="flex items-center gap-4 bg-white/5 border border-white/10 rounded-2xl px-5 focus-within:border-blue-500/50 transition-all group">
+              <div className="flex items-center gap-4 bg-slate-800 border border-slate-600 rounded-xl px-4 h-14 focus-within:ring-2 focus-within:ring-blue-500 focus-within:outline-none transition-all group">
                 <MapPin className="w-5 h-5 text-[#64748b] group-focus-within:text-blue-400 transition-colors" />
                 <input
                   required
@@ -229,16 +229,16 @@ export default function Register() {
                   placeholder="Adresse complète du siège social"
                   value={formData.address}
                   onChange={e => setFormData({ ...formData, address: e.target.value })}
-                  className="flex-1 bg-transparent py-3.5 text-white text-sm outline-none placeholder:text-white/20"
+                  className="flex-1 bg-transparent h-full text-white text-base outline-none placeholder:text-slate-400"
                 />
               </div>
 
-              <div className="flex p-1 bg-white/5 rounded-xl border border-white/10 overflow-hidden">
+              <div className="flex flex-col sm:flex-row gap-3">
                 <button
                   type="button"
                   onClick={() => setFormData({ ...formData, tvaRegime: 'franchise' })}
-                  className={`flex-1 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all ${
-                    formData.tvaRegime === 'franchise' ? 'bg-blue-600 text-white shadow-md' : 'text-slate-400 hover:text-slate-200'
+                  className={`flex-1 py-3 px-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all border ${
+                    formData.tvaRegime === 'franchise' ? 'bg-blue-600 border-blue-500 text-white shadow-md' : 'bg-slate-800 border-slate-600 text-slate-400 hover:text-white'
                   }`}
                 >
                   Franchise TVA (Art. 293 B CGI)
@@ -246,8 +246,8 @@ export default function Register() {
                 <button
                   type="button"
                   onClick={() => setFormData({ ...formData, tvaRegime: 'assujetti' })}
-                  className={`flex-1 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all ${
-                    formData.tvaRegime === 'assujetti' ? 'bg-blue-600 text-white shadow-md' : 'text-slate-400 hover:text-slate-200'
+                  className={`flex-1 py-3 px-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all border ${
+                    formData.tvaRegime === 'assujetti' ? 'bg-blue-600 border-blue-500 text-white shadow-md' : 'bg-slate-800 border-slate-600 text-slate-400 hover:text-white'
                   }`}
                 >
                   Assujetti TVA (10% VTC)
@@ -265,7 +265,7 @@ export default function Register() {
 
             <div className="space-y-3">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                <div className="flex items-center gap-4 bg-white/5 border border-white/10 rounded-2xl px-5 focus-within:border-blue-500/50 transition-all group">
+                <div className="flex items-center gap-4 bg-slate-800 border border-slate-600 rounded-xl px-4 h-14 focus-within:ring-2 focus-within:ring-blue-500 focus-within:outline-none transition-all group">
                   <User className="w-5 h-5 text-[#64748b] group-focus-within:text-blue-400 transition-colors" />
                   <input
                     required
@@ -273,10 +273,10 @@ export default function Register() {
                     placeholder="Nom complet (Prénom Nom)"
                     value={formData.fullName}
                     onChange={e => setFormData({ ...formData, fullName: e.target.value })}
-                    className="flex-1 bg-transparent py-3.5 text-white text-sm outline-none placeholder:text-white/20"
+                    className="flex-1 bg-transparent h-full text-white text-base outline-none placeholder:text-slate-400"
                   />
                 </div>
-                <div className="flex items-center gap-4 bg-white/5 border border-white/10 rounded-2xl px-5 focus-within:border-blue-500/50 transition-all group">
+                <div className="flex items-center gap-4 bg-slate-800 border border-slate-600 rounded-xl px-4 h-14 focus-within:ring-2 focus-within:ring-blue-500 focus-within:outline-none transition-all group">
                   <Phone className="w-5 h-5 text-[#64748b] group-focus-within:text-blue-400 transition-colors" />
                   <input
                     required
@@ -284,12 +284,12 @@ export default function Register() {
                     placeholder="Téléphone mobile"
                     value={formData.phone}
                     onChange={e => setFormData({ ...formData, phone: e.target.value })}
-                    className="flex-1 bg-transparent py-3.5 text-white text-sm outline-none placeholder:text-white/20"
+                    className="flex-1 bg-transparent h-full text-white text-base outline-none placeholder:text-slate-400"
                   />
                 </div>
               </div>
 
-              <div className="flex items-center gap-4 bg-white/5 border border-white/10 rounded-2xl px-5 focus-within:border-blue-500/50 transition-all group">
+              <div className="flex items-center gap-4 bg-slate-800 border border-slate-600 rounded-xl px-4 h-14 focus-within:ring-2 focus-within:ring-blue-500 focus-within:outline-none transition-all group">
                 <CreditCard className="w-5 h-5 text-[#64748b] group-focus-within:text-blue-400 transition-colors" />
                 <input
                   required
@@ -297,11 +297,11 @@ export default function Register() {
                   placeholder="N° Carte Professionnelle VTC (ex: T-060-XXXXXXXX)"
                   value={formData.driverCardNumber}
                   onChange={e => setFormData({ ...formData, driverCardNumber: e.target.value })}
-                  className="flex-1 bg-transparent py-3.5 text-white text-sm outline-none placeholder:text-white/20"
+                  className="flex-1 bg-transparent h-full text-white text-base outline-none placeholder:text-slate-400"
                 />
               </div>
 
-              <div className="flex items-center gap-4 bg-white/5 border border-white/10 rounded-2xl px-5 focus-within:border-blue-500/50 transition-all group">
+              <div className="flex items-center gap-4 bg-slate-800 border border-slate-600 rounded-xl px-4 h-14 focus-within:ring-2 focus-within:ring-blue-500 focus-within:outline-none transition-all group">
                 <Mail className="w-5 h-5 text-[#64748b] group-focus-within:text-blue-400 transition-colors" />
                 <input
                   required
@@ -309,11 +309,11 @@ export default function Register() {
                   placeholder="Email de connexion (ex: contact@maboite.fr)"
                   value={formData.email}
                   onChange={e => setFormData({ ...formData, email: e.target.value })}
-                  className="flex-1 bg-transparent py-3.5 text-white text-sm outline-none placeholder:text-white/20"
+                  className="flex-1 bg-transparent h-full text-white text-base outline-none placeholder:text-slate-400"
                 />
               </div>
 
-              <div className="flex items-center gap-4 bg-white/5 border border-white/10 rounded-2xl px-5 focus-within:border-blue-500/50 transition-all group">
+              <div className="flex items-center gap-4 bg-slate-800 border border-slate-600 rounded-xl px-4 h-14 focus-within:ring-2 focus-within:ring-blue-500 focus-within:outline-none transition-all group">
                 <Lock className="w-5 h-5 text-[#64748b] group-focus-within:text-blue-400 transition-colors" />
                 <input
                   required
@@ -321,7 +321,7 @@ export default function Register() {
                   placeholder="Mot de passe (minimum 6 caractères)"
                   value={formData.password}
                   onChange={e => setFormData({ ...formData, password: e.target.value })}
-                  className="flex-1 bg-transparent py-3.5 text-white text-sm outline-none placeholder:text-white/20"
+                  className="flex-1 bg-transparent h-full text-white text-base outline-none placeholder:text-slate-400"
                 />
               </div>
             </div>
