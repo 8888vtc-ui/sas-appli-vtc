@@ -5,14 +5,14 @@ import {
   Plus, Shield, Sparkles, LogOut
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
-import { useAuth } from '../context/AuthContext';
+
 import { useApp } from '../context/AppContext';
 import { motion } from 'framer-motion';
 import AICopilot from './AICopilot';
 
 export default function Layout({ children, onNewTrip }: { children: React.ReactNode; onNewTrip: () => void }) {
   const { settings } = useApp();
-  const {} = useAuth(); // or completely remove if not used
+
   const location = useLocation();
   const navigate = useNavigate();
   const [aiOpen, setAiOpen] = useState(false);
