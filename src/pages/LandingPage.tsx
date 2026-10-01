@@ -20,7 +20,7 @@ export default function LandingPage() {
             <span className="text-xl font-black tracking-tight">AppVTC</span>
           </div>
           <nav className="flex items-center gap-4">
-            <button onClick={() => navigate('/register')} className="bg-white text-black px-5 py-2.5 rounded-full text-sm font-black hover:bg-slate-200 transition-all active:scale-95 shadow-lg shadow-white/10">
+            <button onClick={() => navigate('/register')} className="px-6 py-2.5 rounded-full bg-slate-800 text-white text-sm font-semibold border border-slate-700 hover:bg-slate-700 transition-colors">
               Rejoindre la liste d'attente
             </button>
           </nav>
@@ -29,11 +29,11 @@ export default function LandingPage() {
 
       <main>
         {/* ─── HERO SECTION ─── */}
-        <section className="relative pt-32 pb-20 sm:pt-40 sm:pb-32 px-6" aria-labelledby="hero-title">
+        <section className="relative mt-20 pt-24 pb-20 sm:pt-32 sm:pb-32 px-6" aria-labelledby="hero-title">
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-blue-500/20 rounded-full blur-[120px] pointer-events-none" />
           
           <div className="max-w-4xl mx-auto text-center relative z-10">
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} className="space-y-6">
               <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-bold mb-6 uppercase tracking-wider">
                 <Sparkles className="w-4 h-4" /> Bêta Privée - Places Limitées
               </span>
@@ -46,7 +46,7 @@ export default function LandingPage() {
               </p>
               
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                <button onClick={() => navigate('/register')} className="w-full sm:w-auto bg-white text-slate-900 px-8 py-4 rounded-full font-black text-lg hover:bg-slate-200 transition-all flex items-center justify-center gap-2 shadow-[0_0_40px_rgba(255,255,255,0.2)] active:scale-95">
+                <button onClick={() => navigate('/register')} className="inline-flex items-center justify-center mt-8 px-8 py-4 text-lg font-bold text-white bg-blue-600 rounded-full shadow-lg hover:bg-blue-500 hover:shadow-blue-500/30 transition-all">
                   Rejoindre la liste d'attente privée <ArrowRight className="w-5 h-5" />
                 </button>
               </div>
