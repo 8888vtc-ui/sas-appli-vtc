@@ -18,6 +18,7 @@ import ResetPassword from './pages/ResetPassword';
 
 import Accounting from './pages/Accounting';
 import CRM from './pages/CRM';
+import ClientCRM from './pages/ClientCRM';
 import ExpenseReports from './pages/ExpenseReports';
 import QRCodeHub from './pages/QRCodeHub';
 import FinancesHub from './pages/FinancesHub';
@@ -65,6 +66,7 @@ function ProtectedLayout() {
                 {/* Legacy individual routes kept for direct linking from ToolsHub */}
                 <Route path="/factures" element={<Invoices />} />
                 <Route path="/crm" element={<CRM />} />
+                <Route path="/clients" element={<ClientCRM />} />
                 <Route path="/coffre-fort" element={<Vault />} />
                 <Route path="/qrcode" element={<QRCodeHub />} />
                 <Route path="/parametres" element={<Settings />} />
