@@ -108,6 +108,6 @@ Génère 5 cibles correspondant exactement à cette demande, de préférence aut
 
   } catch (error: any) {
     console.error('Erreur IA Prospect:', error);
-    throw new Error(error.message || 'Impossible de générer les prospects. Vérifiez votre clé API.');
+    throw new Error(error.message || 'Impossible de générer les prospects. Vérifiez votre clé API.', { cause: error });
   }
 }
