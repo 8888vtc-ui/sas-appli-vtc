@@ -111,6 +111,6 @@ export async function scanReceiptWithAI(settings: AppSettings, base64Image: stri
     return JSON.parse(cleanJson);
   } catch (error: any) {
     console.error('Erreur IA Scanner:', error);
-    throw new Error(error.message || 'Impossible d\'analyser le ticket. Veuillez vérifier votre clé API ou réessayer.');
+    throw new Error(error.message || 'Impossible d\'analyser le ticket. Veuillez vérifier votre clé API ou réessayer.', { cause: error });
   }
 }

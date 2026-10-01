@@ -217,7 +217,7 @@ export default function TripModal({ isOpen, onClose }: { isOpen: boolean; onClos
             clientPhone: contacts[0].tel ? contacts[0].tel[0] : prev.clientPhone,
           }));
         }
-      } catch (ex) {
+      } catch {
         alert("L'importation de contacts n'est pas supportée ou a été annulée.");
       }
     } else {

@@ -32,7 +32,7 @@ import {
   deleteCompanyDriver,
 } from '../lib/authService';
 
-import { showToast } from '../components/Toast';
+import { showToast } from '../lib/toast';
 import { useAuth } from '../context/AuthContext';
 
 export default function Settings() {

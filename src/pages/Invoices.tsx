@@ -4,7 +4,7 @@ import { Receipt, CreditCard, Download, Search, ChevronDown, CheckCircle2, Clock
 import { useApp } from '../context/AppContext';
 import { formatEUR } from '../lib/utils';
 import { exportInvoicesCSV } from '../lib/exportUtils';
-import { showToast } from '../components/Toast';
+import { showToast } from '../lib/toast';
 
 export default function Invoices() {
   const { invoices, trips, togglePayment, deleteInvoice, downloadInvoice, settings } = useApp();

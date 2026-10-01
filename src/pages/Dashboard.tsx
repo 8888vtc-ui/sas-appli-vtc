@@ -8,7 +8,7 @@ import {
 } from 'lucide-react';
 import SignatureModal from '../components/SignatureModal';
 import GPSModal, { openNavigationApp } from '../components/GPSModal';
-import { showToast } from '../components/Toast';
+import { showToast } from '../lib/toast';
 import { format, isToday, isTomorrow } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import { useNavigate } from 'react-router-dom';
@@ -124,7 +124,7 @@ export default function Dashboard() {
     });
     // (On garde la course dans la liste même si elle est affichée en haut pour éviter la confusion d'une liste vide)
     return list;
-  }, [trips, tab, searchQuery, nextTrip]);
+  }, [trips, tab, searchQuery]);
 
   const shareWhatsApp = (trip: any) => {
     const text = `Bonjour ${trip.clientName}, confirmation de votre course le ${fmtDate(trip.date)} à ${trip.time}. Départ : ${trip.pickUpLocation}. Destination : ${trip.dropOffLocation || 'Mise à disposition'}. Tarif : ${trip.price} €. ${settings.companyName}`;
