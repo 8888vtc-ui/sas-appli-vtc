@@ -650,16 +650,16 @@ export default function Settings() {
         </button>
       </div>
 
-      {/* Logout */}
-      <div className="pt-6 border-t border-white/10 flex justify-center">
+      <div className="pt-6 border-t border-white/10 w-full px-4 sm:px-0">
         <button
           type="button"
           onClick={() => {
             if(window.confirm('Voulez-vous vraiment vous déconnecter ?')) {
               signOut();
+              navigate('/login');
             }
           }}
-          className="py-3 px-8 rounded-2xl bg-red-500/10 border border-red-500/20 text-red-500 font-bold text-sm hover:bg-red-500/20 hover:text-red-400 transition-all"
+          className="w-full h-14 rounded-2xl bg-red-900/30 border border-red-800 text-red-400 font-bold text-lg hover:bg-red-900/50 transition-all flex items-center justify-center active:scale-95"
         >
           Se déconnecter
         </button>
