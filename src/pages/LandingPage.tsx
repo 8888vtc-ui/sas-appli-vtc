@@ -37,7 +37,7 @@ export default function LandingPage() {
               <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-bold mb-6 uppercase tracking-wider">
                 <Sparkles className="w-4 h-4" /> Bêta Privée - Places Limitées
               </span>
-              <h1 id="hero-title" className="text-5xl sm:text-7xl font-black tracking-tight leading-[1.1] mb-6">
+              <h1 id="hero-title" className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight leading-tight mb-6">
                 Ne conduisez plus à l'aveugle.<br className="hidden sm:block" />
                 Reprenez le <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-500">contrôle total</span> de votre activité VTC.
               </h1>
@@ -57,7 +57,7 @@ export default function LandingPage() {
         {/* ─── LA PROBLÉMATIQUE & SOLUTION ─── */}
         <section className="py-20 px-6 border-y border-white/5 bg-[#162032]/50" aria-labelledby="problem-title">
           <div className="max-w-4xl mx-auto text-center">
-            <h2 id="problem-title" className="text-3xl sm:text-4xl font-black mb-8">La route est assez dure. L'administratif ne devrait pas l'être.</h2>
+            <h2 id="problem-title" className="text-3xl md:text-4xl font-black mb-8 leading-tight">La route est assez dure. L'administratif ne devrait pas l'être.</h2>
             <p className="text-slate-400 text-lg leading-relaxed mb-6">
               La réalité du métier de chauffeur indépendant est épuisante. Entre les notifications incessantes des dizaines de boucles WhatsApp saturées de messages inutiles, le stress de la comptabilité qui s'accumule dans la boîte à gants, la pression de l'URSSAF et l'angoisse des contrôles des Boers, votre charge mentale explose. Vous passez plus de temps à gérer l'arrière-boutique qu'à conduire et générer du chiffre d'affaires.
             </p>
@@ -71,7 +71,7 @@ export default function LandingPage() {
         <section className="py-24 px-6 relative" aria-labelledby="features-title">
           <div className="max-w-7xl mx-auto">
             <div className="text-center mb-16">
-              <h2 id="features-title" className="text-3xl sm:text-5xl font-black mb-4">Les 3 Piliers Technologiques d'AppVTC</h2>
+              <h2 id="features-title" className="text-3xl md:text-4xl lg:text-5xl font-black mb-4 leading-tight">Les 3 Piliers Technologiques d'AppVTC</h2>
             </div>
 
             <div className="grid sm:grid-cols-3 gap-8">
