@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
 @theme {
   --color-surface: #131313;
@@ -37,8 +38,6 @@
   --color-background: #131313;
   --color-on-background: #e5e2e1;
 }
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
-
 /* ═══════════════════════════════════════════════════
    PREMIUM SAAS DESIGN SYSTEM (Neo-Apple Dark Pro)
    ═══════════════════════════════════════════════════ */

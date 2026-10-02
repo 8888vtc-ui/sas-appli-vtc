@@ -177,7 +177,7 @@ export default function TripModal({ isOpen, onClose }: { isOpen: boolean; onClos
       .or(`name.ilike.%${q}%,phone.ilike.%${q}%`)
       .limit(5);
     if (data) {
-      setClientSuggestions(data.map(d => ({ id: d.id, name: d.name, phone: d.phone, email: d.email, notes: d.notes })));
+      setClientSuggestions(data.map((d: any) => ({ id: d.id, name: d.name, phone: d.phone, email: d.email, notes: d.notes })));
     } else {
       setClientSuggestions([]);
     }
