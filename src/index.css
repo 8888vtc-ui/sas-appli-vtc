@@ -1,5 +1,42 @@
 @import "tailwindcss";
 
+@theme {
+  --color-surface: #131313;
+  --color-surface-dim: #131313;
+  --color-surface-bright: #3a3939;
+  --color-surface-container-lowest: #0e0e0e;
+  --color-surface-container-low: #1c1b1b;
+  --color-surface-container: #201f1f;
+  --color-surface-container-high: #2a2a2a;
+  --color-surface-container-highest: #353534;
+  --color-on-surface: #e5e2e1;
+  --color-on-surface-variant: #b9cbb9;
+  
+  --color-primary: #f1ffef;
+  --color-on-primary: #003919;
+  --color-primary-container: #00ff87;
+  --color-on-primary-container: #007138;
+  --color-primary-fixed: #60ff98;
+  --color-primary-fixed-dim: #00e478;
+  
+  --color-secondary: #adc6ff;
+  --color-on-secondary: #002e6a;
+  --color-secondary-container: #0566d9;
+  --color-on-secondary-container: #e6ecff;
+  
+  --color-tertiary: #fffaf8;
+  --color-tertiary-container: #ffd8ad;
+  --color-tertiary-fixed-dim: #ffb95f;
+  
+  --color-error: #ffb4ab;
+  --color-error-container: #93000a;
+  
+  --color-outline: #849585;
+  --color-outline-variant: #3b4b3d;
+  
+  --color-background: #131313;
+  --color-on-background: #e5e2e1;
+}
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
 /* ═══════════════════════════════════════════════════

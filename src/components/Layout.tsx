@@ -126,36 +126,44 @@ export default function Layout({ children, onNewTrip }: { children: React.ReactN
         </main>
 
         {/* ═══════════════════════════════════════════
-             MOBILE BOTTOM TAB BAR (3 TABS ONLY)
+             MOBILE BOTTOM TAB BAR (CHARTE GRAPHIQUE)
              ═══════════════════════════════════════════ */}
-        <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 flex justify-center pointer-events-none">
-          <div className="w-full max-w-md pointer-events-auto bg-[#0a0a0a] border-t border-white/10 pb-[max(env(safe-area-inset-bottom,0px),16px)] pt-3 px-6 rounded-t-3xl flex items-center justify-between">
-            
-            <button onClick={() => navigate('/')} className="flex flex-col items-center justify-center gap-1 min-w-[70px] active:scale-90 transition-all py-2">
-              <Calendar style={{ width: 26, height: 26, color: isActive('/') ? '#ffffff' : '#545458', strokeWidth: isActive('/') ? 2.5 : 2 }} />
-              <span className={`text-[12px] font-bold mt-1 ${isActive('/') ? 'text-white' : 'text-[#545458]'}`}>Trajets</span>
-            </button>
+        <div className="md:hidden fixed bottom-10 left-1/2 -translate-x-1/2 z-50 pointer-events-auto">
+          <button
+            onClick={onNewTrip}
+            className="flex items-center justify-center w-16 h-16 rounded-full bg-primary-container text-on-primary-container shadow-[0_0_24px_rgba(0,255,135,0.5)] active:scale-95 hover:brightness-110 transition-transform"
+          >
+            <Plus className="w-8 h-8 stroke-[3]" />
+          </button>
+        </div>
 
-            {/* BIG CENTER FAB FOR NEW TRIP */}
-            <div className="relative -top-8 px-2">
-              <button
-                onClick={onNewTrip}
-                className="w-[72px] h-[72px] rounded-full bg-blue-600 flex items-center justify-center shadow-lg border-[6px] border-black active:scale-95 transition-all"
-              >
-                <Plus className="w-10 h-10 text-white stroke-[3]" />
+        <nav className="md:hidden fixed bottom-0 w-full z-40 pb-[env(safe-area-inset-bottom,0px)] bg-surface/90 backdrop-blur-xl shadow-[0_-4px_24px_rgba(0,0,0,0.6)]">
+          <div className="flex items-center justify-between h-20 px-4 max-w-lg mx-auto">
+            <div className="flex items-center w-5/12 justify-around">
+              <button onClick={() => navigate('/')} className={`flex flex-col items-center justify-center min-h-[56px] min-w-[56px] transition-colors ${isActive('/') ? 'text-primary-container' : 'text-on-surface-variant hover:text-on-surface'}`}>
+                <Calendar className="w-7 h-7" />
+                <span className="text-[11px] font-medium mt-1">Cockpit</span>
+              </button>
+              <button onClick={() => navigate('/crm')} className={`flex flex-col items-center justify-center min-h-[56px] min-w-[56px] transition-colors ${isActive('/crm') ? 'text-primary-container' : 'text-on-surface-variant hover:text-on-surface'}`}>
+                <Wallet className="w-7 h-7" />
+                <span className="text-[11px] font-medium mt-1">Clients</span>
               </button>
             </div>
-
-            <button onClick={() => navigate('/finances')} className="flex flex-col items-center justify-center gap-1 min-w-[70px] active:scale-90 transition-all py-2">
-              <Wallet style={{ width: 26, height: 26, color: isActive('/finances') ? '#ffffff' : '#545458', strokeWidth: isActive('/finances') ? 2.5 : 2 }} />
-              <span className={`text-[12px] font-bold mt-1 ${isActive('/finances') ? 'text-white' : 'text-[#545458]'}`}>Argent</span>
-            </button>
-
-            <button onClick={() => navigate('/outils')} className="flex flex-col items-center justify-center gap-1 min-w-[70px] active:scale-90 transition-all py-2">
-              <LayoutGrid style={{ width: 26, height: 26, color: isActive('/outils') ? '#ffffff' : '#545458', strokeWidth: isActive('/outils') ? 2.5 : 2 }} />
-              <span className={`text-[12px] font-bold mt-1 ${isActive('/outils') ? 'text-white' : 'text-[#545458]'}`}>Réglages</span>
-            </button>
-
+            
+            <div className="w-2/12 h-full flex items-end justify-center pb-2">
+              <span className="text-[11px] font-medium text-on-surface-variant opacity-70">Course</span>
+            </div>
+            
+            <div className="flex items-center w-5/12 justify-around">
+              <button onClick={() => navigate('/finances')} className={`flex flex-col items-center justify-center min-h-[56px] min-w-[56px] transition-colors ${isActive('/finances') ? 'text-primary-container' : 'text-on-surface-variant hover:text-on-surface'}`}>
+                <Sparkles className="w-7 h-7" />
+                <span className="text-[11px] font-medium mt-1">Finances</span>
+              </button>
+              <button onClick={() => navigate('/outils')} className={`flex flex-col items-center justify-center min-h-[56px] min-w-[56px] transition-colors ${isActive('/outils') ? 'text-primary-container' : 'text-on-surface-variant hover:text-on-surface'}`}>
+                <LayoutGrid className="w-7 h-7" />
+                <span className="text-[11px] font-medium mt-1">Réglages</span>
+              </button>
+            </div>
           </div>
         </nav>
       </div>
