@@ -6,30 +6,42 @@ interface GPSModalProps {
   isOpen: boolean;
   onClose: () => void;
   destination: string;
+  lat?: number;
+  lng?: number;
   tripLabel?: string;
 }
 
-export function openNavigationApp(address: string, app: 'waze' | 'google' | 'apple') {
-  const encoded = encodeURIComponent(address);
+export function openNavigationApp(address: string, app: 'waze' | 'google' | 'apple', lat?: number, lng?: number) {
   let url = '';
-  if (app === 'waze') {
-    url = `https://www.waze.com/ul?q=${encoded}&navigate=yes`;
-  } else if (app === 'google') {
-    url = `https://www.google.com/maps/dir/?api=1&destination=${encoded}`;
-  } else if (app === 'apple') {
-    url = `https://maps.apple.com/?daddr=${encoded}`;
+  if (lat !== undefined && lng !== undefined) {
+    if (app === 'waze') {
+      url = `https://www.waze.com/ul?ll=${lat},${lng}&navigate=yes`;
+    } else if (app === 'google') {
+      url = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
+    } else if (app === 'apple') {
+      url = `https://maps.apple.com/?daddr=${lat},${lng}`;
+    }
+  } else {
+    const encoded = encodeURIComponent(address);
+    if (app === 'waze') {
+      url = `https://www.waze.com/ul?q=${encoded}&navigate=yes`;
+    } else if (app === 'google') {
+      url = `https://www.google.com/maps/dir/?api=1&destination=${encoded}`;
+    } else if (app === 'apple') {
+      url = `https://maps.apple.com/?daddr=${encoded}`;
+    }
   }
   window.open(url, '_blank');
 }
 
-export default function GPSModal({ isOpen, onClose, destination, tripLabel }: GPSModalProps) {
+export default function GPSModal({ isOpen, onClose, destination, lat, lng, tripLabel }: GPSModalProps) {
   const [saveAsDefault, setSaveAsDefault] = useState(false);
 
   const handleLaunch = (app: 'waze' | 'google' | 'apple') => {
     if (saveAsDefault) {
       localStorage.setItem('vtc_preferred_gps', app);
     }
-    openNavigationApp(destination, app);
+    openNavigationApp(destination, app, lat, lng);
     onClose();
   };
 

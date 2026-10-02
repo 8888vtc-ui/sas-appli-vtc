@@ -1,11 +1,15 @@
-// ─── TRIP ───
 export interface Trip {
   id: string;
+  client_id?: string;
   clientName: string;
   clientPhone: string;
   clientEmail?: string;
   pickUpLocation: string;
+  pickUpLat?: number;
+  pickUpLng?: number;
   dropOffLocation: string;
+  dropOffLat?: number;
+  dropOffLng?: number;
   date: string;
   time: string;
   bookingDateTime: string;
@@ -21,6 +25,17 @@ export interface Trip {
   paymentStatus?: 'pending' | 'paid';
   signature?: string; // Base64 signature image
   notes?: string;
+}
+
+// ─── CLIENTS ───
+export interface Client {
+  id: string;
+  company_id?: string;
+  name: string;
+  phone: string;
+  email?: string;
+  notes?: string;
+  created_at?: string;
 }
 
 // ─── SETTINGS ───

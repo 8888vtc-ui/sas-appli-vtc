@@ -3,15 +3,22 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { X, MapPin, User, Clock, Check, LocateFixed } from 'lucide-react';
 import { format, addMinutes } from 'date-fns';
 import { useApp } from '../context/AppContext';
+import { useAuth } from '../context/AuthContext';
+import { supabase, isLocalMode } from '../lib/supabase';
 import { searchFrenchAddresses } from '../lib/addressService';
 import type { AddressFeature } from '../lib/addressService';
 
 interface TripFormData {
+  client_id?: string;
   clientName: string;
   clientPhone: string;
   clientEmail: string;
   pickUpLocation: string;
+  pickUpLat?: number;
+  pickUpLng?: number;
   dropOffLocation: string;
+  dropOffLat?: number;
+  dropOffLng?: number;
   date: string;
   time: string;
   flightNumber: string;
@@ -33,11 +40,16 @@ interface KnownClient {
 }
 
 const emptyForm: TripFormData = {
+  client_id: undefined,
   clientName: '',
   clientPhone: '',
   clientEmail: '',
   pickUpLocation: '',
+  pickUpLat: undefined,
+  pickUpLng: undefined,
   dropOffLocation: '',
+  dropOffLat: undefined,
+  dropOffLng: undefined,
   date: format(new Date(), 'yyyy-MM-dd'),
   time: format(new Date(), 'HH:mm'),
   flightNumber: '',
@@ -52,6 +64,7 @@ const emptyForm: TripFormData = {
 
 export default function TripModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
   const { addTrip, trips } = useApp();
+  const { profile } = useAuth();
   const [errors, setErrors] = useState<{ [key: string]: boolean }>({});
   const [formData, setFormData] = useState<TripFormData>({
     ...emptyForm,
@@ -64,9 +77,16 @@ export default function TripModal({ isOpen, onClose }: { isOpen: boolean; onClos
   const [dropoffSuggestions, setDropoffSuggestions] = useState<AddressFeature[]>([]);
   const [clientSuggestions, setClientSuggestions] = useState<KnownClient[]>([]);
   const [showClientSuggestions, setShowClientSuggestions] = useState(false);
+  
+  const [isPickupFocused, setIsPickupFocused] = useState(false);
+  const [isDropoffFocused, setIsDropoffFocused] = useState(false);
 
   const pickupTimerRef = useRef<any>(null);
   const dropoffTimerRef = useRef<any>(null);
+  const clientTimerRef = useRef<any>(null);
+  
+  const pickupAbortRef = useRef<AbortController | null>(null);
+  const dropoffAbortRef = useRef<AbortController | null>(null);
 
   // Recueillir tous les clients connus (trips + CRM)
   const knownClients = useMemo<KnownClient[]>(() => {
@@ -112,13 +132,16 @@ export default function TripModal({ isOpen, onClose }: { isOpen: boolean; onClos
 
   // Address search debounce for Pickup
   const handlePickupChange = (value: string) => {
-    setFormData((prev) => ({ ...prev, pickUpLocation: value }));
+    setFormData((prev) => ({ ...prev, pickUpLocation: value, pickUpLat: undefined, pickUpLng: undefined }));
     clearTimeout(pickupTimerRef.current);
+    if (pickupAbortRef.current) pickupAbortRef.current.abort();
+
     if (value.trim().length >= 3) {
       pickupTimerRef.current = setTimeout(async () => {
-        const results = await searchFrenchAddresses(value);
+        pickupAbortRef.current = new AbortController();
+        const results = await searchFrenchAddresses(value, pickupAbortRef.current.signal);
         setPickupSuggestions(results);
-      }, 250);
+      }, 300);
     } else {
       setPickupSuggestions([]);
     }
@@ -126,30 +149,76 @@ export default function TripModal({ isOpen, onClose }: { isOpen: boolean; onClos
 
   // Address search debounce for Dropoff
   const handleDropoffChange = (value: string) => {
-    setFormData((prev) => ({ ...prev, dropOffLocation: value }));
+    setFormData((prev) => ({ ...prev, dropOffLocation: value, dropOffLat: undefined, dropOffLng: undefined }));
     clearTimeout(dropoffTimerRef.current);
+    if (dropoffAbortRef.current) dropoffAbortRef.current.abort();
+
     if (value.trim().length >= 3) {
       dropoffTimerRef.current = setTimeout(async () => {
-        const results = await searchFrenchAddresses(value);
+        dropoffAbortRef.current = new AbortController();
+        const results = await searchFrenchAddresses(value, dropoffAbortRef.current.signal);
         setDropoffSuggestions(results);
-      }, 250);
+      }, 300);
     } else {
       setDropoffSuggestions([]);
     }
   };
 
+  const searchClients = async (q: string) => {
+    if (isLocalMode || !profile?.company_id) {
+      const matches = knownClients.filter(c => c.name.toLowerCase().includes(q) || (c.phone && c.phone.includes(q)));
+      setClientSuggestions(matches);
+      return;
+    }
+    const { data } = await supabase
+      .from('clients')
+      .select('*')
+      .eq('company_id', profile.company_id)
+      .or(`name.ilike.%${q}%,phone.ilike.%${q}%`)
+      .limit(5);
+    if (data) {
+      setClientSuggestions(data.map(d => ({ id: d.id, name: d.name, phone: d.phone, email: d.email, notes: d.notes })));
+    } else {
+      setClientSuggestions([]);
+    }
+  };
+
   // Client Name change & CRM Autocomplete
   const handleClientNameChange = (value: string) => {
-    setFormData((prev) => ({ ...prev, clientName: value }));
-    if (value.trim().length > 0 && knownClients.length > 0) {
-      const q = value.toLowerCase();
-      const matches = knownClients.filter((c) => c.name.toLowerCase().includes(q));
-      setClientSuggestions(matches);
-      setShowClientSuggestions(matches.length > 0);
-    } else if (value.trim().length === 0) {
+    setFormData((prev) => ({ ...prev, clientName: value, client_id: undefined }));
+    clearTimeout(clientTimerRef.current);
+    
+    if (value.trim().length > 0) {
+      clientTimerRef.current = setTimeout(async () => {
+        await searchClients(value.toLowerCase());
+        setShowClientSuggestions(true);
+      }, 300);
+    } else {
       setClientSuggestions(knownClients.slice(0, 10));
       setShowClientSuggestions(knownClients.length > 0);
+    }
+  };
+
+  const createNewClient = async () => {
+    if (!formData.clientName || !formData.clientPhone) {
+      alert("Veuillez saisir au moins le nom et le téléphone pour créer le client.");
+      return;
+    }
+    if (!isLocalMode && profile?.company_id) {
+      const { data, error } = await supabase
+        .from('clients')
+        .insert([{ company_id: profile.company_id, name: formData.clientName, phone: formData.clientPhone, email: formData.clientEmail || null }])
+        .select().single();
+        
+      if (error) {
+        alert("Erreur création client: " + error.message);
+      } else if (data) {
+        setFormData(prev => ({ ...prev, client_id: data.id }));
+        alert("Client créé avec succès !");
+        setShowClientSuggestions(false);
+      }
     } else {
+      alert("Création locale simulée.");
       setShowClientSuggestions(false);
     }
   };
@@ -157,6 +226,7 @@ export default function TripModal({ isOpen, onClose }: { isOpen: boolean; onClos
   const selectClient = (client: KnownClient) => {
     setFormData((prev) => ({
       ...prev,
+      client_id: client.id,
       clientName: client.name,
       clientPhone: client.phone || prev.clientPhone,
       clientEmail: client.email || prev.clientEmail,
@@ -311,16 +381,25 @@ export default function TripModal({ isOpen, onClose }: { isOpen: boolean; onClos
                     />
                     
                     <AnimatePresence>
-                      {showClientSuggestions && clientSuggestions.length > 0 && (
+                      {showClientSuggestions && (
                         <motion.div initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -5 }}
                           className="absolute left-0 right-0 top-full mt-2 z-50 bg-slate-800 border border-blue-500/40 rounded-xl overflow-hidden shadow-2xl">
-                          {clientSuggestions.map((c) => (
-                            <button key={c.id} type="button" onClick={() => selectClient(c)}
-                              className="w-full text-left p-4 hover:bg-slate-700 border-b border-slate-700 last:border-none flex justify-between items-center active:bg-blue-600/50">
-                              <div className="font-bold text-white text-base">{c.name}</div>
-                              <div className="text-emerald-400 font-mono text-sm">{c.phone}</div>
-                            </button>
-                          ))}
+                          <div className="max-h-60 overflow-y-auto">
+                            {clientSuggestions.map((c) => (
+                              <button key={c.id} type="button" onClick={() => selectClient(c)}
+                                className="w-full text-left p-4 hover:bg-slate-700 border-b border-slate-700 last:border-none flex justify-between items-center active:bg-blue-600/50">
+                                <div className="font-bold text-white text-base">{c.name}</div>
+                                <div className="text-emerald-400 font-mono text-sm">{c.phone}</div>
+                              </button>
+                            ))}
+                          </div>
+                          {formData.clientName.length > 0 && !formData.client_id && (
+                            <div className="p-2 border-t border-slate-700 bg-slate-800">
+                              <button type="button" onClick={createNewClient} className="w-full h-14 bg-emerald-600 hover:bg-emerald-500 rounded-xl text-white font-bold flex items-center justify-center">
+                                ➕ Créer nouveau client
+                              </button>
+                            </div>
+                          )}
                         </motion.div>
                       )}
                     </AnimatePresence>
@@ -342,38 +421,18 @@ export default function TripModal({ isOpen, onClose }: { isOpen: boolean; onClos
                 <div className="space-y-3">
                   <div className="relative z-40">
                     <input type="text" placeholder="Lieu de Départ" value={formData.pickUpLocation} onChange={(e) => handlePickupChange(e.target.value)}
+                      onFocus={() => setIsPickupFocused(true)} onBlur={() => setTimeout(() => setIsPickupFocused(false), 200)}
                       className={`w-full h-14 bg-slate-900 border-2 ${errors.pickUpLocation ? 'border-red-500' : 'border-slate-700 focus:border-emerald-500'} rounded-xl px-4 text-lg font-bold text-white placeholder-slate-400 outline-none pr-14`}
                     />
                     <button type="button" onClick={handleCurrentPosition} title="Ma position" className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 bg-slate-800 hover:bg-slate-700 rounded-lg flex items-center justify-center text-emerald-400 active:scale-95 transition-all">
                       <LocateFixed className="w-5 h-5 stroke-[2.5]" />
                     </button>
                     
-                    {pickupSuggestions.length > 0 && (
-                      <div className="absolute left-0 right-0 top-full mt-2 z-50 bg-slate-800 border-2 border-emerald-500/50 rounded-xl overflow-hidden shadow-2xl">
-                        {pickupSuggestions.map((s, idx) => (
-                          <button key={idx} type="button" onClick={() => { setFormData({ ...formData, pickUpLocation: s.label }); setPickupSuggestions([]); }}
-                            className="w-full text-left p-4 hover:bg-slate-700 border-b border-slate-700 last:border-none flex items-center gap-3 active:bg-emerald-600/50">
-                            <MapPin className="w-5 h-5 text-emerald-400 shrink-0" />
-                            <div className="overflow-hidden">
-                              <div className="text-base font-bold text-white truncate">{s.name}</div>
-                              <div className="text-sm text-slate-400 truncate">{s.postcode} {s.city}</div>
-                            </div>
-                          </button>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-
-                  {formData.tripType === 'transfer' ? (
-                    <div className="relative z-30">
-                      <input type="text" placeholder="Destination" value={formData.dropOffLocation} onChange={(e) => handleDropoffChange(e.target.value)}
-                        className={`w-full h-14 bg-slate-900 border-2 ${errors.dropOffLocation ? 'border-red-500' : 'border-slate-700 focus:border-emerald-500'} rounded-xl px-4 text-lg font-bold text-white placeholder-slate-400 outline-none`}
-                      />
-                      
-                      {dropoffSuggestions.length > 0 && (
-                        <div className="absolute left-0 right-0 top-full mt-2 z-50 bg-slate-800 border-2 border-emerald-500/50 rounded-xl overflow-hidden shadow-2xl">
-                          {dropoffSuggestions.map((s, idx) => (
-                            <button key={idx} type="button" onClick={() => { setFormData({ ...formData, dropOffLocation: s.label }); setDropoffSuggestions([]); }}
+                    {(pickupSuggestions.length > 0 || (isPickupFocused && formData.pickUpLocation.length > 0)) && (
+                      <div className="absolute left-0 right-0 top-full mt-2 z-50 bg-slate-800 border-2 border-emerald-500/50 rounded-xl overflow-hidden shadow-2xl flex flex-col">
+                        <div className="max-h-60 overflow-y-auto">
+                          {pickupSuggestions.map((s, idx) => (
+                            <button key={idx} type="button" onMouseDown={() => { setFormData({ ...formData, pickUpLocation: s.label, pickUpLat: s.lat, pickUpLng: s.lon }); setPickupSuggestions([]); setIsPickupFocused(false); }}
                               className="w-full text-left p-4 hover:bg-slate-700 border-b border-slate-700 last:border-none flex items-center gap-3 active:bg-emerald-600/50">
                               <MapPin className="w-5 h-5 text-emerald-400 shrink-0" />
                               <div className="overflow-hidden">
@@ -382,6 +441,46 @@ export default function TripModal({ isOpen, onClose }: { isOpen: boolean; onClos
                               </div>
                             </button>
                           ))}
+                        </div>
+                        {formData.pickUpLocation.length > 0 && (
+                          <div className="p-2 border-t border-slate-700 bg-slate-800/80 backdrop-blur">
+                            <button type="button" onMouseDown={() => { setPickupSuggestions([]); setIsPickupFocused(false); }} className="w-full h-14 bg-slate-700 hover:bg-slate-600 rounded-xl text-white font-bold text-sm">
+                              📍 Utiliser "{formData.pickUpLocation}" tel quel
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+
+                  {formData.tripType === 'transfer' ? (
+                    <div className="relative z-30">
+                      <input type="text" placeholder="Destination" value={formData.dropOffLocation} onChange={(e) => handleDropoffChange(e.target.value)}
+                        onFocus={() => setIsDropoffFocused(true)} onBlur={() => setTimeout(() => setIsDropoffFocused(false), 200)}
+                        className={`w-full h-14 bg-slate-900 border-2 ${errors.dropOffLocation ? 'border-red-500' : 'border-slate-700 focus:border-emerald-500'} rounded-xl px-4 text-lg font-bold text-white placeholder-slate-400 outline-none`}
+                      />
+                      
+                      {(dropoffSuggestions.length > 0 || (isDropoffFocused && formData.dropOffLocation.length > 0)) && (
+                        <div className="absolute left-0 right-0 top-full mt-2 z-50 bg-slate-800 border-2 border-emerald-500/50 rounded-xl overflow-hidden shadow-2xl flex flex-col">
+                          <div className="max-h-60 overflow-y-auto">
+                            {dropoffSuggestions.map((s, idx) => (
+                              <button key={idx} type="button" onMouseDown={() => { setFormData({ ...formData, dropOffLocation: s.label, dropOffLat: s.lat, dropOffLng: s.lon }); setDropoffSuggestions([]); setIsDropoffFocused(false); }}
+                                className="w-full text-left p-4 hover:bg-slate-700 border-b border-slate-700 last:border-none flex items-center gap-3 active:bg-emerald-600/50">
+                                <MapPin className="w-5 h-5 text-emerald-400 shrink-0" />
+                                <div className="overflow-hidden">
+                                  <div className="text-base font-bold text-white truncate">{s.name}</div>
+                                  <div className="text-sm text-slate-400 truncate">{s.postcode} {s.city}</div>
+                                </div>
+                              </button>
+                            ))}
+                          </div>
+                          {formData.dropOffLocation.length > 0 && (
+                            <div className="p-2 border-t border-slate-700 bg-slate-800/80 backdrop-blur">
+                              <button type="button" onMouseDown={() => { setDropoffSuggestions([]); setIsDropoffFocused(false); }} className="w-full h-14 bg-slate-700 hover:bg-slate-600 rounded-xl text-white font-bold text-sm">
+                                📍 Utiliser "{formData.dropOffLocation}" tel quel
+                              </button>
+                            </div>
+                          )}
                         </div>
                       )}
                     </div>

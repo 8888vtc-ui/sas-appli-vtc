@@ -281,11 +281,16 @@ export function AppProvider({ children }: { children: ReactNode }) {
     if (tData) {
       const mappedTrips = tData.map((t: any) => ({
         id: t.id,
+        client_id: t.client_id,
         clientName: t.client_name,
         clientPhone: t.client_phone,
         clientEmail: t.client_email,
         pickUpLocation: t.pickup_location,
+        pickUpLat: t.pickup_lat,
+        pickUpLng: t.pickup_lng,
         dropOffLocation: t.dropoff_location,
+        dropOffLat: t.dropoff_lat,
+        dropOffLng: t.dropoff_lng,
         date: t.date,
         time: t.time,
         flightNumber: t.flight_number,
@@ -367,11 +372,16 @@ export function AppProvider({ children }: { children: ReactNode }) {
     // Map camelCase formData to snake_case schema for Supabase
     const dbPayload = {
       company_id: profile.company_id,
+      client_id: formData.client_id,
       client_name: formData.clientName,
       client_phone: formData.clientPhone,
       client_email: formData.clientEmail,
       pickup_location: formData.pickUpLocation,
+      pickup_lat: formData.pickUpLat,
+      pickup_lng: formData.pickUpLng,
       dropoff_location: formData.dropOffLocation,
+      dropoff_lat: formData.dropOffLat,
+      dropoff_lng: formData.dropOffLng,
       date: formData.date,
       time: formData.time,
       booking_datetime: format(new Date(), 'dd/MM/yyyy HH:mm'),

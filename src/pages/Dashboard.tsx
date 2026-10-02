@@ -135,15 +135,15 @@ export default function Dashboard() {
   const [moreId, setMoreId] = useState<string | null>(null);
   const [confirmDelete, setConfirmDelete] = useState<string | null>(null);
   const [sigTripId, setSigTripId] = useState<string | null>(null);
-  const [gpsModal, setGpsModal] = useState<{ isOpen: boolean; destination: string; label: string } | null>(null);
+  const [gpsModal, setGpsModal] = useState<{ isOpen: boolean; destination: string; label: string; lat?: number; lng?: number } | null>(null);
   const [showSmsToast, setShowSmsToast] = useState(false);
 
-  const triggerGPS = (destination: string, label: string) => {
+  const triggerGPS = (destination: string, label: string, lat?: number, lng?: number) => {
     const preferred = localStorage.getItem('vtc_preferred_gps') as 'waze' | 'google' | 'apple' | null;
     if (preferred) {
-      openNavigationApp(destination, preferred);
+      openNavigationApp(destination, preferred, lat, lng);
     } else {
-      setGpsModal({ isOpen: true, destination, label });
+      setGpsModal({ isOpen: true, destination, label, lat, lng });
     }
   };
 
@@ -337,7 +337,13 @@ export default function Dashboard() {
             <div className="grid grid-cols-2 gap-3 w-full">
               {/* Giant Waze Button */}
               <button 
-                onClick={() => triggerGPS(nextTrip.status === 'in_progress' ? (nextTrip.dropOffLocation || nextTrip.pickUpLocation) : nextTrip.pickUpLocation, 'Navigation')}
+                onClick={() => {
+                  const isDrop = nextTrip.status === 'in_progress';
+                  const dest = isDrop ? (nextTrip.dropOffLocation || nextTrip.pickUpLocation) : nextTrip.pickUpLocation;
+                  const lat = isDrop ? (nextTrip.dropOffLat || nextTrip.pickUpLat) : nextTrip.pickUpLat;
+                  const lng = isDrop ? (nextTrip.dropOffLng || nextTrip.pickUpLng) : nextTrip.pickUpLng;
+                  triggerGPS(dest, 'Navigation', lat, lng);
+                }}
                 className="col-span-2 sm:col-span-1 min-h-[56px] py-3 px-4 rounded-xl flex items-center justify-center gap-3 shadow-[0_0_20px_rgba(5,102,217,0.4)] active:scale-95 transition-all"
                 style={{ backgroundColor: c.secondaryContainer, color: c.onSecondaryContainer }}
               >
@@ -493,7 +499,7 @@ export default function Dashboard() {
       </section>
 
       {/* Modales */}
-      {gpsModal && <GPSModal isOpen={gpsModal.isOpen} onClose={() => setGpsModal(null)} destination={gpsModal.destination} tripLabel={gpsModal.label} />}
+      {gpsModal && <GPSModal isOpen={gpsModal.isOpen} onClose={() => setGpsModal(null)} destination={gpsModal.destination} lat={gpsModal.lat} lng={gpsModal.lng} tripLabel={gpsModal.label} />}
       <SignatureModal isOpen={!!sigTripId} onClose={() => setSigTripId(null)} initialSignature={trips.find(t => t.id === sigTripId)?.signature} onSave={data => { if (sigTripId) { addSignature(sigTripId, data); setSigTripId(null); } }} />
     </div>
   );
