@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { 
-  Car, Sparkles, MessageCircle, Receipt, Smartphone, ArrowRight, ShieldCheck 
+  Sparkles, MessageCircle, Receipt, Smartphone, ArrowRight, ShieldCheck 
 } from 'lucide-react';
 
 export default function LandingPage() {
@@ -14,9 +14,7 @@ export default function LandingPage() {
       <header className="fixed top-0 left-0 right-0 z-50 bg-[#0F172A]/80 backdrop-blur-xl border-b border-white/5">
         <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-gradient-to-tr from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/30">
-              <Car className="w-6 h-6 text-white" />
-            </div>
+            <img src="/logo.jpg" alt="Logo AppVTC" className="w-12 h-12 rounded-xl shadow-[0_0_15px_rgba(0,255,135,0.4)] border border-[#00ff87]/30" />
             <span className="text-xl font-black tracking-tight">AppVTC</span>
           </div>
           <nav className="flex items-center gap-4">
@@ -151,7 +149,7 @@ export default function LandingPage() {
       {/* ─── FOOTER ─── */}
       <footer className="border-t border-white/10 py-12 text-center text-slate-500 text-sm bg-[#0A0F1F]">
         <div className="flex items-center justify-center gap-2 mb-4">
-          <Car className="w-5 h-5 text-slate-400" /> <span className="font-bold text-slate-300 text-lg">AppVTC</span>
+          <img src="/logo.jpg" alt="Logo AppVTC" className="w-6 h-6 rounded-md" /> <span className="font-bold text-slate-300 text-lg">AppVTC</span>
         </div>
         <p className="mb-2">Conforme Réglementation Française & Factur-X Ready.</p>
         <p className="mb-2">

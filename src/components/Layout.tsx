@@ -37,9 +37,12 @@ export default function Layout({ children, onNewTrip }: { children: React.ReactN
            DESKTOP SIDEBAR
            ═══════════════════════════════════════════ */}
       <nav className="hidden md:flex flex-col w-72 shrink-0 bg-[#0a0a0a] border-r border-white/5 h-screen sticky top-0 p-6 z-50">
-        <h1 className="text-3xl font-black text-white tracking-tight mb-8">
-          {settings.companyName || 'VTC Pro'}
-        </h1>
+        <div className="flex items-center gap-3 mb-8">
+          <img src="/logo.jpg" alt="Logo AppVTC" className="w-10 h-10 rounded-xl shadow-[0_0_15px_rgba(0,255,135,0.4)] border border-[#00ff87]/30" />
+          <h1 className="text-3xl font-black text-white tracking-tight">
+            {settings.companyName || 'AppVTC'}
+          </h1>
+        </div>
         
         <div className="flex flex-col gap-2 flex-1">
           <button onClick={() => navigate('/')} className={`flex items-center gap-4 px-4 py-4 rounded-xl transition-all ${isActive('/') ? 'bg-white/10 text-white' : 'text-slate-400 hover:bg-white/5'}`}>
@@ -80,9 +83,12 @@ export default function Layout({ children, onNewTrip }: { children: React.ReactN
         <header className="flex flex-col border-b border-white/10 sticky top-0 z-40 bg-black md:px-10">
           
           <div className="flex items-center justify-between px-5 py-4">
-            <h1 className="text-2xl font-black text-white truncate tracking-tight md:hidden">
-              {settings.companyName || 'VTC Pro'}
-            </h1>
+            <div className="flex items-center gap-3">
+              <img src="/logo.jpg" alt="Logo AppVTC" className="w-8 h-8 rounded-lg shadow-[0_0_10px_rgba(0,255,135,0.4)] border border-[#00ff87]/30 md:hidden" />
+              <h1 className="text-2xl font-black text-white truncate tracking-tight md:hidden">
+                {settings.companyName || 'AppVTC'}
+              </h1>
+            </div>
             
             <div className="flex items-center gap-3 ml-auto">
               {settings.appMode === 'ai' && (
