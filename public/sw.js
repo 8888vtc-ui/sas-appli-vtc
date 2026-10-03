@@ -1,4 +1,4 @@
-const CACHE_NAME = 'vtc-pro-v23-tailwind-fix';
+const CACHE_NAME = 'vtc-pro-v24-traffic-revenue';
 
 self.addEventListener('install', (event) => {
   self.skipWaiting();

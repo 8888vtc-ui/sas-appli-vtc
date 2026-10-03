@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import {
-  Calendar, Wallet, LayoutGrid,
+  Calendar, TrendingUp, LayoutGrid, Users,
   Plus, Shield, Sparkles, LogOut
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
@@ -49,7 +49,7 @@ export default function Layout({ children, onNewTrip }: { children: React.ReactN
             <Calendar className="w-6 h-6" /> <span className="font-bold text-[17px]">Trajets</span>
           </button>
           <button onClick={() => navigate('/finances')} className={`flex items-center gap-4 px-4 py-4 rounded-xl transition-all ${isActive('/finances') ? 'bg-white/10 text-white' : 'text-slate-400 hover:bg-white/5'}`}>
-            <Wallet className="w-6 h-6" /> <span className="font-bold text-[17px]">Argent</span>
+            <TrendingUp className="w-6 h-6" /> <span className="font-bold text-[17px]">Chiffre d'affaires</span>
           </button>
           <button onClick={() => navigate('/outils')} className={`flex items-center gap-4 px-4 py-4 rounded-xl transition-all ${isActive('/outils') ? 'bg-white/10 text-white' : 'text-slate-400 hover:bg-white/5'}`}>
             <LayoutGrid className="w-6 h-6" /> <span className="font-bold text-[17px]">Réglages</span>
@@ -160,7 +160,7 @@ export default function Layout({ children, onNewTrip }: { children: React.ReactN
                 <span className="text-[11px] font-medium mt-1">Cockpit</span>
               </button>
               <button onClick={() => navigate('/crm')} className={`flex flex-col items-center justify-center min-h-[56px] min-w-[56px] transition-colors ${isActive('/crm') ? 'text-primary-container' : 'text-on-surface-variant hover:text-on-surface'}`}>
-                <Wallet className="w-7 h-7" />
+                <Users className="w-7 h-7" />
                 <span className="text-[11px] font-medium mt-1">Clients</span>
               </button>
             </div>
@@ -171,8 +171,8 @@ export default function Layout({ children, onNewTrip }: { children: React.ReactN
             
             <div className="flex items-center w-5/12 justify-around">
               <button onClick={() => navigate('/finances')} className={`flex flex-col items-center justify-center min-h-[56px] min-w-[56px] transition-colors ${isActive('/finances') ? 'text-primary-container' : 'text-on-surface-variant hover:text-on-surface'}`}>
-                <Sparkles className="w-7 h-7" />
-                <span className="text-[11px] font-medium mt-1">Finances</span>
+                <TrendingUp className="w-7 h-7" />
+                <span className="text-[11px] font-medium mt-1">Revenus</span>
               </button>
               <button onClick={() => navigate('/outils')} className={`flex flex-col items-center justify-center min-h-[56px] min-w-[56px] transition-colors ${isActive('/outils') ? 'text-primary-container' : 'text-on-surface-variant hover:text-on-surface'}`}>
                 <LayoutGrid className="w-7 h-7" />

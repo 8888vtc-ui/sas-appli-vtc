@@ -4,9 +4,11 @@ import {
   Play, CheckCircle2,
   FileText, Trash2, PenTool, MessageCircle,
   MoreHorizontal, Phone,
-  Navigation, Car, Banknote, Map, Sparkles
+  Navigation, Car, Sparkles
 } from 'lucide-react';
 import SignatureModal from '../components/SignatureModal';
+import TrafficWidget from '../components/dashboard/TrafficWidget';
+import RevenueWidget from '../components/dashboard/RevenueWidget';
 import GPSModal, { openNavigationApp } from '../components/GPSModal';
 import { showToast } from '../components/Toast';
 import { format, isToday, isTomorrow } from 'date-fns';
@@ -194,11 +196,6 @@ export default function Dashboard() {
       .sort((a, b) => new Date(a.date + 'T' + a.time).getTime() - new Date(b.date + 'T' + b.time).getTime())[0] || null;
   }, [trips]);
 
-  const todayCount = useMemo(() => {
-    const today = trips.filter(t => isToday(new Date(t.date + 'T00:00:00')));
-    return { n: today.length, rev: today.reduce((s, t) => s + (t.price || 0), 0) };
-  }, [trips]);
-
   const listTrips = useMemo(() => {
     let list = trips;
     if (tab === 'active') list = list.filter(t => t.status === 'scheduled' || t.status === 'in_progress');
@@ -211,53 +208,29 @@ export default function Dashboard() {
   }, [trips, tab]);
 
   return (
-    <div className="flex flex-col w-full gap-4 pb-24 text-[#e5e2e1]">
+    <div className="flex flex-col w-full gap-5 pb-24 md:pb-8 text-[#e5e2e1]">
       
-      {/* ─── HUD Telemetry Bar: Live Traffic & Daily Revenue ─── */}
-      <section className="grid grid-cols-2 gap-3 w-full">
-        {/* Live Traffic */}
-        <div className="flex items-center gap-3 p-3 rounded-xl shadow-md" style={{ backgroundColor: c.surfaceContainerHigh }}>
-          <div className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0 shadow-inner" style={{ backgroundColor: c.surfaceContainer, color: '#60ff98' }}>
-            <Map className="w-5 h-5" />
-          </div>
-          <div className="flex flex-col min-w-0">
-            <div className="flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full animate-pulse shrink-0" style={{ backgroundColor: c.primaryContainer }}></span>
-              <span className="text-[11px] font-bold uppercase tracking-wide truncate" style={{ color: c.primary }}>Trafic Paris</span>
-            </div>
-            <span className="text-[13px] font-normal truncate" style={{ color: c.onSurfaceVariant }}>Fluide • 14°C Sec</span>
-          </div>
-        </div>
-
-        {/* Daily Revenue */}
-        <div className="flex items-center gap-3 p-3 rounded-xl shadow-md" style={{ backgroundColor: c.surfaceContainerHigh }}>
-          <div className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0 shadow-inner" style={{ backgroundColor: c.surfaceContainer, color: c.primaryContainer }}>
-            <Banknote className="w-5 h-5" />
-          </div>
-          <div className="flex flex-col min-w-0">
-            <span className="text-[11px] font-bold uppercase tracking-wider truncate" style={{ color: c.onSurfaceVariant }}>Recette du Jour</span>
-            <div className="flex items-baseline gap-1">
-              <span className="text-[18px] sm:text-[22px] font-bold tracking-tight" style={{ color: c.primary }}>{formatEUR(todayCount.rev)}</span>
-              <span className="text-[11px] font-medium" style={{ color: c.onSurfaceVariant }}>· {todayCount.n} course(s)</span>
-            </div>
-          </div>
-        </div>
+      {/* ─── HUD : Trafic local géolocalisé & CA du jour ─── */}
+      <section className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full">
+        <TrafficWidget />
+        <RevenueWidget />
       </section>
 
       {/* ─── Co-Pilot AI Tactical Alert ─── */}
-      <aside className="w-full rounded-xl p-3 flex items-center justify-between shadow-sm" style={{ backgroundColor: c.surfaceContainerLow }}>
-        <div className="flex items-center gap-3 min-w-0">
-          <Sparkles className="w-5 h-5 shrink-0" style={{ color: '#adc6ff' }} />
-          <p className="text-[13px] font-normal truncate" style={{ color: c.onSurface }}>
-            {nextTrip ? `Prochaine course pour ${nextTrip.clientName} prévue à ${nextTrip.time}.` : "Aucune course imminente. Bonne route !"}
-          </p>
-        </div>
-        <span className="text-[11px] font-medium shrink-0 ml-2" style={{ color: '#d8e2ff' }}>Copilot</span>
+      <aside className="w-full rounded-2xl px-4 py-3 flex items-center gap-3 border border-[#adc6ff]/10" style={{ backgroundColor: c.surfaceContainerLow }}>
+        <Sparkles className="w-5 h-5 shrink-0" style={{ color: '#adc6ff' }} />
+        <p className="flex-1 min-w-0 text-[13px] leading-snug line-clamp-2" style={{ color: c.onSurface }}>
+          {nextTrip
+            ? <>Prochaine course : <strong>{nextTrip.clientName}</strong> · {fmtDate(nextTrip.date)} à <strong>{nextTrip.time}</strong></>
+            : "Aucune course imminente. Bonne route !"}
+        </p>
+        <span className="text-[10px] font-bold uppercase tracking-wider shrink-0 px-2 py-0.5 rounded-full bg-[#adc6ff]/10" style={{ color: '#d8e2ff' }}>Copilot</span>
       </aside>
 
+      <div className={`flex flex-col gap-5 ${nextTrip && tab === 'active' ? 'lg:grid lg:grid-cols-2 lg:items-start lg:gap-6' : ''}`}>
       {/* ─── MAJOR HERO CARD: Next Ride VIP ─── */}
       {nextTrip && tab === 'active' && (
-        <>
+        <div className="flex flex-col gap-3 lg:sticky lg:top-44">
           <article className="relative flex flex-col w-full rounded-xl p-4 shadow-xl overflow-hidden" style={{ backgroundColor: c.surfaceContainerHigh }}>
             <div className="absolute -top-12 -right-12 w-44 h-44 rounded-full blur-3xl pointer-events-none" style={{ backgroundColor: `${c.primaryContainer}1a` }}></div>
             
@@ -366,8 +339,10 @@ export default function Dashboard() {
               </div>
             </div>
           </section>
-        </>
+        </div>
       )}
+
+      <div className="flex flex-col gap-3 min-w-0">
 
       {/* ─── Interactive Feedback Pill ─── */}
       <AnimatePresence>
@@ -382,7 +357,7 @@ export default function Dashboard() {
       </AnimatePresence>
 
       {/* ─── Onglets ─── */}
-      <div className="flex rounded-xl p-1 mt-2" style={{ backgroundColor: c.surfaceContainerHigh }}>
+      <div className="flex rounded-xl p-1" style={{ backgroundColor: c.surfaceContainerHigh }}>
         {[
           { key: 'active' as const, label: 'À VENIR' },
           { key: 'history' as const, label: 'HISTORIQUE' },
@@ -400,7 +375,7 @@ export default function Dashboard() {
       </div>
 
       {/* ─── Upcoming Missions Today ─── */}
-      <section className="flex flex-col gap-3 w-full mt-2">
+      <section className="flex flex-col gap-3 w-full mt-1">
         <div className="flex items-center justify-between px-2">
           <h3 className="text-[18px] font-semibold tracking-tight" style={{ color: c.primary }}>
             {tab === 'active' ? 'Courses Suivantes' : 'Historique'}
@@ -500,6 +475,8 @@ export default function Dashboard() {
           })
         )}
       </section>
+      </div>
+      </div>
 
       {/* Modales */}
       {gpsModal && <GPSModal isOpen={gpsModal.isOpen} onClose={() => setGpsModal(null)} destination={gpsModal.destination} lat={gpsModal.lat} lng={gpsModal.lng} tripLabel={gpsModal.label} />}
