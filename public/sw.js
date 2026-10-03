@@ -1,4 +1,4 @@
-const CACHE_NAME = 'vtc-pro-v22-forgot-pwd';
+const CACHE_NAME = 'vtc-pro-v23-tailwind-fix';
 
 self.addEventListener('install', (event) => {
   self.skipWaiting();
