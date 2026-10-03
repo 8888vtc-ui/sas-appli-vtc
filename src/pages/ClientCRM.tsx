@@ -123,9 +123,9 @@ export default function ClientCRM() {
                   <Star className="w-5 h-5" style={{ color: c.tertiaryFixedDim, fill: c.tertiaryFixedDim }} />
                   <h2 className="text-[22px] font-bold tracking-tight" style={{ color: c.primary }}>Annuaire Clients VIP</h2>
                 </div>
-                <span className="text-[11px] font-medium mt-0.5" style={{ color: c.onSurfaceVariant }}>Portefeuille clientèle directe & conciergerie</span>
+                <span className="text-xs font-medium mt-0.5" style={{ color: c.onSurfaceVariant }}>Portefeuille clientèle directe & conciergerie</span>
               </div>
-              <span className="px-2 py-1 rounded-full text-[11px] font-medium shadow-sm flex items-center gap-1" style={{ backgroundColor: c.surfaceContainerHigh, color: '#00e478' }}>
+              <span className="px-2 py-1 rounded-full text-xs font-medium shadow-sm flex items-center gap-1" style={{ backgroundColor: c.surfaceContainerHigh, color: '#00e478' }}>
                 <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ backgroundColor: c.primaryContainer }}></span>
                 Direct Sync
               </span>
@@ -135,7 +135,7 @@ export default function ClientCRM() {
             <div className="grid grid-cols-2 gap-3 mt-1">
               <div className="p-4 rounded-xl shadow-lg flex flex-col justify-between" style={{ backgroundColor: c.surfaceContainerLow }}>
                 <div className="flex items-center justify-between" style={{ color: c.onSurfaceVariant }}>
-                  <span className="text-[11px] font-medium uppercase tracking-wider">Clients Fidèles</span>
+                  <span className="text-xs font-medium uppercase tracking-wider">Clients Fidèles</span>
                   <ShieldCheck className="w-5 h-5" style={{ color: c.secondary }} />
                 </div>
                 <div className="mt-2 flex items-baseline gap-1">
@@ -148,13 +148,13 @@ export default function ClientCRM() {
 
               <div className="p-4 rounded-xl shadow-lg flex flex-col justify-between" style={{ backgroundColor: c.surfaceContainerLow }}>
                 <div className="flex items-center justify-between" style={{ color: c.onSurfaceVariant }}>
-                  <span className="text-[11px] font-medium uppercase tracking-wider">Total CA Direct</span>
+                  <span className="text-xs font-medium uppercase tracking-wider">Total CA Direct</span>
                   <Wallet className="w-5 h-5" style={{ color: c.tertiaryFixedDim }} />
                 </div>
                 <div className="mt-2 flex items-baseline gap-1">
                   <span className="text-[22px] sm:text-[28px] font-bold tabular-nums tracking-tight" style={{ color: c.primaryContainer, lineHeight: 1.2 }}>{formatEUR(totalCA)}</span>
                 </div>
-                <div className="flex items-center gap-1 text-[11px] font-medium mt-2" style={{ color: c.onSurfaceVariant }}>
+                <div className="flex items-center gap-1 text-xs font-medium mt-2" style={{ color: c.onSurfaceVariant }}>
                   <span style={{ color: c.primaryContainer }}>↑</span>
                   <span>Moy. {clients.length ? Math.round(totalCA / clients.length) : 0} €/client</span>
                 </div>
@@ -198,7 +198,7 @@ export default function ClientCRM() {
                   {f.icon && filterType !== f.id && f.icon}
                   <span>{f.label}</span>
                   {f.count !== undefined && (
-                    <span className="text-[11px] px-1.5 py-0.5 rounded-full" style={{ backgroundColor: filterType === f.id ? 'rgba(0,113,56,0.15)' : c.surfaceContainerHigh }}>
+                    <span className="text-xs px-1.5 py-0.5 rounded-full" style={{ backgroundColor: filterType === f.id ? 'rgba(0,113,56,0.15)' : c.surfaceContainerHigh }}>
                       {f.count}
                     </span>
                   )}
@@ -209,7 +209,7 @@ export default function ClientCRM() {
             {/* ── Client List ── */}
             <div className="flex items-center justify-between pt-2">
               <span className="text-[13px] font-medium uppercase tracking-wider" style={{ color: c.onSurfaceVariant }}>Répertoire Clients</span>
-              <span className="text-[11px] font-medium" style={{ color: c.secondary }}>Classer par CA</span>
+              <span className="text-xs font-medium" style={{ color: c.secondary }}>Classer par CA</span>
             </div>
 
             <div className="flex flex-col gap-3">
@@ -236,14 +236,14 @@ export default function ClientCRM() {
                       <span className="text-[13px] font-normal truncate" style={{ color: c.onSurfaceVariant }}>
                         {client.trips.length} course(s)
                       </span>
-                      <span className="text-[11px] font-medium flex items-center gap-1 mt-0.5" style={{ color: c.outline }}>
+                      <span className="text-xs font-medium flex items-center gap-1 mt-0.5" style={{ color: c.outline }}>
                         <Phone className="w-3 h-3" /> {client.phone || 'Aucun numéro'}
                       </span>
                     </div>
                   </div>
                   <div className="flex flex-col items-end shrink-0">
                     <span className="text-[16px] font-bold tabular-nums" style={{ color: c.primaryContainer }}>{formatEUR(client.totalRevenue)}</span>
-                    <span className="text-[11px] font-medium mt-0.5" style={{ color: c.onSurfaceVariant }}>CA Total</span>
+                    <span className="text-xs font-medium mt-0.5" style={{ color: c.onSurfaceVariant }}>CA Total</span>
                     <ChevronRight className="w-5 h-5 mt-1" style={{ color: c.onSurfaceVariant }} />
                   </div>
                 </div>
@@ -285,7 +285,7 @@ export default function ClientCRM() {
                   </div>
                   <div className="flex flex-col min-w-0">
                     <h3 className="text-[18px] sm:text-[22px] font-bold truncate" style={{ color: c.primary }}>{selectedClient.name}</h3>
-                    <span className="text-[11px] font-medium truncate uppercase tracking-wider" style={{ color: c.tertiaryFixedDim }}>Client VIP</span>
+                    <span className="text-xs font-medium truncate uppercase tracking-wider" style={{ color: c.tertiaryFixedDim }}>Client VIP</span>
                     <a href={`tel:${selectedClient.phone}`} className="text-[13px] font-normal flex items-center gap-1 mt-0.5" style={{ color: c.onSurfaceVariant }}>
                       <Phone className="w-3.5 h-3.5" /> <span>{selectedClient.phone || 'Non renseigné'}</span>
                     </a>
@@ -293,16 +293,16 @@ export default function ClientCRM() {
                 </div>
                 {/* Revenue Callout */}
                 <div className="flex flex-col items-end shrink-0">
-                  <span className="text-[11px] font-medium uppercase" style={{ color: c.onSurfaceVariant }}>CA Direct</span>
+                  <span className="text-xs font-medium uppercase" style={{ color: c.onSurfaceVariant }}>CA Direct</span>
                   <span className="text-[22px] font-bold tabular-nums tracking-tight" style={{ color: c.primaryContainer }}>{formatEUR(selectedClient.totalRevenue)}</span>
-                  <span className="text-[11px] font-medium" style={{ color: c.onSurfaceVariant }}>{selectedClient.trips.length} course(s)</span>
+                  <span className="text-xs font-medium" style={{ color: c.onSurfaceVariant }}>{selectedClient.trips.length} course(s)</span>
                 </div>
               </div>
 
               {/* VIP Preference Grid */}
               <div className="mt-2 flex flex-col gap-2 p-3 rounded-lg" style={{ backgroundColor: c.surfaceContainerLowest }}>
                 <div className="flex items-center justify-between mb-1">
-                  <span className="text-[11px] font-medium uppercase tracking-wider flex items-center gap-1" style={{ color: c.onSurfaceVariant }}>
+                  <span className="text-xs font-medium uppercase tracking-wider flex items-center gap-1" style={{ color: c.onSurfaceVariant }}>
                     <Settings2 className="w-4 h-4" style={{ color: c.tertiaryFixedDim }} /> Protocole de Bord & Préférences
                   </span>
                 </div>
@@ -313,7 +313,7 @@ export default function ClientCRM() {
                       <Thermometer className="w-4 h-4" />
                     </div>
                     <div className="flex flex-col min-w-0">
-                      <span className="text-[11px] font-medium" style={{ color: c.onSurfaceVariant }}>Climatisation</span>
+                      <span className="text-xs font-medium" style={{ color: c.onSurfaceVariant }}>Climatisation</span>
                       <span className="text-[13px] font-medium truncate" style={{ color: c.primary }}>{selectedClient.preferences.climate || '-'}</span>
                     </div>
                   </div>
@@ -323,7 +323,7 @@ export default function ClientCRM() {
                       <Headphones className="w-4 h-4" />
                     </div>
                     <div className="flex flex-col min-w-0">
-                      <span className="text-[11px] font-medium" style={{ color: c.onSurfaceVariant }}>Musique</span>
+                      <span className="text-xs font-medium" style={{ color: c.onSurfaceVariant }}>Musique</span>
                       <span className="text-[13px] font-medium truncate" style={{ color: c.primary }}>{selectedClient.preferences.music || '-'}</span>
                     </div>
                   </div>
@@ -333,7 +333,7 @@ export default function ClientCRM() {
                       <VolumeX className="w-4 h-4" />
                     </div>
                     <div className="flex flex-col min-w-0">
-                      <span className="text-[11px] font-medium" style={{ color: c.onSurfaceVariant }}>Ambiance</span>
+                      <span className="text-xs font-medium" style={{ color: c.onSurfaceVariant }}>Ambiance</span>
                       <span className="text-[13px] font-medium truncate" style={{ color: c.primary }}>{selectedClient.preferences.atmosphere || '-'}</span>
                     </div>
                   </div>
@@ -343,7 +343,7 @@ export default function ClientCRM() {
                       <Coffee className="w-4 h-4" />
                     </div>
                     <div className="flex flex-col min-w-0">
-                      <span className="text-[11px] font-medium" style={{ color: c.onSurfaceVariant }}>Boisson</span>
+                      <span className="text-xs font-medium" style={{ color: c.onSurfaceVariant }}>Boisson</span>
                       <span className="text-[13px] font-medium truncate" style={{ color: c.primary }}>{selectedClient.preferences.drink || '-'}</span>
                     </div>
                   </div>

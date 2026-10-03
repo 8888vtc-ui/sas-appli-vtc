@@ -1,4 +1,4 @@
-const CACHE_NAME = 'vtc-pro-v24-traffic-revenue';
+const CACHE_NAME = 'vtc-pro-v25-cockpit-terrain';
 
 self.addEventListener('install', (event) => {
   self.skipWaiting();

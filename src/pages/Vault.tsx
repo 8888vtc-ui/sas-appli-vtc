@@ -94,7 +94,7 @@ export default function Vault({ controlMode = false }: { controlMode?: boolean }
                 <div className="text-2xl font-black text-emerald-400">
                   {roadControlCompliance.valid} / {roadControlCompliance.total}
                 </div>
-                <div className="text-[11px] text-slate-400">Pièces à bord valides</div>
+                <div className="text-xs text-slate-400">Pièces à bord valides</div>
               </div>
               <button
                 onClick={() => navigate('/coffre-fort')}
@@ -117,7 +117,7 @@ export default function Vault({ controlMode = false }: { controlMode?: boolean }
                 </h2>
               </div>
               {activeTrip && (
-                <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-blue-500/20 text-blue-300 font-bold border border-blue-500/30">
+                <span className="text-xs font-mono px-2 py-0.5 rounded bg-blue-500/20 text-blue-300 font-bold border border-blue-500/30">
                   {activeTrip.status === 'in_progress' ? '🚗 Course en cours' : '📅 Prochaine prise en charge'}
                 </span>
               )}
@@ -127,16 +127,16 @@ export default function Vault({ controlMode = false }: { controlMode?: boolean }
               <div className="space-y-3">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-black/40 p-4 rounded-xl border border-white/5 text-xs">
                   <div>
-                    <span className="text-slate-400 block text-[11px]">Client & Réservation :</span>
+                    <span className="text-slate-400 block text-xs">Client & Réservation :</span>
                     <span className="font-bold text-white text-sm">{activeTrip.clientName}</span>
-                    <div className="text-slate-300 text-[11px] mt-0.5">Tél : {activeTrip.clientPhone || 'Non renseigné'}</div>
-                    <div className="text-slate-400 text-[11px]">Horodatage commande : {activeTrip.bookingDateTime || `${activeTrip.date} ${activeTrip.time}`}</div>
+                    <div className="text-slate-300 text-xs mt-0.5">Tél : {activeTrip.clientPhone || 'Non renseigné'}</div>
+                    <div className="text-slate-400 text-xs">Horodatage commande : {activeTrip.bookingDateTime || `${activeTrip.date} ${activeTrip.time}`}</div>
                   </div>
                   <div>
-                    <span className="text-slate-400 block text-[11px]">Véhicule & Exploitant :</span>
+                    <span className="text-slate-400 block text-xs">Véhicule & Exploitant :</span>
                     <span className="font-semibold text-white">{settings.companyName} (EVTC: {settings.registreVTC || 'EVTC060240098'})</span>
-                    <div className="text-slate-300 text-[11px] mt-0.5">Immatriculation : <span className="font-mono font-bold text-white">{settings.vehiclePlate}</span></div>
-                    <div className="text-slate-300 text-[11px]">Chauffeur : {settings.driverName} (Carte : {settings.driverCardNumber})</div>
+                    <div className="text-slate-300 text-xs mt-0.5">Immatriculation : <span className="font-mono font-bold text-white">{settings.vehiclePlate}</span></div>
+                    <div className="text-slate-300 text-xs">Chauffeur : {settings.driverName} (Carte : {settings.driverCardNumber})</div>
                   </div>
                   <div className="sm:col-span-2 pt-2 border-t border-white/10">
                     <div className="flex items-center justify-between text-slate-300">
@@ -203,7 +203,7 @@ export default function Vault({ controlMode = false }: { controlMode?: boolean }
               <h3 className="text-sm font-black uppercase tracking-wider text-emerald-400 flex items-center gap-2">
                 <ShieldCheck className="w-4 h-4" /> 2. Pièces Justificatives Obligatoires à Bord
               </h3>
-              <span className="text-[11px] text-slate-400">Forces de l'ordre (Police / Boers)</span>
+              <span className="text-xs text-slate-400">Forces de l'ordre (Police / Boers)</span>
             </div>
 
             <div className="grid gap-2.5">
@@ -243,16 +243,16 @@ export default function Vault({ controlMode = false }: { controlMode?: boolean }
                         <div className="flex items-center gap-2 flex-wrap">
                           <span className="font-bold text-sm text-white">{doc.name}</span>
                           {doc.isRequired && (
-                            <span className="text-[10px] uppercase font-bold text-red-400 bg-red-500/10 px-1.5 py-0.5 rounded">
+                            <span className="text-xs uppercase font-bold text-red-400 bg-red-500/10 px-1.5 py-0.5 rounded">
                               Obligatoire
                             </span>
                           )}
                         </div>
                         {doc.legalBasis && (
-                          <div className="text-[11px] text-slate-400 font-mono mt-0.5 truncate">{doc.legalBasis}</div>
+                          <div className="text-xs text-slate-400 font-mono mt-0.5 truncate">{doc.legalBasis}</div>
                         )}
                         <div
-                          className="text-[11px] mt-0.5 font-medium truncate"
+                          className="text-xs mt-0.5 font-medium truncate"
                           style={{
                             color: !doc.fileData
                               ? '#ef4444'
@@ -484,7 +484,7 @@ export default function Vault({ controlMode = false }: { controlMode?: boolean }
                   <div className="flex-1 min-w-0 flex items-center gap-2">
                      <span className="text-[17px] text-white tracking-tight truncate">{doc.name}</span>
                      {doc.isRequired && (
-                       <span className="text-[10px] font-bold text-red-500 uppercase tracking-wider bg-red-500/10 px-1.5 py-0.5 rounded shrink-0 hidden sm:inline-block">Obligatoire</span>
+                       <span className="text-xs font-bold text-red-500 uppercase tracking-wider bg-red-500/10 px-1.5 py-0.5 rounded shrink-0 hidden sm:inline-block">Obligatoire</span>
                      )}
                   </div>
                 </div>

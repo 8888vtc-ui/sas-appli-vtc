@@ -26,7 +26,7 @@ export default function TrafficWidget() {
       id="traffic-widget"
       onClick={openLiveMap}
       onKeyDown={e => e.key === 'Enter' && openLiveMap()}
-      className="group relative overflow-hidden rounded-2xl p-4 bg-[#1c1b1b] border border-white/5 hover:border-white/10 transition-all cursor-pointer active:scale-[0.99]"
+      className="group relative overflow-hidden rounded-2xl p-4 bg-[#161616] border border-white/5 hover:border-white/10 transition-all cursor-pointer active:scale-[0.99]"
     >
       <div
         className="absolute -top-10 -right-10 w-32 h-32 rounded-full blur-3xl pointer-events-none opacity-25 transition-colors"
@@ -39,11 +39,11 @@ export default function TrafficWidget() {
             <MapPin className="w-5 h-5" style={{ color: lvl.color }} />
           </div>
           <div className="min-w-0">
-            <p className="text-[11px] font-bold uppercase tracking-wider text-[#b9cbb9]">Trafic local</p>
+            <p className="text-xs font-bold uppercase tracking-wider text-[#b4b4b4]">Trafic local</p>
             <p className={`text-[16px] font-bold text-white truncate ${loading ? 'animate-pulse' : ''}`}>
               {t.zone}
               {t.region && t.region !== t.zone && (
-                <span className="font-normal text-[#b9cbb9]"> · {t.region}</span>
+                <span className="font-normal text-[#b4b4b4]"> · {t.region}</span>
               )}
             </p>
           </div>
@@ -53,7 +53,7 @@ export default function TrafficWidget() {
           id="traffic-refresh"
           aria-label="Actualiser le trafic"
           onClick={e => { e.stopPropagation(); t.refresh(); }}
-          className="w-9 h-9 rounded-full flex items-center justify-center shrink-0 bg-white/5 hover:bg-white/10 text-[#b9cbb9]"
+          className="w-9 h-9 rounded-full flex items-center justify-center shrink-0 bg-white/5 hover:bg-white/10 text-[#b4b4b4]"
         >
           <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
         </button>
@@ -80,18 +80,18 @@ export default function TrafficWidget() {
         </div>
 
         {t.temperature != null && (
-          <span className="inline-flex items-center gap-1 text-[12px] text-[#b9cbb9]">
+          <span className="inline-flex items-center gap-1 text-[12px] text-[#b4b4b4]">
             <CloudSun className="w-3.5 h-3.5" /> {t.temperature}°C · {t.weatherLabel}
           </span>
         )}
         {t.currentSpeed != null && (
-          <span className="inline-flex items-center gap-1 text-[12px] text-[#b9cbb9]">
+          <span className="inline-flex items-center gap-1 text-[12px] text-[#b4b4b4]">
             <Gauge className="w-3.5 h-3.5" /> {t.currentSpeed} km/h
           </span>
         )}
       </div>
 
-      <div className="relative mt-2 flex items-center justify-between text-[11px] text-[#b9cbb9]/70">
+      <div className="relative mt-2 flex items-center justify-between text-xs text-[#b4b4b4]/70">
         <span>
           {t.status === 'denied'
             ? 'Localisation désactivée · zone par défaut'

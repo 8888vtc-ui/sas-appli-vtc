@@ -1,0 +1,19 @@
+import { useEffect, useState } from 'react';
+
+/** Horloge réactive : renvoie Date.now() rafraîchi toutes les `intervalMs` (et au retour au premier plan). */
+export function useNow(intervalMs = 30_000) {
+  const [now, setNow] = useState(() => Date.now());
+
+  useEffect(() => {
+    const tick = () => setNow(Date.now());
+    const id = window.setInterval(tick, intervalMs);
+    const onVisible = () => { if (document.visibilityState === 'visible') tick(); };
+    document.addEventListener('visibilitychange', onVisible);
+    return () => {
+      window.clearInterval(id);
+      document.removeEventListener('visibilitychange', onVisible);
+    };
+  }, [intervalMs]);
+
+  return now;
+}

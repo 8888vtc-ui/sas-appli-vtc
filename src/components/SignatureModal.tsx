@@ -277,7 +277,7 @@ export default function SignatureModal({
                   <div className="absolute bottom-5 left-8 right-8 flex items-center gap-2 pointer-events-none opacity-30 select-none">
                     <span className="text-sm font-bold text-slate-600 font-mono">✕</span>
                     <div className="flex-1 border-b border-dashed border-slate-600"></div>
-                    <span className="text-[10px] text-slate-600 uppercase font-semibold">Signez ici</span>
+                    <span className="text-xs text-slate-600 uppercase font-semibold">Signez ici</span>
                   </div>
                 </div>
               )}
@@ -303,7 +303,7 @@ export default function SignatureModal({
 
             {/* Footer notice */}
             <div className="px-6 pb-6 pt-0 text-center">
-              <p className="text-[11px] text-slate-400">
+              <p className="text-xs text-slate-400">
                 La signature sera automatiquement apposée sur le <strong>Bon de Commande</strong> et le <strong>Contrat MAD</strong> (Arrêté du 6 août 2025).
               </p>
             </div>

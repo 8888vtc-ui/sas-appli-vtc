@@ -140,7 +140,7 @@ export default function ExpenseReports() {
         ].map(s => (
           <div key={s.label} className="glass rounded-xl sm:rounded-2xl p-3 sm:p-5">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-[10px] sm:text-xs font-medium text-slate-400">{s.label}</span>
+              <span className="text-xs sm:text-xs font-medium text-slate-400">{s.label}</span>
               <s.icon className="w-3.5 h-3.5 sm:w-4 sm:h-4" style={{ color: s.color }} />
             </div>
             <p className="text-lg sm:text-2xl font-bold text-white">{s.value}</p>
@@ -244,23 +244,23 @@ export default function ExpenseReports() {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">
                       <h3 className="text-sm sm:text-base font-bold text-white truncate">{exp.description}</h3>
-                      <span className="text-[9px] sm:text-[10px] px-1.5 py-0.5 rounded-full font-medium shrink-0"
+                      <span className="text-xs sm:text-xs px-1.5 py-0.5 rounded-full font-medium shrink-0"
                         style={{ background: `${cat.color}15`, color: cat.color }}>
                         {cat.label}
                       </span>
                       {exp.tvaDeductible && (
-                        <span className="text-[9px] px-1.5 py-0.5 rounded-full font-medium bg-emerald-500/15 text-emerald-400 shrink-0">
+                        <span className="text-xs px-1.5 py-0.5 rounded-full font-medium bg-emerald-500/15 text-emerald-400 shrink-0">
                           TVA {exp.tvaRate}%
                         </span>
                       )}
                       {exp.receiptPhoto && (
                         <button onClick={() => setPreviewReceipt({ name: exp.description, data: exp.receiptPhoto! })}
-                          className="text-[9px] px-1.5 py-0.5 rounded-full font-medium bg-blue-500/15 text-blue-400 shrink-0 flex items-center gap-1">
+                          className="text-xs px-1.5 py-0.5 rounded-full font-medium bg-blue-500/15 text-blue-400 shrink-0 flex items-center gap-1">
                           <Camera className="w-3 h-3" /> Justif.
                         </button>
                       )}
                     </div>
-                    <div className="flex items-center gap-2 text-[10px] sm:text-xs mt-1 text-slate-400">
+                    <div className="flex items-center gap-2 text-xs sm:text-xs mt-1 text-slate-400">
                       <span>{format(new Date(exp.date), 'dd MMM yyyy', { locale: fr })}</span>
                       {exp.tvaDeductible && <span>TVA: {formatEUR(exp.tvaAmount)}</span>}
                       {exp.notes && <span className="truncate">• {exp.notes}</span>}
@@ -272,8 +272,8 @@ export default function ExpenseReports() {
                     <p className="text-base sm:text-lg font-bold text-red-400">-{formatEUR(exp.amount)}</p>
                     {confirmDeleteId === exp.id ? (
                       <div className="flex gap-1">
-                        <button onClick={() => { deleteExpense(exp.id); setConfirmDeleteId(null); }} className="px-2 py-1 rounded-lg bg-red-500 text-white text-[10px] font-bold">Oui</button>
-                        <button onClick={() => setConfirmDeleteId(null)} className="px-2 py-1 rounded-lg bg-white/10 text-white text-[10px]">Non</button>
+                        <button onClick={() => { deleteExpense(exp.id); setConfirmDeleteId(null); }} className="px-2 py-1 rounded-lg bg-red-500 text-white text-xs font-bold">Oui</button>
+                        <button onClick={() => setConfirmDeleteId(null)} className="px-2 py-1 rounded-lg bg-white/10 text-white text-xs">Non</button>
                       </div>
                     ) : (
                       <button onClick={() => setConfirmDeleteId(exp.id)} className="p-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 transition-all">
@@ -340,14 +340,14 @@ export default function ExpenseReports() {
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-bold text-white truncate">{ml.description || 'Trajet'}</p>
-                    <p className="text-[10px] sm:text-xs text-slate-400 mt-0.5">
+                    <p className="text-xs sm:text-xs text-slate-400 mt-0.5">
                       {format(new Date(ml.date), 'dd MMM yyyy', { locale: fr })} · {ml.startKm.toLocaleString()} → {ml.endKm.toLocaleString()} km
                     </p>
                   </div>
                   <div className="text-right shrink-0 flex items-center gap-2">
                     <div>
                       <p className="text-base font-bold text-white">{ml.distance} km</p>
-                      <p className={`text-[10px] font-semibold ${ml.purpose === 'professional' ? 'text-blue-400' : 'text-slate-500'}`}>
+                      <p className={`text-xs font-semibold ${ml.purpose === 'professional' ? 'text-blue-400' : 'text-slate-500'}`}>
                         {ml.purpose === 'professional' ? 'Pro' : 'Perso'}
                       </p>
                     </div>
@@ -374,19 +374,19 @@ export default function ExpenseReports() {
               </h3>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
                 <div className="bg-white/5 rounded-xl p-3 text-center">
-                  <p className="text-[10px] text-slate-400 mb-1">Nb Dépenses</p>
+                  <p className="text-xs text-slate-400 mb-1">Nb Dépenses</p>
                   <p className="text-xl font-bold text-white">{expenses.length}</p>
                 </div>
                 <div className="bg-white/5 rounded-xl p-3 text-center">
-                  <p className="text-[10px] text-slate-400 mb-1">Total Dépenses</p>
+                  <p className="text-xs text-slate-400 mb-1">Total Dépenses</p>
                   <p className="text-xl font-bold text-red-400">{formatEUR(stats.totalExpenses)}</p>
                 </div>
                 <div className="bg-white/5 rounded-xl p-3 text-center">
-                  <p className="text-[10px] text-slate-400 mb-1">TVA Récup.</p>
+                  <p className="text-xs text-slate-400 mb-1">TVA Récup.</p>
                   <p className="text-xl font-bold text-emerald-400">{formatEUR(stats.totalTVA)}</p>
                 </div>
                 <div className="bg-white/5 rounded-xl p-3 text-center">
-                  <p className="text-[10px] text-slate-400 mb-1">Justificatifs</p>
+                  <p className="text-xs text-slate-400 mb-1">Justificatifs</p>
                   <p className="text-xl font-bold text-blue-400">{stats.withReceipt}/{expenses.length}</p>
                 </div>
               </div>
@@ -406,7 +406,7 @@ export default function ExpenseReports() {
                           className="h-full rounded-full" style={{ background: cat.color }} />
                       </div>
                       <span className="text-xs font-bold text-white w-20 text-right">{formatEUR(total)}</span>
-                      <span className="text-[10px] text-slate-500 w-10 text-right">{pct.toFixed(0)}%</span>
+                      <span className="text-xs text-slate-500 w-10 text-right">{pct.toFixed(0)}%</span>
                     </div>
                   );
                 })}
@@ -422,14 +422,14 @@ export default function ExpenseReports() {
               </h4>
               <div className="grid grid-cols-2 gap-3">
                 <div className="bg-blue-500/10 rounded-xl p-3 border border-blue-500/20">
-                  <p className="text-[10px] text-blue-400 mb-1 font-semibold">Km Pro Annuels</p>
+                  <p className="text-xs text-blue-400 mb-1 font-semibold">Km Pro Annuels</p>
                   <p className="text-xl font-bold text-white">{stats.proKm.toLocaleString()} km</p>
-                  <p className="text-[10px] text-slate-400 mt-1">Barème {fiscalPower.toUpperCase()} fiscaux</p>
+                  <p className="text-xs text-slate-400 mt-1">Barème {fiscalPower.toUpperCase()} fiscaux</p>
                 </div>
                 <div className="bg-emerald-500/10 rounded-xl p-3 border border-emerald-500/20">
-                  <p className="text-[10px] text-emerald-400 mb-1 font-semibold">Indemnité Calculée</p>
+                  <p className="text-xs text-emerald-400 mb-1 font-semibold">Indemnité Calculée</p>
                   <p className="text-xl font-bold text-emerald-400">{formatEUR(stats.mileageAllowance)}</p>
-                  <p className="text-[10px] text-slate-400 mt-1">Déductible fiscalement</p>
+                  <p className="text-xs text-slate-400 mt-1">Déductible fiscalement</p>
                 </div>
               </div>
             </div>
@@ -481,7 +481,7 @@ export default function ExpenseReports() {
                   <div className="grid grid-cols-3 sm:grid-cols-4 gap-1.5">
                     {Object.entries(EXPENSE_CATEGORIES).slice(0, 8).map(([key, { label, icon, color }]) => (
                       <button key={key} type="button" onClick={() => setExpForm({ ...expForm, category: key as ExpenseCategory })}
-                        className={`flex items-center gap-1 px-2 py-2 rounded-xl text-[10px] sm:text-xs font-medium transition-all ${expForm.category === key ? 'border-2' : 'bg-white/5 border border-transparent text-slate-400'}`}
+                        className={`flex items-center gap-1 px-2 py-2 rounded-xl text-xs sm:text-xs font-medium transition-all ${expForm.category === key ? 'border-2' : 'bg-white/5 border border-transparent text-slate-400'}`}
                         style={expForm.category === key ? { borderColor: color, color, background: `${color}10` } : {}}>
                         <span>{icon}</span><span className="truncate">{label}</span>
                       </button>

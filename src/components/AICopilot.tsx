@@ -172,7 +172,7 @@ Demande de l'utilisateur : ${userMsg}
             animate={{ y: 0 }}
             exit={{ y: '100%' }}
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-            className="fixed bottom-0 left-0 right-0 z-[110] flex flex-col backdrop-blur-2xl rounded-t-[24px] shadow-[0_-12px_48px_rgba(0,0,0,0.85)] overflow-hidden max-w-2xl mx-auto h-[90vh]"
+            className="fixed bottom-0 left-0 right-0 z-[110] flex flex-col backdrop-blur-2xl rounded-t-[24px] shadow-[0_-12px_48px_rgba(0,0,0,0.85)] overflow-hidden max-w-2xl mx-auto h-[90dvh] pb-[env(safe-area-inset-bottom,0px)]"
             style={{ backgroundColor: 'rgba(42, 42, 42, 0.95)' }}
           >
             {/* Lueur subtile diffuse Indigo / Violette en haut */}
@@ -197,11 +197,11 @@ Demande de l'utilisateur : ${userMsg}
                   <div className="flex flex-col min-w-0">
                     <div className="flex items-center gap-2">
                       <h2 className="text-[18px] font-bold tracking-tight" style={{ color: c.primary }}>Copilote IA Gemini</h2>
-                      <span className="px-1.5 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider" style={{ backgroundColor: 'rgba(5,102,217,0.3)', color: c.secondaryFixed }}>Pro</span>
+                      <span className="px-1.5 py-0.5 rounded-md text-xs font-bold uppercase tracking-wider" style={{ backgroundColor: 'rgba(5,102,217,0.3)', color: c.secondaryFixed }}>Pro</span>
                     </div>
                     <div className="flex items-center gap-1.5 mt-0.5">
                       <Mic className="w-3.5 h-3.5" style={{ color: c.primaryContainer }} />
-                      <span className="text-[11px] font-medium" style={{ color: c.primaryContainer }}>À l'écoute en mains libres</span>
+                      <span className="text-xs font-medium" style={{ color: c.primaryContainer }}>À l'écoute en mains libres</span>
                     </div>
                   </div>
                 </div>
@@ -215,15 +215,15 @@ Demande de l'utilisateur : ${userMsg}
                 <div className="flex items-center gap-2 w-max">
                   <button onClick={() => setInput("Génère un bon de commande de 50€ pour M. Martin ce soir 22h à Gare de Lyon.")} className="flex items-center gap-1.5 px-3.5 py-2 rounded-full transition-all active:scale-95 shadow-sm" style={{ backgroundColor: c.surfaceContainer, color: c.onSurface }}>
                     <Receipt className="w-4 h-4" style={{ color: c.secondaryContainer }} />
-                    <span className="text-[11px] font-medium whitespace-nowrap">Bon de commande 50€ M. Martin</span>
+                    <span className="text-xs font-medium whitespace-nowrap">Bon de commande 50€ M. Martin</span>
                   </button>
                   <button onClick={() => setInput("Calcule moi la rentabilité de la journée.")} className="flex items-center gap-1.5 px-3.5 py-2 rounded-full transition-all active:scale-95 shadow-sm" style={{ backgroundColor: c.surfaceContainer, color: c.onSurface }}>
                     <TrendingUp className="w-4 h-4" style={{ color: c.tertiaryFixedDim }} />
-                    <span className="text-[11px] font-medium whitespace-nowrap">Calculer rentabilité du jour</span>
+                    <span className="text-xs font-medium whitespace-nowrap">Calculer rentabilité du jour</span>
                   </button>
                   <button onClick={() => setInput("Rédige un message pour dire au passager du vol AF1234 que je l'attends au terminal.")} className="flex items-center gap-1.5 px-3.5 py-2 rounded-full transition-all active:scale-95 shadow-sm" style={{ backgroundColor: c.surfaceContainer, color: c.onSurface }}>
                     <Plane className="w-4 h-4" style={{ color: c.secondaryFixed }} />
-                    <span className="text-[11px] font-medium whitespace-nowrap">Rappeler vol AF1234 CDG</span>
+                    <span className="text-xs font-medium whitespace-nowrap">Rappeler vol AF1234 CDG</span>
                   </button>
                 </div>
               </div>
@@ -237,7 +237,7 @@ Demande de l'utilisateur : ${userMsg}
                       <>
                         <div className="flex items-center gap-1.5 mr-1">
                           <Volume2 className="w-3.5 h-3.5" style={{ color: c.onSurfaceVariant }} />
-                          <span className="text-[11px] font-medium" style={{ color: c.onSurfaceVariant }}>Dicté à l'instant</span>
+                          <span className="text-xs font-medium" style={{ color: c.onSurfaceVariant }}>Dicté à l'instant</span>
                         </div>
                         <div className="p-3.5 rounded-2xl rounded-tr-[4px] shadow-md" style={{ backgroundColor: c.surfaceContainer }}>
                           <p className="text-[15px] leading-snug" style={{ color: c.onSurface }}>{msg.text}</p>
@@ -247,7 +247,7 @@ Demande de l'utilisateur : ${userMsg}
                       <>
                         <div className="flex items-center gap-1.5 ml-1">
                           <Sparkles className="w-3.5 h-3.5" style={{ color: c.secondaryFixed }} />
-                          <span className="text-[11px] font-medium" style={{ color: c.secondaryFixed }}>Assistant Exécutif Gemini</span>
+                          <span className="text-xs font-medium" style={{ color: c.secondaryFixed }}>Assistant Exécutif Gemini</span>
                         </div>
                         <div className="p-4 rounded-2xl rounded-tl-[4px] shadow-lg space-y-3 w-full" style={{ backgroundColor: 'rgba(14, 14, 14, 0.9)' }}>
                           <p className="text-[15px] leading-relaxed" style={{ color: c.primary }} dangerouslySetInnerHTML={{ __html: msg.text.replace(/\*\*(.*?)\*\*/g, `<span style="font-weight: 700; color: ${c.secondaryFixed}">$1</span>`) }} />
@@ -262,20 +262,20 @@ Demande de l'utilisateur : ${userMsg}
                                   </div>
                                   <div className="flex flex-col">
                                     <span className="text-[13px] font-medium" style={{ color: c.onSurface }}>Bon_Commande_{msg.pdfData.clientName.replace(/\s+/g,'')}.pdf</span>
-                                    <span className="text-[11px] font-medium" style={{ color: c.onSurfaceVariant }}>Prêt pour signature & validation</span>
+                                    <span className="text-xs font-medium" style={{ color: c.onSurfaceVariant }}>Prêt pour signature & validation</span>
                                   </div>
                                 </div>
-                                <span className="px-2 py-0.5 rounded-full text-[11px] font-bold" style={{ backgroundColor: 'rgba(0, 255, 135, 0.2)', color: c.primaryContainer }}>
+                                <span className="px-2 py-0.5 rounded-full text-xs font-bold" style={{ backgroundColor: 'rgba(0, 255, 135, 0.2)', color: c.primaryContainer }}>
                                   {formatEUR(msg.pdfData.price)}
                                 </span>
                               </div>
                               {/* ACTIONS RAPIDES */}
                               <div className="grid grid-cols-2 gap-2 pt-1">
-                                <button onClick={() => handleShareWhatsApp(msg.pdfData)} className="min-h-[44px] px-3 rounded-xl font-bold text-[11px] flex items-center justify-center gap-1.5 shadow-[0_0_16px_rgba(0,255,135,0.3)] hover:brightness-110 active:scale-95 transition-all" style={{ backgroundColor: c.primaryContainer, color: c.onPrimaryContainer }}>
+                                <button onClick={() => handleShareWhatsApp(msg.pdfData)} className="min-h-[44px] px-3 rounded-xl font-bold text-xs flex items-center justify-center gap-1.5 shadow-[0_0_16px_rgba(0,255,135,0.3)] hover:brightness-110 active:scale-95 transition-all" style={{ backgroundColor: c.primaryContainer, color: c.onPrimaryContainer }}>
                                   <Send className="w-4 h-4" />
                                   <span>WhatsApp Client</span>
                                 </button>
-                                <button onClick={() => handleDownloadPDF(msg.pdfData)} className="min-h-[44px] px-3 rounded-xl font-bold text-[11px] flex items-center justify-center gap-1.5 active:scale-95 transition-all" style={{ backgroundColor: c.surfaceContainerHigh, color: c.onSurface }}>
+                                <button onClick={() => handleDownloadPDF(msg.pdfData)} className="min-h-[44px] px-3 rounded-xl font-bold text-xs flex items-center justify-center gap-1.5 active:scale-95 transition-all" style={{ backgroundColor: c.surfaceContainerHigh, color: c.onSurface }}>
                                   <Download className="w-4 h-4" />
                                   <span>Télécharger PDF</span>
                                 </button>
@@ -293,7 +293,7 @@ Demande de l'utilisateur : ${userMsg}
                   <div className="flex flex-col items-start self-start max-w-[92%] space-y-1">
                     <div className="flex items-center gap-1.5 ml-1">
                       <Sparkles className="w-3.5 h-3.5" style={{ color: c.secondaryFixed }} />
-                      <span className="text-[11px] font-medium" style={{ color: c.secondaryFixed }}>Assistant Exécutif Gemini réfléchit...</span>
+                      <span className="text-xs font-medium" style={{ color: c.secondaryFixed }}>Assistant Exécutif Gemini réfléchit...</span>
                     </div>
                     <div className="p-4 rounded-2xl rounded-tl-[4px] shadow-lg flex items-center gap-1.5" style={{ backgroundColor: 'rgba(14, 14, 14, 0.9)' }}>
                       <motion.div animate={{ y: [0, -4, 0] }} transition={{ duration: 0.6, repeat: Infinity, delay: 0 }} className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: c.secondaryFixed }} />
@@ -344,7 +344,7 @@ Demande de l'utilisateur : ${userMsg}
                 {/* Mini-statut de sécurité routière */}
                 <div className="mt-2.5 flex items-center justify-center gap-1.5 opacity-80" style={{ color: c.onSurfaceVariant }}>
                   <Lock className="w-3.5 h-3.5" />
-                  <span className="text-[11px] font-medium">Conforme conduite sécurisée mains libres • Annulation bruit</span>
+                  <span className="text-xs font-medium">Conforme conduite sécurisée mains libres • Annulation bruit</span>
                 </div>
               </div>
 

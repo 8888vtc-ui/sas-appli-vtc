@@ -127,7 +127,7 @@ export default function Invoices() {
                   <div className="min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">
                       <span className="font-bold text-white font-mono text-base">{inv.invoiceNumber}</span>
-                      <span className="text-[10px] px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider"
+                      <span className="text-xs px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider"
                         style={{ background: isPaid ? 'rgba(34,197,94,0.15)' : 'rgba(245,158,11,0.15)',
                           color: isPaid ? '#22c55e' : '#f59e0b',
                           border: `1px solid ${isPaid ? 'rgba(34,197,94,0.3)' : 'rgba(245,158,11,0.3)'}` }}>

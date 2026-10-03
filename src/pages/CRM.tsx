@@ -231,7 +231,7 @@ export default function CRM() {
         ].map(s => (
           <div key={s.label} className="glass rounded-xl sm:rounded-2xl p-3 sm:p-5">
             <div className="flex items-center justify-between mb-3">
-              <span className="text-[10px] sm:text-xs font-medium text-slate-400">{s.label}</span>
+              <span className="text-xs sm:text-xs font-medium text-slate-400">{s.label}</span>
               <s.icon className="w-4 h-4" style={{ color: s.color }} />
             </div>
             <p className="text-lg sm:text-2xl font-bold text-white">{s.value}</p>
@@ -325,12 +325,12 @@ export default function CRM() {
                     <div className="min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
                         <h3 className="text-base font-bold text-white truncate">{contact.name}</h3>
-                        <span className="text-[10px] px-2 py-0.5 rounded-full font-medium"
+                        <span className="text-xs px-2 py-0.5 rounded-full font-medium"
                           style={{ background: contact.type === 'client' ? 'rgba(34,197,94,0.15)' : 'rgba(139,92,246,0.15)',
                             color: contact.type === 'client' ? '#22c55e' : '#8b5cf6' }}>
                           {contact.type === 'client' ? 'Client' : 'Prospect'}
                         </span>
-                        <span className="text-[10px] px-2 py-0.5 rounded-full font-medium" style={{ background: `${cat.color}15`, color: cat.color }}>
+                        <span className="text-xs px-2 py-0.5 rounded-full font-medium" style={{ background: `${cat.color}15`, color: cat.color }}>
                           {cat.label}
                         </span>
                       </div>
@@ -347,19 +347,19 @@ export default function CRM() {
                     {contact.totalTrips > 0 && (
                       <div className="text-center min-w-[45px]">
                         <p className="text-base font-bold text-white">{contact.totalTrips}</p>
-                        <p className="text-[10px] text-slate-500">courses</p>
+                        <p className="text-xs text-slate-500">courses</p>
                       </div>
                     )}
                     {contact.totalRevenue > 0 && (
                       <div className="text-center min-w-[55px]">
                         <p className="text-base font-bold text-emerald-400">{contact.totalRevenue.toFixed(0)}€</p>
-                        <p className="text-[10px] text-slate-500">CA</p>
+                        <p className="text-xs text-slate-500">CA</p>
                       </div>
                     )}
                     {daysSince !== null && (
                       <div className="text-center min-w-[55px]">
                         <p className="text-base font-bold" style={{ color: getDaysColor(daysSince) }}>{daysSince}j</p>
-                        <p className="text-[10px] text-slate-500">dernier contact</p>
+                        <p className="text-xs text-slate-500">dernier contact</p>
                       </div>
                     )}
 

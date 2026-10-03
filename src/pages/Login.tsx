@@ -120,7 +120,7 @@ export default function Login() {
               width: 20, height: 20, borderRadius: 10,
               background: '#ff453a', color: '#fff',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontWeight: 800, fontSize: 11, flexShrink: 0,
+              fontWeight: 800, fontSize: 12, flexShrink: 0,
             }}>!</div>
             <span>{error}</span>
           </div>
@@ -228,7 +228,7 @@ export default function Login() {
           </Link>
         </p>
 
-        <p style={{ textAlign: 'center', marginTop: 18, fontSize: 11, color: '#636366' }}>
+        <p style={{ textAlign: 'center', marginTop: 18, fontSize: 12, color: '#636366' }}>
           VTC Pro Console • Réalisé par <span style={{ color: '#8e8e93', fontWeight: 600 }}>David Chemla</span>
         </p>
       </motion.div>

@@ -211,12 +211,12 @@ export default function Settings() {
                         <div className="text-white font-bold text-sm flex items-center gap-2">
                           {d.fullName}
                           {isPrimary && (
-                            <span className="text-[10px] bg-blue-500/20 text-blue-400 px-2 py-0.5 rounded-full font-semibold border border-blue-500/30">
+                            <span className="text-xs bg-blue-500/20 text-blue-400 px-2 py-0.5 rounded-full font-semibold border border-blue-500/30">
                               Principal
                             </span>
                           )}
                         </div>
-                        <div className="text-[11px] text-slate-400 capitalize">
+                        <div className="text-xs text-slate-400 capitalize">
                           {d.role === 'admin' ? 'Administrateur / Gérant' : 'Chauffeur VTC'}
                         </div>
                       </div>
@@ -225,18 +225,18 @@ export default function Settings() {
                     {drivers.length > 1 && !isPrimary && (
                       driverToDelete === d.id ? (
                         <div className="flex items-center gap-1.5 bg-red-500/20 p-1 rounded-xl border border-red-500/30">
-                          <span className="text-[10px] text-red-300 font-bold pl-1">Sûr ?</span>
+                          <span className="text-xs text-red-300 font-bold pl-1">Sûr ?</span>
                           <button
                             type="button"
                             onClick={() => confirmDeleteDriver(d.id)}
-                            className="px-2 py-0.5 bg-red-600 hover:bg-red-500 text-white rounded-lg text-[11px] font-bold"
+                            className="px-2 py-0.5 bg-red-600 hover:bg-red-500 text-white rounded-lg text-xs font-bold"
                           >
                             Oui
                           </button>
                           <button
                             type="button"
                             onClick={() => setDriverToDelete(null)}
-                            className="px-2 py-0.5 bg-white/10 hover:bg-white/20 text-white rounded-lg text-[11px]"
+                            className="px-2 py-0.5 bg-white/10 hover:bg-white/20 text-white rounded-lg text-xs"
                           >
                             Non
                           </button>
@@ -258,7 +258,7 @@ export default function Settings() {
                     {d.driverCardNumber && (
                       <div className="flex items-center gap-2">
                         <CreditCard className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-                        <span className="font-mono text-[11px]">{d.driverCardNumber}</span>
+                        <span className="font-mono text-xs">{d.driverCardNumber}</span>
                       </div>
                     )}
                     {d.phone && (
@@ -547,7 +547,7 @@ export default function Settings() {
               <h3 className={`font-bold text-lg ${localSettings.appMode === 'ai' ? 'text-purple-400' : 'text-white'}`}>
                 Mode IA Premium
               </h3>
-              <span className="px-2 py-0.5 rounded bg-purple-500/20 text-purple-300 text-[10px] font-black uppercase tracking-wider">
+              <span className="px-2 py-0.5 rounded bg-purple-500/20 text-purple-300 text-xs font-black uppercase tracking-wider">
                 Recommandé
               </span>
             </div>

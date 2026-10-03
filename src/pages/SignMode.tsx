@@ -214,7 +214,7 @@ export default function SignMode() {
                   <button
                     key={t}
                     onClick={() => setThemeMode(t)}
-                    className={`w-6 h-6 sm:w-7 sm:h-7 rounded-xl flex items-center justify-center text-[10px] font-bold transition-all ${
+                    className={`w-6 h-6 sm:w-7 sm:h-7 rounded-xl flex items-center justify-center text-xs font-bold transition-all ${
                       themeMode === t ? 'ring-2 ring-white scale-110' : 'opacity-60 hover:opacity-100'
                     }`}
                     style={{
@@ -293,7 +293,7 @@ export default function SignMode() {
             {/* Raccourcis 1-Tap passagers des courses */}
             {trips.filter(t => t.status === 'scheduled' || t.status === 'in_progress').length > 0 && (
               <div className="mb-3 pb-3 border-b border-white/10">
-                <span className="text-[11px] text-slate-400 block mb-1.5 font-medium">Passagers des courses (cliquez pour basculer en 1-tap) :</span>
+                <span className="text-xs text-slate-400 block mb-1.5 font-medium">Passagers des courses (cliquez pour basculer en 1-tap) :</span>
                 <div className="flex gap-1.5 flex-wrap max-h-24 overflow-y-auto">
                   {trips.filter(t => t.status === 'scheduled' || t.status === 'in_progress').map(t => (
                     <button
@@ -307,7 +307,7 @@ export default function SignMode() {
                       className="px-2.5 py-1.5 rounded-lg bg-blue-600/20 hover:bg-blue-600/40 text-blue-300 text-xs border border-blue-500/30 flex items-center gap-1.5 cursor-pointer active:scale-95 transition-all"
                     >
                       <span>{t.clientName}</span>
-                      {t.flightNumber && <span className="text-amber-400 font-mono text-[10px]">({t.flightNumber})</span>}
+                      {t.flightNumber && <span className="text-amber-400 font-mono text-xs">({t.flightNumber})</span>}
                     </button>
                   ))}
                 </div>
@@ -433,13 +433,13 @@ export default function SignMode() {
 
         <div className="flex items-center gap-2">
           {isLocked ? (
-            <span className="text-[11px] text-amber-400 font-bold flex items-center gap-1">
+            <span className="text-xs text-amber-400 font-bold flex items-center gap-1">
               <Lock className="w-3 h-3" /> Écran verrouillé (Touchez le cadenas en haut à droite pour quitter)
             </span>
           ) : (
             <button
               onClick={() => navigate('/')}
-              className="text-[11px] text-slate-400 hover:text-white flex items-center gap-1"
+              className="text-xs text-slate-400 hover:text-white flex items-center gap-1"
             >
               <ArrowLeft className="w-3 h-3" /> Retour aux courses
             </button>

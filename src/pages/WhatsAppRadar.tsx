@@ -150,7 +150,7 @@ export default function WhatsAppRadar() {
                 <div>
                   <h3 className="text-white font-bold text-base flex items-center gap-2">
                     Analyse en temps réel
-                    {criteria.autoScan && <span className="px-2 py-0.5 rounded bg-green-500/20 text-green-400 text-[10px] uppercase font-black tracking-wider">Actif</span>}
+                    {criteria.autoScan && <span className="px-2 py-0.5 rounded bg-green-500/20 text-green-400 text-xs uppercase font-black tracking-wider">Actif</span>}
                   </h3>
                   <p className="text-xs text-slate-400 mt-1">L'IA surveille {MOCK_GROUPS.length} groupes de sous-traitance.</p>
                 </div>
@@ -196,19 +196,19 @@ export default function WhatsAppRadar() {
                       {/* IA Parsed Data */}
                       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-black/40 rounded-xl p-4 border border-white/5">
                         <div>
-                          <p className="text-[10px] text-slate-500 mb-1 flex items-center gap-1"><MapPin className="w-3 h-3" /> Départ</p>
+                          <p className="text-xs text-slate-500 mb-1 flex items-center gap-1"><MapPin className="w-3 h-3" /> Départ</p>
                           <p className="text-sm font-bold text-white truncate">{trip.parsed.pickup}</p>
                         </div>
                         <div>
-                          <p className="text-[10px] text-slate-500 mb-1 flex items-center gap-1"><MapPin className="w-3 h-3 text-red-400" /> Arrivée</p>
+                          <p className="text-xs text-slate-500 mb-1 flex items-center gap-1"><MapPin className="w-3 h-3 text-red-400" /> Arrivée</p>
                           <p className="text-sm font-bold text-white truncate">{trip.parsed.dropoff}</p>
                         </div>
                         <div>
-                          <p className="text-[10px] text-slate-500 mb-1 flex items-center gap-1"><Clock className="w-3 h-3" /> Date & Heure</p>
+                          <p className="text-xs text-slate-500 mb-1 flex items-center gap-1"><Clock className="w-3 h-3" /> Date & Heure</p>
                           <p className="text-sm font-bold text-white truncate">{trip.parsed.date} à {trip.parsed.time}</p>
                         </div>
                         <div>
-                          <p className="text-[10px] text-slate-500 mb-1 flex items-center gap-1"><Car className="w-3 h-3 text-blue-400" /> Véhicule</p>
+                          <p className="text-xs text-slate-500 mb-1 flex items-center gap-1"><Car className="w-3 h-3 text-blue-400" /> Véhicule</p>
                           <p className="text-sm font-bold text-white truncate">{trip.parsed.type}</p>
                         </div>
                       </div>
@@ -217,7 +217,7 @@ export default function WhatsAppRadar() {
                     {/* Prix et Action */}
                     <div className="flex flex-col justify-between items-end shrink-0 sm:w-48">
                       <div className="text-right w-full p-4 rounded-xl bg-green-500/10 border border-green-500/20">
-                        <p className="text-[10px] text-green-400 font-bold uppercase tracking-wider mb-1">Tarif Net Sous-traitant</p>
+                        <p className="text-xs text-green-400 font-bold uppercase tracking-wider mb-1">Tarif Net Sous-traitant</p>
                         <p className="text-3xl font-black text-white flex items-center justify-end gap-1">
                           {trip.parsed.price} <DollarSign className="w-6 h-6 text-green-400" />
                         </p>

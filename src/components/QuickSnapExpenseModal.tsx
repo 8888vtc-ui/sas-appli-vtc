@@ -116,7 +116,7 @@ export default function QuickSnapExpenseModal({ isOpen, onClose, onSave }: Quick
     <AnimatePresence>
       <div
         onClick={onClose}
-        className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/80 backdrop-blur-md"
+        className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 pb-[env(safe-area-inset-bottom,0px)] bg-black/80 backdrop-blur-md"
       >
         <motion.div
           initial={{ y: '100%', opacity: 0 }}
@@ -185,7 +185,7 @@ export default function QuickSnapExpenseModal({ isOpen, onClose, onSave }: Quick
                 />
                 <span className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-lg">€</span>
               </div>
-              <div className="text-center text-[11px] text-emerald-400 mt-1">
+              <div className="text-center text-xs text-emerald-400 mt-1">
                 TVA estimée déductible ({selectedPreset.tvaRate}%) :{' '}
                 {amount && parseFloat(amount) > 0
                   ? ((parseFloat(amount) * selectedPreset.tvaRate) / (100 + selectedPreset.tvaRate)).toFixed(2)

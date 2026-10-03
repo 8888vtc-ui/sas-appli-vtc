@@ -30,12 +30,12 @@ export default function RevenueOverview() {
             <p className="text-[40px] sm:text-[48px] font-black tracking-tight text-white leading-none mt-1">
               {formatEUR(s.today.amount)}
             </p>
-            <p className="text-[13px] text-[#b9cbb9] mt-2">
+            <p className="text-[13px] text-[#b4b4b4] mt-2">
               {s.today.count} course{s.today.count > 1 ? 's' : ''} terminée{s.today.count > 1 ? 's' : ''}
             </p>
           </div>
           <div className="flex gap-2">
-            <Pill icon={Clock} label="Reste prévu" value={formatEUR(s.today.planned)} sub={`${s.today.plannedCount} course(s)`} color="#ffb95f" />
+            <Pill icon={Clock} label="Reste prévu" value={formatEUR(s.today.planned)} sub={`${s.today.plannedCount} course(s)`} color="#f5f5f5" />
             <Pill icon={TrendingUp} label="Total potentiel" value={formatEUR(s.today.amount + s.today.planned)} color="#00ff87" />
           </div>
         </div>
@@ -50,20 +50,20 @@ export default function RevenueOverview() {
       {/* ─── KPIs secondaires ─── */}
       <section className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         <Kpi icon={Receipt} label="Panier moyen" value={formatEUR(s.avgTicket)} hint="ce mois" />
-        <Kpi icon={Car} label="Courses à venir" value={String(s.upcoming.count)} hint={formatEUR(s.upcoming.amount)} accent="#adc6ff" />
+        <Kpi icon={Car} label="Courses à venir" value={String(s.upcoming.count)} hint={formatEUR(s.upcoming.amount)} accent="#f5f5f5" />
         <Kpi icon={Wallet} label="Net du mois" value={formatEUR(s.month.net)} hint={`Frais : ${formatEUR(s.month.expenses)}`} accent={s.month.net >= 0 ? '#00ff87' : '#ff453a'} />
-        <Kpi icon={XCircle} label="Annulations" value={`${s.cancelRate.toFixed(0)} %`} hint="ce mois" accent={s.cancelRate > 15 ? '#ff453a' : '#b9cbb9'} />
+        <Kpi icon={XCircle} label="Annulations" value={`${s.cancelRate.toFixed(0)} %`} hint="ce mois" accent={s.cancelRate > 15 ? '#ff453a' : '#b4b4b4'} />
       </section>
 
       {/* ─── 7 derniers jours ─── */}
-      <section className="rounded-2xl p-5 bg-[#1c1b1b] border border-white/5">
+      <section className="rounded-2xl p-5 bg-[#161616] border border-white/5">
         <div className="flex items-center justify-between mb-5">
           <div>
             <h2 className="text-[16px] font-bold text-white">7 derniers jours</h2>
-            <p className="text-[12px] text-[#b9cbb9]">CA réalisé par jour</p>
+            <p className="text-[12px] text-[#b4b4b4]">CA réalisé par jour</p>
           </div>
           {s.bestDay && s.bestDay.amount > 0 && (
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-[#ffb95f]/10 text-[#ffb95f]">
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-[#f5f5f5]/10 text-white">
               <Trophy className="w-3.5 h-3.5" /> Meilleur : {s.bestDay.label} · {formatEUR(s.bestDay.amount)}
             </span>
           )}
@@ -74,7 +74,7 @@ export default function RevenueOverview() {
             const h = Math.max(4, (d.amount / max) * 100);
             return (
               <div key={d.key} className="flex-1 flex flex-col items-center gap-2 h-full min-w-0" title={`${formatEUR(d.amount)} · ${d.count} course(s)`}>
-                <span className="text-[10px] font-bold text-[#b9cbb9] truncate">{d.amount > 0 ? Math.round(d.amount) + '€' : ''}</span>
+                <span className="text-xs font-bold text-[#b4b4b4] truncate">{d.amount > 0 ? Math.round(d.amount) + '€' : ''}</span>
                 <div className="flex-1 w-full flex items-end">
                   <motion.div
                     initial={{ height: 0 }} animate={{ height: `${h}%` }} transition={{ delay: i * 0.04, duration: 0.4 }}
@@ -87,7 +87,7 @@ export default function RevenueOverview() {
                     }}
                   />
                 </div>
-                <span className={`text-[11px] font-bold uppercase ${d.isToday ? 'text-[#00ff87]' : 'text-[#b9cbb9]'}`}>{d.label}</span>
+                <span className={`text-xs font-bold uppercase ${d.isToday ? 'text-[#00ff87]' : 'text-[#b4b4b4]'}`}>{d.label}</span>
               </div>
             );
           })}
@@ -100,11 +100,11 @@ export default function RevenueOverview() {
 function Pill({ icon: Icon, label, value, sub, color }: { icon: any; label: string; value: string; sub?: string; color: string }) {
   return (
     <div className="flex-1 sm:flex-none rounded-2xl px-3.5 py-2.5 bg-black/40 border border-white/5 min-w-[130px]">
-      <p className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider" style={{ color }}>
+      <p className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider" style={{ color }}>
         <Icon className="w-3.5 h-3.5" /> {label}
       </p>
       <p className="text-[18px] font-bold text-white mt-0.5">{value}</p>
-      {sub && <p className="text-[11px] text-[#b9cbb9]">{sub}</p>}
+      {sub && <p className="text-xs text-[#b4b4b4]">{sub}</p>}
     </div>
   );
 }
@@ -114,22 +114,22 @@ function PeriodCard({ icon: Icon, title, amount, count, delta, compare }: {
 }) {
   const up = delta != null && delta > 0.5;
   const down = delta != null && delta < -0.5;
-  const color = up ? '#00ff87' : down ? '#ff453a' : '#b9cbb9';
+  const color = up ? '#00ff87' : down ? '#ff453a' : '#b4b4b4';
   const DeltaIcon = up ? TrendingUp : down ? TrendingDown : Minus;
 
   return (
-    <div className="rounded-2xl p-5 bg-[#1c1b1b] border border-white/5">
+    <div className="rounded-2xl p-5 bg-[#161616] border border-white/5">
       <div className="flex items-center justify-between">
-        <p className="flex items-center gap-2 text-[12px] font-bold uppercase tracking-wider text-[#b9cbb9]">
+        <p className="flex items-center gap-2 text-[12px] font-bold uppercase tracking-wider text-[#b4b4b4]">
           <Icon className="w-4 h-4" /> {title}
         </p>
-        <span className="text-[12px] text-[#b9cbb9]">{count} course{count > 1 ? 's' : ''}</span>
+        <span className="text-[12px] text-[#b4b4b4]">{count} course{count > 1 ? 's' : ''}</span>
       </div>
       <p className="text-[30px] font-black tracking-tight text-white mt-2">{formatEUR(amount)}</p>
       <p className="flex items-center gap-1.5 text-[12px] mt-1" style={{ color }}>
         <DeltaIcon className="w-3.5 h-3.5" />
         {delta == null ? 'Pas de comparaison' : `${delta > 0 ? '+' : ''}${delta.toFixed(0)} %`}
-        <span className="text-[#b9cbb9]/70">{compare}</span>
+        <span className="text-[#b4b4b4]/70">{compare}</span>
       </p>
     </div>
   );
@@ -139,13 +139,13 @@ function Kpi({ icon: Icon, label, value, hint, accent = '#e5e2e1' }: {
   icon: any; label: string; value: string; hint?: string; accent?: string;
 }) {
   return (
-    <div className="rounded-2xl p-4 bg-[#1c1b1b] border border-white/5 min-w-0">
+    <div className="rounded-2xl p-4 bg-[#161616] border border-white/5 min-w-0">
       <div className="w-9 h-9 rounded-xl flex items-center justify-center bg-[#0e0e0e] mb-3">
         <Icon className="w-[18px] h-[18px]" style={{ color: accent }} />
       </div>
-      <p className="text-[11px] font-bold uppercase tracking-wider text-[#b9cbb9] truncate">{label}</p>
-      <p className="text-[20px] font-bold truncate" style={{ color: accent === '#b9cbb9' ? '#fff' : accent }}>{value}</p>
-      {hint && <p className="text-[11px] text-[#b9cbb9]/70 truncate">{hint}</p>}
+      <p className="text-xs font-bold uppercase tracking-wider text-[#b4b4b4] truncate">{label}</p>
+      <p className="text-[20px] font-bold truncate" style={{ color: accent === '#b4b4b4' ? '#fff' : accent }}>{value}</p>
+      {hint && <p className="text-xs text-[#b4b4b4]/70 truncate">{hint}</p>}
     </div>
   );
 }

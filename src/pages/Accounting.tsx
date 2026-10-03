@@ -148,12 +148,12 @@ export default function Accounting() {
                   </div>
                   <div className="min-w-0">
                     <p className="text-sm font-bold text-white truncate">{exp.description}</p>
-                    <p className="text-[10px] text-slate-500">{format(new Date(exp.date), 'dd MMM yyyy')}</p>
+                    <p className="text-xs text-slate-500">{format(new Date(exp.date), 'dd MMM yyyy')}</p>
                   </div>
                 </div>
                 <div className="text-right shrink-0">
                   <p className="text-sm font-bold text-red-400">-{formatEUR(exp.amount)}</p>
-                  <p className="text-[10px] text-slate-500">{categories[exp.category as keyof typeof categories]?.label}</p>
+                  <p className="text-xs text-slate-500">{categories[exp.category as keyof typeof categories]?.label}</p>
                 </div>
               </div>
             ))}
