@@ -95,7 +95,7 @@ interface AppContextType {
   stats: any;
   compliance: any;
   expiringSoon: LegalDocument[];
-  addTrip: (formData: any) => Promise<void>;
+  addTrip: (formData: any) => Promise<Trip | null>;
   deleteTrip: (id: string) => Promise<void>;
   changeStatus: (tripId: string, status: Trip['status']) => Promise<void>;
   invoiceTrip: (trip: Trip) => Promise<void>;
@@ -354,7 +354,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     if (expData) setExpenses(expData);
   };
 
-  const addTrip = async (formData: any) => {
+  const addTrip = async (formData: any): Promise<Trip | null> => {
     if (isLocalMode) {
       const newTrip: Trip = {
         ...formData,
@@ -365,9 +365,9 @@ export function AppProvider({ children }: { children: ReactNode }) {
       const updated = [newTrip, ...trips];
       setTrips(updated);
       syncLocal('vtc_local_trips', updated);
-      return;
+      return newTrip;
     }
-    if (!profile?.company_id) return;
+    if (!profile?.company_id) return null;
     
     // Map camelCase formData to snake_case schema for Supabase
     const dbPayload = {
@@ -393,12 +393,22 @@ export function AppProvider({ children }: { children: ReactNode }) {
       notes: formData.notes
     };
 
-    const { error } = await supabase.from('trips').insert([dbPayload]);
+    const { data, error } = await supabase.from('trips').insert([dbPayload]).select();
     if (error) {
       console.error("Error creating trip:", error);
       alert("Erreur lors de la création de la course : " + error.message);
+      return null;
     } else {
       fetchData(); // Force refresh to show the new trip
+      if (data && data.length > 0) {
+        return {
+          id: data[0].id,
+          ...formData,
+          bookingDateTime: data[0].booking_datetime,
+          status: 'scheduled'
+        } as Trip;
+      }
+      return null;
     }
   };
 

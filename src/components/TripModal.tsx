@@ -1,8 +1,9 @@
 import { useState, useRef, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, MapPin, User, Clock, Check, LocateFixed } from 'lucide-react';
+import { X, MapPin, User, Clock, Check, LocateFixed, CheckCircle2, FileText } from 'lucide-react';
 import { format, addMinutes } from 'date-fns';
 import { useApp } from '../context/AppContext';
+import type { Trip } from '../types';
 import { useAuth } from '../context/AuthContext';
 import { supabase, isLocalMode } from '../lib/supabase';
 import { searchFrenchAddresses } from '../lib/addressService';
@@ -63,7 +64,8 @@ const emptyForm: TripFormData = {
 };
 
 export default function TripModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
-  const { addTrip, trips } = useApp();
+  const { addTrip, generateBon, trips } = useApp();
+  const [createdTrip, setCreatedTrip] = useState<Trip | null>(null);
   const { profile } = useAuth();
   const [errors, setErrors] = useState<{ [key: string]: boolean }>({});
   const [formData, setFormData] = useState<TripFormData>({
@@ -244,7 +246,7 @@ export default function TripModal({ isOpen, onClose }: { isOpen: boolean; onClos
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const newErrors: { [key: string]: boolean } = {};
     if (!formData.clientName) newErrors.clientName = true;
@@ -257,10 +259,12 @@ export default function TripModal({ isOpen, onClose }: { isOpen: boolean; onClos
       return;
     }
     
-    addTrip(formData);
-    setFormData({ ...emptyForm, date: format(new Date(), 'yyyy-MM-dd'), time: format(new Date(), 'HH:mm') });
-    setErrors({});
-    onClose();
+    const newTrip = await addTrip(formData);
+    if (newTrip) {
+      setCreatedTrip(newTrip);
+    } else {
+      handleClose();
+    }
   };
 
   const handleClose = () => {
@@ -269,6 +273,7 @@ export default function TripModal({ isOpen, onClose }: { isOpen: boolean; onClos
     setDropoffSuggestions([]);
     setShowClientSuggestions(false);
     setErrors({});
+    setCreatedTrip(null);
     onClose();
   };
 
@@ -322,6 +327,31 @@ export default function TripModal({ isOpen, onClose }: { isOpen: boolean; onClos
             exit={{ scale: 0.95, y: 100 }}
             className="w-full sm:max-w-2xl bg-surface border border-outline-variant p-4 sm:p-7 rounded-t-3xl sm:rounded-3xl overflow-y-auto h-[92dvh] sm:h-auto sm:max-h-[90vh] text-on-surface shadow-2xl pb-[calc(env(safe-area-inset-bottom,0px)+96px)]"
           >
+            {createdTrip ? (
+              <div className="flex flex-col items-center justify-center py-10 px-4 text-center">
+                <div className="w-16 h-16 bg-[#00ff87]/20 rounded-full flex items-center justify-center mb-4">
+                  <CheckCircle2 className="w-8 h-8 text-[#00ff87]" />
+                </div>
+                <h2 className="text-2xl font-black text-white mb-2">Course Planifiée !</h2>
+                <p className="text-slate-400 mb-8">Votre course pour {createdTrip.clientName} a été créée avec succès.</p>
+                
+                <button
+                  onClick={() => generateBon(createdTrip)}
+                  className="w-full sm:w-auto px-8 py-4 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-bold text-lg mb-4 flex items-center justify-center gap-2 shadow-lg shadow-blue-500/30 transition-all"
+                >
+                  <FileText className="w-5 h-5" />
+                  Télécharger le Bon de Commande (PDF)
+                </button>
+                
+                <button
+                  onClick={handleClose}
+                  className="w-full sm:w-auto px-8 py-3 bg-white/5 hover:bg-white/10 text-white rounded-xl font-bold transition-all"
+                >
+                  Fermer
+                </button>
+              </div>
+            ) : (
+              <>
             {/* Header / Type de Prestation (MAD vs Transfert) */}
             <div className="sticky top-0 bg-surface z-50 pt-2 pb-4 border-b border-outline-variant mb-5">
               <div className="flex items-center justify-between mb-4">
@@ -557,6 +587,8 @@ export default function TripModal({ isOpen, onClose }: { isOpen: boolean; onClos
               </div>
 
             </form>
+            </>
+            )}
           </motion.div>
         </motion.div>
       )}

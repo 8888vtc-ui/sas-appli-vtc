@@ -451,7 +451,10 @@ export default function Dashboard() {
                       <div className="p-3 rounded-xl mb-2 flex flex-col gap-2" style={{ backgroundColor: c.surfaceContainerLowest }}>
                         <div className="flex gap-2">
                           {trip.status === 'scheduled' && (
-                            <button onClick={() => handleStart(trip.id, trip.clientName)} className="flex-1 py-3 rounded-lg font-bold text-[13px] flex items-center justify-center gap-2" style={{ backgroundColor: '#00ff87', color: '#007138' }}><Play className="w-4 h-4"/> Démarrer</button>
+                            <>
+                              <button onClick={() => generateBon(trip)} className="w-12 rounded-lg flex items-center justify-center border" style={{ borderColor: c.outlineVariant, backgroundColor: c.surfaceContainer }}><FileText className="w-5 h-5" style={{ color: c.secondaryContainer }}/></button>
+                              <button onClick={() => handleStart(trip.id, trip.clientName)} className="flex-1 py-3 rounded-lg font-bold text-[13px] flex items-center justify-center gap-2" style={{ backgroundColor: '#00ff87', color: '#007138' }}><Play className="w-4 h-4"/> Démarrer</button>
+                            </>
                           )}
                           {trip.status === 'in_progress' && (
                             <button onClick={() => handleComplete(trip.id, trip.clientName)} className="flex-1 py-3 rounded-lg font-bold text-[13px] flex items-center justify-center gap-2" style={{ backgroundColor: '#ffb95f', color: '#653e00' }}><CheckCircle2 className="w-4 h-4"/> Terminer</button>
