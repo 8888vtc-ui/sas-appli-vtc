@@ -105,6 +105,15 @@ export default function Layout({ children, onNewTrip }: { children: React.ReactN
               >
                 <Shield className="w-6 h-6" />
               </button>
+              <button
+                onClick={async () => {
+                  await supabase.auth.signOut();
+                  navigate('/login');
+                }}
+                className="w-12 h-12 rounded-full bg-[#1c1c1e] text-slate-400 border border-white/10 flex items-center justify-center active:scale-90 transition-all md:hidden hover:text-red-400"
+              >
+                <LogOut className="w-5 h-5" />
+              </button>
             </div>
           </div>
 
