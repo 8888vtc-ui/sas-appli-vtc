@@ -1,33 +1,19 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  Users, Search, Plus, Phone, Mail, MessageSquare, Star, Tag,
-  Building2, Hotel, Briefcase, User, MapPin, Send,
+  Users, Search, Plus, MessageSquare, Send,
   ChevronDown, UserPlus,
-  X, CheckCircle2, AlertCircle, MessageCircle, Trash2, Sparkles, Loader2
+  X, CheckCircle2, AlertCircle, Sparkles, Loader2
 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { format, differenceInDays } from 'date-fns';
 import { generateProspects } from '../lib/aiProspects';
 import { showToast } from '../components/Toast';
-
-// ─── TYPES ───
-interface Contact {
-  id: string;
-  name: string;
-  phone: string;
-  email: string;
-  type: 'client' | 'prospect';
-  category: 'particulier' | 'hotel' | 'entreprise' | 'agence' | 'concierge' | 'restaurant';
-  source: string;
-  notes: string;
-  lastContact: string;
-  totalTrips: number;
-  totalRevenue: number;
-  rating: number;
-  tags: string[];
-  createdAt: string;
-}
+import ContactCard from '../components/crm/ContactCard';
+import ConfirmDeleteModal from '../components/crm/ConfirmDeleteModal';
+import OrderSlideOver from '../components/crm/OrderSlideOver';
+import { CATEGORIES, contactKey, tripContactKey, type Contact } from '../components/crm/types';
+import type { Trip } from '../types';
 
 interface SMSTemplate {
   id: string;
@@ -49,17 +35,10 @@ const SMS_TEMPLATES: SMSTemplate[] = [
     body: 'Bonjour, {societe} propose des tarifs préférentiels pour vos déplacements professionnels. Contactez-nous : {tel}' },
 ];
 
-const CATEGORIES = {
-  particulier: { label: 'Particulier', icon: User, color: '#3b82f6' },
-  hotel: { label: 'Hôtel / Concierge', icon: Hotel, color: '#8b5cf6' },
-  entreprise: { label: 'Entreprise', icon: Briefcase, color: '#22c55e' },
-  agence: { label: 'Agence de voyage', icon: MapPin, color: '#f59e0b' },
-  concierge: { label: 'Concierge privé', icon: Star, color: '#ec4899' },
-  restaurant: { label: 'Restaurant / Club', icon: Building2, color: '#ef4444' },
-};
+const tripTs = (t: Trip) => new Date(`${t.date}T${t.time || '00:00'}`).getTime();
 
 export default function CRM() {
-  const { trips, settings } = useApp();
+  const { trips, settings, invoices, invoiceTrip, downloadInvoice, generateBon } = useApp();
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTab, setActiveTab] = useState<'all' | 'clients' | 'prospects'>('all');
   const [categoryFilter, setCategoryFilter] = useState<string>('all');
@@ -95,12 +74,12 @@ export default function CRM() {
   const enrichedContacts = useMemo(() => {
     const contactMap = new Map<string, Contact>();
     
-    // Ajouter les contacts manuels
-    contacts.forEach(c => contactMap.set(c.phone || c.email || c.id, c));
+    // Ajouter les contacts manuels (copie pour ne jamais muter l'état React)
+    contacts.forEach(c => contactMap.set(contactKey(c), { ...c }));
 
     // Enrichir depuis les courses
     trips.forEach(trip => {
-      const key = trip.clientPhone || trip.clientEmail || trip.clientName;
+      const key = tripContactKey(trip);
       if (!contactMap.has(key)) {
         contactMap.set(key, {
           id: key,
@@ -123,12 +102,27 @@ export default function CRM() {
         existing.totalTrips += 1;
         existing.totalRevenue += trip.price;
         existing.type = 'client';
-        if (trip.date > existing.lastContact) existing.lastContact = trip.date;
+        if (!existing.lastContact || trip.date > existing.lastContact) existing.lastContact = trip.date;
       }
     });
 
-    return Array.from(contactMap.values());
+    // Soft delete : les contacts supprimés restent stockés mais sont masqués,
+    // sauf si une nouvelle course a été créée pour eux après la suppression.
+    return Array.from(contactMap.values()).filter(
+      c => !c.deletedAt || c.totalTrips > (c.tripsAtDeletion ?? 0)
+    );
   }, [contacts, trips]);
+
+  // Courses regroupées par contact (pour le bon de commande et la facturation)
+  const tripsByContact = useMemo(() => {
+    const map = new Map<string, Trip[]>();
+    trips.forEach(t => {
+      const k = tripContactKey(t);
+      map.set(k, [...(map.get(k) || []), t]);
+    });
+    return map;
+  }, [trips]);
+  const getContactTrips = useCallback((c: Contact) => tripsByContact.get(contactKey(c)) || [], [tripsByContact]);
 
   // Filtres
   const filtered = enrichedContacts
@@ -165,10 +159,72 @@ export default function CRM() {
     setShowAddContact(false);
   };
 
-  const deleteContact = (id: string) => {
-    const updated = contacts.filter(c => c.id !== id);
-    saveContacts(updated);
+  /* ─── Suppression (soft delete) ─── */
+  const [deleteTarget, setDeleteTarget] = useState<Contact | null>(null);
+  const [deleting, setDeleting] = useState(false);
+
+  /**
+   * Soft delete : on horodate `deletedAt` au lieu d'effacer la ligne.
+   * Les courses et factures du client sont conservées (obligations comptables).
+   * Les contacts issus des courses sont mémorisés avec `deletedAt` pour rester masqués.
+   */
+  const handleDelete = async (contact: Contact) => {
+    const deletedAt = new Date().toISOString();
+    setDeleting(true);
+    try {
+      // ── Base de données (à activer quand la table `clients` a une colonne deleted_at) ──
+      // const { error } = await supabase.from('clients').update({ deleted_at: deletedAt }).eq('id', contact.id);
+      // if (error) throw error;
+
+      const tripsAtDeletion = contact.totalTrips;
+      const exists = contacts.some(c => c.id === contact.id);
+      const updated = exists
+        ? contacts.map(c => (c.id === contact.id ? { ...c, deletedAt, tripsAtDeletion } : c))
+        : [{ ...contact, totalTrips: 0, totalRevenue: 0, deletedAt, tripsAtDeletion }, ...contacts];
+      saveContacts(updated);
+      setSelectedContacts(prev => prev.filter(id => id !== contact.id));
+      showToast(`${contact.name} supprimé`, 'info');
+      setDeleteTarget(null);
+    } catch (err: any) {
+      showToast(err?.message || 'Suppression impossible', 'error');
+    } finally {
+      setDeleting(false);
+    }
   };
+
+  /* ─── Facturation à la demande ─── */
+  const [invoicingId, setInvoicingId] = useState<string | null>(null);
+
+  /** Génère (ou retélécharge) la facture d'une course précise. */
+  const generateInvoice = async (trip: Trip) => {
+    if (trip.status === 'invoiced') {
+      const inv = invoices.find(i => i.tripId === trip.id);
+      if (inv) { downloadInvoice(inv); return; }
+    }
+    if (trip.status !== 'completed' && trip.status !== 'invoiced') {
+      showToast('La facture est disponible une fois la course terminée', 'info');
+      return;
+    }
+    await invoiceTrip(trip);
+    showToast(`Facture générée pour ${trip.clientName}`, 'success');
+  };
+
+  /** Depuis la carte : facture la dernière course terminée, sinon retélécharge la dernière facture. */
+  const generateContactInvoice = async (contact: Contact) => {
+    const list = [...getContactTrips(contact)].sort((a, b) => tripTs(b) - tripTs(a));
+    const target = list.find(t => t.status === 'completed') || list.find(t => t.status === 'invoiced');
+    if (!target) {
+      showToast('Aucune course terminée à facturer pour ce client', 'info');
+      return;
+    }
+    setInvoicingId(contact.id);
+    try { await generateInvoice(target); } finally { setInvoicingId(null); }
+  };
+
+  /* ─── Bon de commande (slide-over) ─── */
+  const [orderContact, setOrderContact] = useState<Contact | null>(null);
+  const orderTrips = useMemo(() => (orderContact ? getContactTrips(orderContact) : []), [orderContact, getContactTrips]);
+  const closeOrder = useCallback(() => setOrderContact(null), []);
 
   const toggleSelect = (id: string) => {
     setSelectedContacts(prev => prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]);
@@ -217,7 +273,6 @@ export default function CRM() {
     }
   };
 
-  const getDaysColor = (days: number) => days > 60 ? '#ef4444' : days > 30 ? '#f59e0b' : '#22c55e';
 
   return (
     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
@@ -300,101 +355,18 @@ export default function CRM() {
         </div>
       ) : (
         <div className="space-y-3">
-          {filtered.map(contact => {
-            const cat = CATEGORIES[contact.category];
-            const daysSince = contact.lastContact ? differenceInDays(new Date(), new Date(contact.lastContact)) : null;
-            const isSelected = selectedContacts.includes(contact.id);
-
-            return (
-              <motion.div key={contact.id} layout
-                className={`glass rounded-2xl p-5 cursor-pointer transition-all ${isSelected ? 'border-blue-500/50 bg-blue-500/5' : 'hover:border-white/20'}`}
-                onClick={() => toggleSelect(contact.id)}>
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
-                  <div className="flex items-center gap-4 min-w-0">
-                    {/* Checkbox */}
-                    <div className={`w-5 h-5 rounded-md border-2 flex items-center justify-center shrink-0 transition-all ${isSelected ? 'bg-blue-600 border-blue-600' : 'border-white/20'}`}>
-                      {isSelected && <CheckCircle2 className="w-3 h-3 text-white" />}
-                    </div>
-
-                    {/* Avatar */}
-                    <div className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0" style={{ background: `${cat.color}20` }}>
-                      <cat.icon className="w-5 h-5" style={{ color: cat.color }} />
-                    </div>
-
-                    {/* Info */}
-                    <div className="min-w-0">
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <h3 className="text-base font-bold text-white truncate">{contact.name}</h3>
-                        <span className="text-xs px-2 py-0.5 rounded-full font-medium"
-                          style={{ background: contact.type === 'client' ? 'rgba(34,197,94,0.15)' : 'rgba(139,92,246,0.15)',
-                            color: contact.type === 'client' ? '#22c55e' : '#8b5cf6' }}>
-                          {contact.type === 'client' ? 'Client' : 'Prospect'}
-                        </span>
-                        <span className="text-xs px-2 py-0.5 rounded-full font-medium" style={{ background: `${cat.color}15`, color: cat.color }}>
-                          {cat.label}
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-3 mt-1 text-xs text-slate-400 flex-wrap">
-                        {contact.phone && <span className="flex items-center gap-1"><Phone className="w-3 h-3" />{contact.phone}</span>}
-                        {contact.email && <span className="flex items-center gap-1"><Mail className="w-3 h-3" />{contact.email}</span>}
-                        {contact.source && <span className="flex items-center gap-1"><Tag className="w-3 h-3" />{contact.source}</span>}
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Right stats & actions */}
-                  <div className="flex items-center gap-3 sm:gap-4 shrink-0 overflow-x-auto" style={{ scrollbarWidth: 'none' }}>
-                    {contact.totalTrips > 0 && (
-                      <div className="text-center min-w-[45px]">
-                        <p className="text-base font-bold text-white">{contact.totalTrips}</p>
-                        <p className="text-xs text-slate-500">courses</p>
-                      </div>
-                    )}
-                    {contact.totalRevenue > 0 && (
-                      <div className="text-center min-w-[55px]">
-                        <p className="text-base font-bold text-emerald-400">{contact.totalRevenue.toFixed(0)}€</p>
-                        <p className="text-xs text-slate-500">CA</p>
-                      </div>
-                    )}
-                    {daysSince !== null && (
-                      <div className="text-center min-w-[55px]">
-                        <p className="text-base font-bold" style={{ color: getDaysColor(daysSince) }}>{daysSince}j</p>
-                        <p className="text-xs text-slate-500">dernier contact</p>
-                      </div>
-                    )}
-
-                    <div className="flex items-center gap-1 border-l border-white/10 pl-2 sm:pl-3 shrink-0">
-                      {contact.phone && (
-                        <>
-                          <a href={`https://wa.me/${contact.phone.replace(/[^0-9]/g, '')}`} target="_blank" rel="noreferrer"
-                            onClick={e => e.stopPropagation()}
-                            className="p-2 rounded-lg bg-green-500/10 hover:bg-green-500/20 text-green-400 transition-all" title="WhatsApp">
-                            <MessageCircle className="w-3.5 h-3.5" />
-                          </a>
-                          <a href={`tel:${contact.phone}`}
-                            onClick={e => e.stopPropagation()}
-                            className="p-2 rounded-lg bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 transition-all" title="Appeler">
-                            <Phone className="w-3.5 h-3.5" />
-                          </a>
-                        </>
-                      )}
-                      {contact.email && (
-                        <a href={`mailto:${contact.email}`}
-                          onClick={e => e.stopPropagation()}
-                          className="p-2 rounded-lg bg-purple-500/10 hover:bg-purple-500/20 text-purple-400 transition-all" title="Email">
-                          <Mail className="w-3.5 h-3.5" />
-                        </a>
-                      )}
-                      <button onClick={e => { e.stopPropagation(); deleteContact(contact.id); }}
-                        className="p-2 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 transition-all" title="Supprimer">
-                        <Trash2 className="w-3.5 h-3.5" />
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
-            );
-          })}
+          {filtered.map(contact => (
+            <ContactCard
+              key={contact.id}
+              contact={contact}
+              selected={selectedContacts.includes(contact.id)}
+              invoicing={invoicingId === contact.id}
+              onToggleSelect={() => toggleSelect(contact.id)}
+              onOpen={() => setOrderContact(contact)}
+              onRequestDelete={() => setDeleteTarget(contact)}
+              onGenerateInvoice={() => generateContactInvoice(contact)}
+            />
+          ))}
         </div>
       )}
 
@@ -567,6 +539,28 @@ export default function CRM() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* ──── MODALE : Confirmation de suppression ──── */}
+      <ConfirmDeleteModal
+        open={!!deleteTarget}
+        title="Supprimer ce contact ?"
+        message="Voulez-vous vraiment supprimer cet élément ?"
+        detail={deleteTarget ? `${deleteTarget.name}${deleteTarget.totalTrips ? ` · ses ${deleteTarget.totalTrips} course(s) et factures sont conservées` : ''}` : undefined}
+        loading={deleting}
+        onConfirm={() => deleteTarget && handleDelete(deleteTarget)}
+        onCancel={() => setDeleteTarget(null)}
+      />
+
+      {/* ──── SLIDE-OVER : Bon de commande ──── */}
+      <OrderSlideOver
+        open={!!orderContact}
+        clientName={orderContact?.name || ''}
+        clientPhone={orderContact?.phone}
+        trips={orderTrips}
+        onClose={closeOrder}
+        onDownloadBon={generateBon}
+        onGenerateInvoice={generateInvoice}
+      />
     </motion.div>
   );
 }
